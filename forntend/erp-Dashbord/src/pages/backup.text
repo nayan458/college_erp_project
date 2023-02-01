@@ -1,0 +1,134 @@
+# import axios from 'axios'
+# import React, { useEffect, useState } from 'react'
+# import { json, Link, useNavigate } from 'react-router-dom'
+# import Cookies from 'universal-cookie'
+
+# export default function Register() {
+
+#   const cookie = Cookies();
+#   const redirect = useNavigate();
+#   const [dat, setdata] = useState('')
+#   const [auth,setauth] = useState(false)
+
+#   const [formData, setformData] = useState([{
+#     fname:'',
+#     lname:'',
+#     email:'',
+#     password:'',
+#   }])
+
+#   let name,value;
+
+#   const upDateValues=(e)=>{
+#     name = e.target.name;
+#     value = e.target.value;
+#     setformData({...formData,[name]:value})
+#   }
+
+#   const submit=async(e)=>{
+#     try {
+#       e.preventDefault()
+#       axios.defaults.withCredentials = true;
+#       await axios.get('http://localhost:8000/sanctum/csrf-cookie');
+#       let rslt = await axios.post('/register',{
+#         "fname" : formData.fname,
+#         "lname" : formData.lname,
+#         "email" : formData.email,
+#         "password" : formData.password,
+#       })
+#       console.log(rslt)
+#       cookie.set('token',rslt.data.token)
+#       setdata(`${rslt.data.message} with token ${rslt.data.token}`)
+
+#     } catch (error){
+#       e.preventDefault()
+#       if(error)
+#         setdata(`Error 500 ${error}`)
+#     }
+#   }
+
+#   useEffect(()=>{
+#     if(auth)
+#       redirect('/')
+#   },[submit])
+
+#   useEffect(() => {
+#     let cookies = new Cookies();
+#     if(cookies.get('token'))
+#       setauth(true)
+#     if(auth)
+#       redirect('/')
+#   }, [submit])
+  
+#   return (
+#     <>
+#     <form class="flex flex-col gap-2">
+#           <input name='fname' type='text' required placeholder="fname" value={formData.fname} onChange={upDateValues}/>
+#           <input name='lname' type='text' required placeholder="lname" value={formData.lname} onChange={upDateValues}/>
+#           <input name='email' type='email' required placeholder="example@email.com" value={formData.email} onChange={upDateValues}/>
+#           <input name='password' type='password' required placeholder="password" value={formData.password} onChange={upDateValues}/>
+#           <button onClick={submit}>Submit</button>
+#         </form>
+#         <Link to="/login">all ready have an account</Link>
+#         <div>
+#           {dat}
+#         </div>
+#     </>
+#   )
+# }
+
+
+
+
+
+# ///////////////////////////////////
+# --------------------------------------
+#     LOGIN                             |
+# --------------------------------------
+
+    
+  const submit =async(e)=>{
+    try {
+      e.preventDefault()
+      axios.defaults.withCredentials = true;
+      await axios.get('http://localhost:8000/sanctum/csrf-cookie');
+        const rslt = await axios.post("/login",formValue);
+        cookies.set('token',rslt.data.token);
+        redirect('/')
+    } catch (error) {
+      e.preventDefault()
+      if(error){
+        // setdata(`${rslt.data.message} with token null`);
+      }
+    }
+}
+
+# --------------------------------------
+#     RREGISTER                         |
+# --------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

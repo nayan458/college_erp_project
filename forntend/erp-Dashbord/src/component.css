@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Messages of the mail box */
+  .innerMsg{
+    @apply p-2 w-7 h-7 text-sm sm:w-10 sm:h-10 bg-teal-700 rounded-full text-center text-slate-200 font-sans flex justify-center align-middle items-center;
+  }
+  .outerMsg{
+    @apply w-full bg-slate-200 p-2 flex gap-3 border-b-[1px] border-slate-100 cursor-pointer hover:bg-blue-200 snap-start text-xs sm:text-sm lg:text-lg items-center;
+    @apply focus:bg-blue-300 active:bg-blue-300 transform duration-200
+  }
+  /* .outerMsg{
+    @apply  bg-slate-200 ;
+    @apply focus:bg-blue-300 active:bg-blue-300 
+  } */
+  .outer_selected{
+    @apply bg-blue-300;
+  }
+  .date_msg{
+    @apply font-bold flex-1 flex justify-end align-middle items-center pr-5 text-slate-600 text-xs sm:text-sm lg:text-lg;
+  }
+  /*  */
+
+
+
+  /* ------------------------------------------------------------------------------------------------------ */
+
+
+
+  .Gmail-child-1{
+    @apply absolute transform h-full z-10 duration-500 ease-in-out translate-x-0;
+    @apply bg-blue-50 px-3 py-2 md:block md:relative;
+  }
+  .Gmail-child-2{
+    @apply col-span-4 h-10;
+    @apply bg-slate-200 md:col-span-3 py-2;
+  }
+
+  .Gmail-dashBord-Toggle-btn{
+    @apply rounded-md px-3 py-1 my-4 text-green-500 font-medium md:text-lg hover:bg-blue-400 hover:text-slate-100 transform duration-100 ease-in-out focus:text-slate-200 focus:bg-blue-800 flex justify-between align-middle items-center gap-3 md:hidden sm:text-lg text-sm;
+  }
+  .Gmail-child-1-active{
+    @apply absolute transform h-full z-10 duration-500 ease-in-out -translate-x-full;
+    @apply bg-blue-50 px-3 py-2 md:block md:relative md:-translate-x-0;
+  }
+  .black-screen{
+    @apply w-full h-full bg-transparent/20 fixed z-10 transform duration-150 md:hidden opacity-100 backdrop-blur-sm;
+  }
+  .black-screen-active{
+    @apply w-full h-full bg-black fixed z-10 transform duration-500 opacity-0 -translate-x-full md:hidden;
+  }
+  }

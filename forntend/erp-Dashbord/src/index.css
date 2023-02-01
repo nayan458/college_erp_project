@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Dash Bord css */
+    .nav{
+      @apply bg-gray-900 w-[15rem] h-full pl-3 pt-3 pr-4 fixed top-0 z-20 ease-in-out transform duration-300 overflow-y-auto scroll-smooth;
+    }
+    .btn-side-nav {
+      @apply h-11 flex items-center pl-8 rounded-md hover:bg-slate-800 opacity-75 hover:opacity-100 cursor-pointer transform duration-200 ease-linear;
+    }
+    .btn-side-nav-active {
+      @apply h-11 flex items-center pl-8 rounded-md bg-slate-800 opacity-100 cursor-pointer transform duration-200 ease-linear;
+    }
+    .inner-nav {
+      @apply text-white font-[Righteous] mt-10 grid gap-1;
+      
+    }
+    .user-nav{
+      @apply bg-white rounded-md pl-2 py-2 pr-1 mt-16 flex align-middle items-center cursor-pointer;
+      @layer max:w-12 min:w-[13.5rem];
+    }
+    .hide-nav{
+      @apply transform -translate-x-full inset-0; 
+    }
+    .nav-mini{
+      @apply hidden sm:block ;
+      @apply fixed bg-gray-900 h-full px-3 py-3 top-0 z-10 ease-linear transform duration-700;
+      
+    }
+    .btn-side-nav-mini {
+      @apply flex items-center justify-start h-11 rounded-md hover:bg-slate-800 opacity-75 hover:opacity-100 cursor-pointer transform duration-200 ease-linear;
+    }
+    .btn-side-nav-mini-active {
+      @apply flex items-center justify-start h-11 rounded-md bg-slate-800 opacity-100 cursor-pointer transform duration-200 ease-linear;
+    }
+    .tol-tip{
+      @apply fixed ml-12 min-w-max text-black bg-gray-50 px-2 py-1 font-mono rounded-sm transform duration-200 ease-in-out shadow-md;
+    }
+    .hide-toltip{
+      @apply scale-0;
+    }
+
+
+  /* Mail Box css */
+    .mail-box-outer{
+      @apply fixed top-0 w-screen h-screen bg-transparent/30 flex justify-center items-center transform ease-in-out duration-300 opacity-100 backdrop-blur-sm;
+      /* @apply md:-z-10 sm:z-10; */
+    }
+    .mail-box{
+      @apply fixed z-50 w-[100vw] h-[100vh] sm:w-[60vw] sm:h-[70vh] sm:rounded-xl bg-slate-50 p-6 font-sans transform ease-in-out duration-300 flex flex-col;
+    }
+
+    .mail-inputs{
+      @apply w-full p-1 mb-2 rounded-md text-lg bg-transparent outline-2 outline-blue-500 placeholder:italic;
+    }
+
+    .mail-editor{
+      @apply w-full h-full py-3 px-2 bg-slate-200 outline-none overflow-auto scroll-pb-3 md:rounded-md rounded-sm;
+      @apply dark:bg-slate-900 dark:text-slate-200;
+    }
+
+    div:empty:before{
+      content:attr(data-placeholder);
+      @apply text-gray-500 font-medium ;
+    }
+    
+    /* animation of hidden */
+    
+    .mail-box-hidden-animation-outer{
+      @apply opacity-0 -z-30;
+    }
+    .mail-box-hidden-animation-inner{
+      @apply scale-0;
+    }
+
+    /* close-btn */
+    .close-btn{
+      @apply h-6 w-6 rounded-full cursor-pointer text-center text-slate-400 hover:text-slate-700 hover:bg-slate-200;
+    }
+
+    /*  */
+
+    .admin-menu{
+      @apply absolute grid min-w-max px-3 py-2 transform-cpu  -translate-x-full bg-slate-100 rounded-md gap-2 drop-shadow-md duration-200 ;
+    }
+    .admin-menu-btn{
+      @apply  cursor-pointer font-mono text-slate-400 hover:text-slate-600 active:text-slate-800 transform ease-in-out duration-200;
+    }
+    .horizon{
+      @apply w-full h-[0.1rem] bg-slate-300 absolute left-0 ;
+    }
+    .hide{
+      @apply scale-0;
+    }
+    /*  */
+    .top-nav-tooltip{
+      @apply fixed min-w-max text-black bg-gray-50 px-2 py-1 font-mono rounded-sm transform duration-200 ease-in-out -translate-x-full translate-y-full shadow-md;
+    }
+  }
