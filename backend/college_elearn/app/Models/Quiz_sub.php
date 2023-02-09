@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Quiz_sub extends Model
 {
     use HasFactory;
+    public $timestamps = false;
 }

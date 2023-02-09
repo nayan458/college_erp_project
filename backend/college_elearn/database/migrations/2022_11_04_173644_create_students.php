@@ -17,13 +17,14 @@ return new class extends Migration
             $table->id('student_id')->unique();
             $table->string('fname')->require();
             $table->string('lname')->require();
-            $table->string('email')->require();
+            $table->string('email')->require()->unique();
             $table->string('username')->require();
             $table->string('password')->require();
             $table->string('location');
             $table->string('std_semester');
             $table->uuid('dep_id');
             $table->foreign('dep_id')->references('dep_id')->on('departments')->onUpdate('cascade')->onDelete('cascade');
+            $table->rememberToken();
         });
     }
 

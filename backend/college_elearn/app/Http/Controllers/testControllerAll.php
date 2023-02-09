@@ -28,7 +28,8 @@ class testControllerAll extends Controller
 
     function get_tech(){
         $tech = Teacher::all();
-        return(["Result"=>$tech]);
+        echo $tech;
+        // return(["Result"=>$tech]);
     }
 
     function put_tech(Request $req){
@@ -45,7 +46,8 @@ class testControllerAll extends Controller
 
     function get_class(){
         $classes = Classe::all();
-        return(["success"=>$classes]);
+        echo $classes;
+        // return(["success"=>$classes]);
     }
 
     function put_class(Request $req,$id){

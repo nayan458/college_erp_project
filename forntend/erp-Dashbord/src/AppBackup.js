@@ -23,6 +23,7 @@ import Register from './pages/Register';
 import Protected from './Protected';
 import Logout from './pages/Logout';
 import Demo from './pages/Demo';
+import Profile from './pages/Profile';
 
 function AppBackup() {
   return (
@@ -34,7 +35,9 @@ function AppBackup() {
 
               <Route path='/message' element={<Message/>}/>
 
-              <Route path='/admin' element={<Admin/>}/>
+              {/* <Route path='/admin' element={<Admin/>}/> */}
+
+              <Route path='/profile' element={<Profile/>}/>
 
               <Route path='/backpack' element={<Backpack/>}/>
 

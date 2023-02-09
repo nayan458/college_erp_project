@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Teacher extends Model
+class Teacher extends Authenticatable
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens, Notifiable;
+
+    protected $gaurd = 'teacher';
 
     protected $primaryKey = 'tech_id';
 
@@ -22,5 +25,15 @@ class Teacher extends Model
         'dep_id'
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     public $timestamps = false;
+
+    // done
+    function view_classes(){
+        return $this->hasManyThrough(Classe::class,Teacher::class,'tech_id','tech_id');
+    }
 }

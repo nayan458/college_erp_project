@@ -6,7 +6,6 @@ use App\Models\Assignment;
 use App\Models\Classe;
 use App\Models\Student;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,16 +14,17 @@ class StudentsController extends Controller
     /**
      * STUDENT ROLLS
      */
-    // Student view classes(pending)
-        function view_classes($student_id){
-            return DB::table('std_classes')
-                ->where('student_id','=',$student_id)
-                ->get();
+    // Student view classes
+        function view_classes($username){
+            $student_id = DB::table('students')->select('student_id')->where('username','=',$username)->first()->student_id;
+            return DB::table('std_classes')->get()->where('student_id','=',$student_id);
+            // return $student_id;
         }
 
     // Studnet view assignments
-        function view_assignment($student_id,$class_id){
+        function view_assignment($username,$class_id){
             try{
+                $student_id = DB::table('students')->select('student_id')->where('username',$username)->first()->student_id;
                 $clas_id = DB::table('std_classes')->where('student_id',$student_id)->where('classe_id',$class_id)->first()->classe_id;
             } catch(\Throwable $th){
                 return(["error"=>"404 Page not found"]);
@@ -32,8 +32,9 @@ class StudentsController extends Controller
             return Classe::with('assignment')->where('classe_id',$clas_id)->first()->assignment;
         }
     // student downloads assignment
-        function download_assignment($student_id,$class_id,$ass_id){
+        function download_assignment($username,$class_id,$ass_id){
             try{
+                $student_id = DB::table('students')->select('student_id')->where('username',$username)->first()->student_id;
                 $clas_id = DB::table('std_classes')->where('student_id',$student_id)->where('classe_id',$class_id)->first()->classe_id;
             } catch(\Throwable $th){
                 return(["error"=>"404 Page not found"]);
@@ -44,15 +45,16 @@ class StudentsController extends Controller
         }
 
     // Studnet submit assignments
-        function submit_assignment(Request $req,$student_id,$class_id){
+        function submit_assignment(Request $req,$username,$class_id){
             try {
+                $student_id = DB::table('students')->select('student_id')->where('username','=',$username)->first()->student_id;
                 $cls_id = DB::table('std_classes')->select('classe_id')->where('student_id','=',$student_id)->where('classe_id',$class_id)->first()->classe_id;
                 if(!$cls_id)
                     throw $cls_id;
             } catch (\Throwable $th) {
                 return(["error"=>"404 page don't exist"]);
             }
-            $path = 'assignment_Submitions/'.$student_id.'/'.$cls_id;
+            $path = 'assignment_Submitions/'.$username.'/'.$cls_id;
 
             $req->assignment->storeAS($path,$req->name.'.pdf');
             DB::table('assignments_subs')->insert([
@@ -67,9 +69,10 @@ class StudentsController extends Controller
     // Student submit quiz
 
     // student view classmats
-        function view_classmates($student_id,$class_id){
+        function view_classmates($username,$class_id){
             // class.std_classes.students
             try {
+                $student_id = DB::table('students')->select('student_id')->where('username','=',$username)->first()->student_id;
                 $cls_id = DB::table('std_classes')->select('classe_id')->where('student_id','=',$student_id)->where('classe_id',$class_id)->first()->classe_id;
                 if(!$cls_id)
                     throw $cls_id;
@@ -79,20 +82,11 @@ class StudentsController extends Controller
                 
             }
             // check if user belongs to requested class;
-            return DB::table('students')
+            echo DB::table('students')
             ->join('std_classes','std_classes.student_id','students.student_id')
             ->where('classe_id','=',$cls_id)
             ->get();
             
-        }
-
-        function myData(){
-            $user = Auth::user();
-            return response()->json([
-                "fname" => $user->fname,
-                "lname" => $user->lname,
-                "lable" => "student"
-            ]);
         }
         
 }

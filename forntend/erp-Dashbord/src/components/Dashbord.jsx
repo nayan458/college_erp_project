@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Bubble from './Bubble'
 import Logo from './media/svg/Logo'
-import AdminPhoto from './media/img/tonySir.png'
+import male from './media/img/maleIcon.png'
+import female from './media/img/femaleIcon.png'
 import BubbleBig from './BubbleBig'
 import UserNav from './UserNav'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import Cookies from 'universal-cookie'
 
 
 export default function Dashbord(props) {
@@ -42,6 +45,33 @@ export default function Dashbord(props) {
             icon : <i class="fa-solid fa-power-off"></i>
         },
     ]
+
+    const [user, setUser] = useState({
+        name : "",
+        lable : "",
+        gender : "male"
+    })
+
+    // useEffect(
+        const userData = async() => {
+        let cookie = new Cookies
+        let result
+        try {
+            result = await axios.get('/myData', {
+                headers: {
+                    'Authorization': 'Bearer ' + cookie.get('token')
+                }
+            })
+            setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable});
+            console.log(user);
+        } catch (error) {
+            console.log(error);
+        }}
+
+        useEffect(() => {
+        userData();
+        }, []);
+        
   return (
 
         <>
@@ -59,8 +89,8 @@ export default function Dashbord(props) {
                 </div>
             </div>
 
-            <Link to='/admin'>
-                <UserNav name="Tony Bayan" lable="Admin" img={AdminPhoto}/>
+            <Link to='/profile'>
+                <UserNav name={user.name} lable={user.lable} img={user.gender == "male" ? male : user.gender == "female" ? female : male}/>
             </Link>
             <div className="inner-nav">
             {
@@ -114,9 +144,9 @@ export default function Dashbord(props) {
                 </button>
 
             </div>
-            <Link to='/admin'>
+            <Link to='/profile'>
                 <span className="rounded-full cursor-pointer">
-                    <img className="rounded-full w-11 h-11 border-[2px] border-blue-600 md:mt-24 sm:mt-12 mt-6" src={AdminPhoto} alt="" />
+                    <img className="rounded-full w-11 h-11 border-[2px] border-blue-600 md:mt-24 sm:mt-12 mt-6" src={user.gender === "male" ? male : female} alt="" />
                 </span>
             </Link>
 

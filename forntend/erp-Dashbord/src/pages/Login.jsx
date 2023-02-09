@@ -21,21 +21,30 @@ export default function Login() {
     setFormValue({...formValue,[name]:value})
   }
 
+  let url = window.location.href
+  console.log(url)
+  let searchParams = new URLSearchParams(url.search)
+  let desiredParam = searchParams.get('login');
+  console.log(desiredParam)
+
+
   const submit =async(e)=>{
-      // try {
-        e.preventDefault()
-        // axios.defaults.withCredentials = true;
-        // await axios.get('http://localhost:8000/sanctum/csrf-cookie');
-        //   const rslt = await axios.post("/login",formValue);
-        //   cookies.set('token',rslt.data.token);
+      try {
+          e.preventDefault()
+          axios.defaults.withCredentials = true;
+          await axios.get('http://localhost:8000/sanctum/csrf-cookie');
+          const rslt = await axios.post("/studlogin",formValue);
+          if(rslt.data.user === false){
+            throw "Invalid login credentials"}
+          cookies.set('token',rslt.data.token);
           alert("loged in successfully");
           redirect('/myclass')
-      //   } catch (error) {
-      //     e.preventDefault()
-      //     if(error){
-      //       alert("Invalid login credentials");
-      //   }
-      // }
+        } catch (error) {
+          e.preventDefault()
+          if(error){
+            alert("Invalid login credentials");
+        }
+      }
   }
 
   useEffect(() => {

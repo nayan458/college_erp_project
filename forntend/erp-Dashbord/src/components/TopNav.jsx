@@ -1,13 +1,41 @@
-import React, { useState } from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import AdminPhoto from './media/img/tonySir.png'
+import Cookies from 'universal-cookie'
 import Tooltip from './Tooltip'
+import male from './media/img/maleIcon.png'
+import female from './media/img/femaleIcon.png'
 
 
 export default function TopNav() {
     const [admin_menu, setadmin_menu] = useState(false)
     const open=()=>setadmin_menu(true)
     const close=()=>setadmin_menu(false)
+
+    const [user, setUser] = useState({
+        name : "",
+        lable : "",
+        gender : "male"
+    })
+
+    const userData = async() => {
+        let cookie = new Cookies
+        let result
+        try {
+            result = await axios.get('/myData', {
+                headers: {
+                    'Authorization': 'Bearer ' + cookie.get('token')
+                }
+            })
+            setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable});
+            console.log(user);
+        } catch (error) {
+            console.log(error);
+        }}
+
+        useEffect(() => {
+        userData();
+        }, []);
 
   return (
     <>
@@ -21,11 +49,11 @@ export default function TopNav() {
             
             <div onClick={admin_menu === false ? open : close}>
                     <div className="rounded-full cursor-pointer">
-                        <img className="rounded-full w-8 h-8 border-[2px] border-blue-600 mt-0" src={AdminPhoto} alt="" />
+                        <img className="rounded-full w-8 h-8 border-[2px] border-blue-600 mt-0" src={user.gender == "male" ? male : user.gender == "female" ? female : male} alt="" />
                     </div>
                 <div className={admin_menu === true ? 'admin-menu' : 'admin-menu hide'}>
                 
-                    <Link to='/admin'>
+                    <Link to='/profile'>
                     <span className='admin-menu-btn'>Profile
                         <hr className='horizon'/>
                     </span>
@@ -35,7 +63,7 @@ export default function TopNav() {
                         <hr className='horizon'/>
                     </span>
                     </Link>
-                    <Link to='/admin'>
+                    <Link to='/logout'>
                         <span className='admin-menu-btn'>Log Out</span>
                     </Link>
                 </div>

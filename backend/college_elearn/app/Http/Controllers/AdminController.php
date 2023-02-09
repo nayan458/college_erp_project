@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Classe;
 use App\Models\Department;
 use App\Models\Student;
 use App\Models\Teacher;
-use Error;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\TryCatch;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
+    use DispatchesJobs, AuthorizesRequests, ValidatesRequests;
     /**
      * ADMIN ROLLS
      */
@@ -54,7 +58,7 @@ class AdminController extends Controller
 
         function register_teachers(Request $req){
             try {
-                $req->validate([
+                $data = $req->validate([
                     'tech_fname'=>'required|max:20',
     
                     'tech_lname'=>'required',
@@ -76,25 +80,26 @@ class AdminController extends Controller
                 $dep_id = DB::table('departments')->select('dep_id')->where('dep_name',"=",$req->department)->first();
             if(!$dep_id)
                 return(["error"=>"departmant doesnot exists"]);
-            
 
-            DB::table('teachers')->insert([
-                'tech_fname' => $req->tech_fname,
-                'tech_lname' => $req->tech_lname,
-                'email' => $req->email,
-                'username' => $req->username,
-                'password' => $req->password,
-                'location' => $req->location,
+            $teacher = Teacher::create([
+                'tech_fname' => $data['tech_fname'],
+                'tech_lname' => $data['tech_lname'],
+                'email' => $data['email'],
+                'username' => $data['username'],
+                'password' => Hash::make($data['password']),
+                'location' => $data['location'],
                 'dep_id' => $dep_id->dep_id,
             ]);
-            return(["message"=>"Registered Successfully"]);
+
+            $token = $teacher->createToken('teacher_token')->plainTextToken;
+
+            return(["message"=>"Registered Successfully","token"=>$token]);
         }
 
     // Register students
-
         function register_students(Request $req){
             try {
-                $req->validate([
+                $data = $req->validate([
                     'fname' => 'required',
                     'lname' => 'required',
                     'email' => 'required|email',
@@ -110,17 +115,21 @@ class AdminController extends Controller
                 $dep_id = DB::table('departments')->select('dep_id')->where('dep_name','=',$req->department)->first();
             if(!$dep_id)
                 return(["error"=>"department does not exists"]);
-            DB::table('students')->insert([
-                'fname' => $req->fname,
-                'lname' => $req->lname,
-                'email' => $req->email,
-                'username' => $req->username,
-                'password' => $req->password,
-                'location' => $req->location,
-                'std_semester' => $req->std_semester,
+            
+            $student = Student::create([
+                'fname' => $data['fname'],
+                'lname' => $data['lname'],
+                'email' => $data['email'],
+                'username' => $data['username'],
+                'password' => Hash::make($data['password']),
+                'location' => $data['location'],
+                'std_semester' => $data['std_semester'],
                 'dep_id' => $dep_id->dep_id,
             ]);
-            return(["message"=>"Registered Successfully"]);
+            
+            $token = $student->createToken('student_token')->plainTextToken;
+
+            return(["message"=>"Registered Successfully","token"=>$token]);
         }
 
     // view teachers
@@ -135,6 +144,11 @@ class AdminController extends Controller
             return Student::all();
         }
     
+    // view classes
+        function all_classes(){
+            return Classe::all();
+        }
+
     // Delete Teachers
 
         function delete_teachers(Request $req){
@@ -162,6 +176,35 @@ class AdminController extends Controller
             return(["message"=>"student deleted successfully"]);
         }
 
-    // Rgister or add subjects
-    // 
+    // Register Classes and asign teachers to it.
+        function register_classes(Request $req){
+            try {
+                $req->validate([
+                    'class_name' => 'required',
+                    'class_desc' => 'required',
+                    'class_semester' => 'required',
+                ]);
+            } catch (\Throwable $th) {
+                return(["error"=>"class couldnot be registered"]);
+            }
+            try {
+                DB::table('classes')->insert([
+                    'class_name' => $req->class_name,
+                    'class_desc' => $req->class_desc,
+                    'class_semester' => $req->class_semester,
+                    'tech_id' => $req->tech_id
+                ]);   
+            } catch (\Throwable $th) {
+                return(["error"=>"teacher doesnot exist"]);
+            }
+            return(["message"=>"Registered successfully"]);
+        }
+    // Add students to a class
+    function add_students_to_class(Request $request){
+        return DB::table('std_classes')->insert([
+            'classe_id' => $request->classe_id,
+            'student_id' => $request->student_id
+        ]);
+
+    }
 }

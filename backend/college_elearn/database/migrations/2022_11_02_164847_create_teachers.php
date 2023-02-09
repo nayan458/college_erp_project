@@ -17,12 +17,13 @@ return new class extends Migration
             $table->id('tech_id')->unique();
             $table->string('tech_fname')->require();
             $table->string('tech_lname')->require();
-            $table->string('email')->require();
+            $table->string('email')->require()->unique();
             $table->string('username')->unique()->require();
             $table->string('password')->require();
             $table->string('location');
             $table->uuid('dep_id')->require();
             $table->foreign('dep_id')->references('dep_id')->on('departments')->onUpdate('cascade')->onDelete('cascade');
+            $table->rememberToken();
         });
     }
 

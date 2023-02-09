@@ -7,63 +7,56 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\HasApiTokens;
 
 class AuthenticationController extends Controller
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
+    use DispatchesJobs, AuthorizesRequests, ValidatesRequests, HasApiTokens;
+    //
     // student authentication
         function studentLogin(Request $request){
             try{
-                $request->validate([
-                    "email" => "require",
+                $credentials = $request->validate([
+                    "email" => "required",
                     "password" => "required"
                 ]);
             }
             catch(\Throwable $th){
-                return response(["error" => "invalid credintials"]);
+                return response(["error" => "invalid credintials"],401);
             }
-
-            $token = Auth::attempt([
-                "email" => $request->email,
-                "password" => $request->password,
-            ]);
-
-            if($token){
-                return response()->json([
-                    'token' => $token,
-                ]);
-            }
-
-            return response()->json([
-                "error" => "invalid credintials"
-            ],401);
-
+            $student = Auth::guard('student')->attempt($credentials);
+            if(!$student)
+                return response()->json(["error"=>"invalid credentials"],401);
+            $user = Auth::guard('student')->user();
+            $token = $user->tokens()->delete();
+            $token = $user->createToken('student_token')->plainTextToken;
+            return response()->json([                
+                "user" => $student,
+                "token" => $token
+            ],200);
         }
 
     //  teachers authentication
         function teacherLogin(Request $request){
             try {
-                $request->validate([
-                    "email"=>"requires",
-                    "password"=>"requires"
+                $credentials = $request->validate([
+                    "email" => "required",
+                    "password" => "required"
                 ]);
             } catch (\Throwable $th) {
                 return response(["error" => "invalid credintials"]);
             }
-            
-            $token = Auth::attempt([
-                "email"=>$request->email,
-                "password"=>$request->password,
-            ]);
 
-            if($token){
-                return response()->json([
-                    'token' => $token
-                ],200);
-            }
+            $teacher = Auth::guard('teacher')->attempt($credentials);
+            if(!$teacher)
+                return response()->json(["error"=>"invalid credentials"],401);
+            $user = Auth::guard('teacher')->user();
+            $token = $user->tokens()->delete();
+            $token = $user->createToken('teacher_token')->plainTextToken;
+
             return response()->json([
-                "error" => "invalid credintials"
-            ],401);
+                "user" => $user,
+                "token" => $token
+            ],200);
         }
 }

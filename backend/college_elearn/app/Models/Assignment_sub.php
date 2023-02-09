@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Assignment_sub extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
 }
