@@ -54,7 +54,7 @@ export default function Dashbord(props) {
 
     // useEffect(
         const userData = async() => {
-        let cookie = new Cookies
+        let cookie = new Cookies()
         let result
         try {
             result = await axios.get('/myData', {
@@ -63,7 +63,6 @@ export default function Dashbord(props) {
                 }
             })
             setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable});
-            console.log(user);
         } catch (error) {
             console.log(error);
         }}
@@ -90,7 +89,7 @@ export default function Dashbord(props) {
             </div>
 
             <Link to='/profile'>
-                <UserNav name={user.name} lable={user.lable} img={user.gender == "male" ? male : user.gender == "female" ? female : male}/>
+                <UserNav name={user.name} lable={user.lable} img={user.gender === "male" ? male : user.gender === "female" ? female : male}/>
             </Link>
             <div className="inner-nav">
             {

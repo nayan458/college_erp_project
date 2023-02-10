@@ -19,7 +19,7 @@ export default function TopNav() {
     })
 
     const userData = async() => {
-        let cookie = new Cookies
+        let cookie = new Cookies()
         let result
         try {
             result = await axios.get('/myData', {
@@ -28,7 +28,6 @@ export default function TopNav() {
                 }
             })
             setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable});
-            console.log(user);
         } catch (error) {
             console.log(error);
         }}
@@ -49,7 +48,7 @@ export default function TopNav() {
             
             <div onClick={admin_menu === false ? open : close}>
                     <div className="rounded-full cursor-pointer">
-                        <img className="rounded-full w-8 h-8 border-[2px] border-blue-600 mt-0" src={user.gender == "male" ? male : user.gender == "female" ? female : male} alt="" />
+                        <img className="rounded-full w-8 h-8 border-[2px] border-blue-600 mt-0" src={user.gender === "male" ? male : user.gender === "female" ? female : male} alt="" />
                     </div>
                 <div className={admin_menu === true ? 'admin-menu' : 'admin-menu hide'}>
                 
