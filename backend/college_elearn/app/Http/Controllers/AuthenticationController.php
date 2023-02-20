@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Teacher;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 class AuthenticationController extends Controller
@@ -32,7 +35,9 @@ class AuthenticationController extends Controller
             $token = $user->createToken('student_token')->plainTextToken;
             return response()->json([                
                 "user" => $student,
-                "token" => $token
+                "student_id" => $user->student_id,
+                "token" => $token,
+                "label" => "student"
             ],200);
         }
 
@@ -56,7 +61,16 @@ class AuthenticationController extends Controller
 
             return response()->json([
                 "user" => $user,
-                "token" => $token
+                "student_id" => $user->tech_id,
+                "token" => $token,
+                "label" => "teacher"
             ],200);
+        }
+
+        function updatePassword(Request $request){
+            $user = Teacher::find($request->id);
+            $user->password = Hash::make($request->password);
+            $user->save();
+            return $user;
         }
 }

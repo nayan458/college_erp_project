@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('fname')->require();
             $table->string('lname')->require();
             $table->string('email')->require()->unique();
+            $table->string('gender');
             $table->string('username')->require();
             $table->string('password')->require();
             $table->string('location');

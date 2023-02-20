@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Dashbord from '../../components/Dashbord'
 import MainPage from '../../components/MainPage'
 import TopNav from '../../components/TopNav'
 import links from './Links'
 import Announcement from '../../db/AnouncementDb'
 import { Empty } from '../Backpack'
+import NodeContext from '../../contexts/NodeContext'
 
 export default function Announcements() {
+  const a = useContext(NodeContext)
   return (
     <>
     <TopNav/>
@@ -16,7 +18,7 @@ export default function Announcements() {
       :
       <Empty/>
     }/>
-    <Dashbord links={links}/>
+    <Dashbord links={a.links}/>
     </>
   )
 }

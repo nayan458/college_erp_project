@@ -19,6 +19,7 @@ class Teacher extends Authenticatable
         'tech_fname',
         'tech_lname',
         'email',
+        'gender',
         'username',
         'password',
         'location',

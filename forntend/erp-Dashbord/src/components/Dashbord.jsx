@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Bubble from './Bubble'
 import Logo from './media/svg/Logo'
 import male from './media/img/maleIcon.png'
@@ -6,8 +6,7 @@ import female from './media/img/femaleIcon.png'
 import BubbleBig from './BubbleBig'
 import UserNav from './UserNav'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
-import Cookies from 'universal-cookie'
+import NodeContext from '../contexts/NodeContext'
 
 
 export default function Dashbord(props) {
@@ -18,17 +17,19 @@ export default function Dashbord(props) {
 
     // const [ActiveLink, setActiveLink] = useState(false)
 
+    const a = useContext(NodeContext)
+
     const links = [
         {
-            to:'/myClass',
+            to:`/myClass/${a.user.student_id}`,
             name : 'My class',
             icon : <i className="fa-solid fa-users"></i>
         },
-        {
-            to:'/message',
-            name : 'Message',
-            icon : <i className="fa-solid fa-envelope"></i>
-        },
+        // {
+        //     to:'/message',
+        //     name : 'Message',
+        //     icon : <i className="fa-solid fa-envelope"></i>
+        // },
         {
             to:'/notifications',
             name : 'Notification',
@@ -46,29 +47,15 @@ export default function Dashbord(props) {
         },
     ]
 
-    const [user, setUser] = useState({
-        name : "",
-        lable : "",
-        gender : "male"
-    })
+    // const [user, setUser] = useState({
+    //     name : "",
+    //     lable : "",
+    //     gender : "male"
+    // })
 
-    // useEffect(
-        const userData = async() => {
-        let cookie = new Cookies()
-        let result
-        try {
-            result = await axios.get('/myData', {
-                headers: {
-                    'Authorization': 'Bearer ' + cookie.get('token')
-                }
-            })
-            setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable});
-        } catch (error) {
-            console.log(error);
-        }}
-
+    // const a = useContext(NodeContext);
         useEffect(() => {
-        userData();
+            a.userData();
         }, []);
         
   return (
@@ -89,7 +76,7 @@ export default function Dashbord(props) {
             </div>
 
             <Link to='/profile'>
-                <UserNav name={user.name} lable={user.lable} img={user.gender === "male" ? male : user.gender === "female" ? female : male}/>
+                <UserNav name={a.user.name} lable={a.user.lable} img={a.user.gender === "male" ? male : a.user.gender === "female" ? female : male}/>
             </Link>
             <div className="inner-nav">
             {
@@ -145,7 +132,7 @@ export default function Dashbord(props) {
             </div>
             <Link to='/profile'>
                 <span className="rounded-full cursor-pointer">
-                    <img className="rounded-full w-11 h-11 border-[2px] border-blue-600 md:mt-24 sm:mt-12 mt-6" src={user.gender === "male" ? male : female} alt="" />
+                    <img className="rounded-full w-11 h-11 border-[2px] border-blue-600 md:mt-24 sm:mt-12 mt-6" src={a.user.gender === "male" ? male : a.user.gender === "female" ? female : male} alt="" />
                 </span>
             </Link>
 

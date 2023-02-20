@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Assignment;
 use App\Models\Classe;
+use App\Models\Std_class;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,14 +16,17 @@ class StudentsController extends Controller
     /**
      * STUDENT ROLLS
      */
-    // Student view classes(pending)
-        function view_classes($student_id){
-            return DB::table('std_classes')
-                ->where('student_id','=',$student_id)
-                ->get();
-        }
+    // Student view classes(done)
+    function view_classes($student_id){
 
-    // Studnet view assignments
+                return Student::with('classes')
+                        ->where('student_id',$student_id)
+                        ->get()
+                        ->pluck('classes')
+                        ->first();
+            }
+
+    // Studnet view assignments(need Update)
         function view_assignment($student_id,$class_id){
             try{
                 $clas_id = DB::table('std_classes')->where('student_id',$student_id)->where('classe_id',$class_id)->first()->classe_id;
@@ -80,6 +84,7 @@ class StudentsController extends Controller
             }
             // check if user belongs to requested class;
             return DB::table('students')
+            ->select('fname','lname','gender')
             ->join('std_classes','std_classes.student_id','students.student_id')
             ->where('classe_id','=',$cls_id)
             ->get();
@@ -91,6 +96,7 @@ class StudentsController extends Controller
             return response()->json([
                 "fname" => $user->fname,
                 "lname" => $user->lname,
+                "student_id" => $user->student_id,
                 "lable" => "student"
             ]);
         }

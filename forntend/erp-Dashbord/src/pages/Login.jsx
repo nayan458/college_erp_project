@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import LogoDark from '../components/media/svg/LogoDark'
 import Cookies from 'universal-cookie'
 import axios from 'axios'
 import college_logo from '../components/media/img/college_logo.png'
+import NodeContext from '../contexts/NodeContext'
 
 export default function Login() {
   
@@ -14,31 +15,31 @@ export default function Login() {
   const [formValue, setFormValue] = useState({email : '',password : ''})
 
   let name,value;
-
+  const {label} = useParams()
   let upDateValues=(e)=>{
     name = e.target.name;
     value = e.target.value;
     setFormValue({...formValue,[name]:value})
   }
 
-  let url = window.location.href
-  console.log(url)
-  let searchParams = new URLSearchParams(url.search)
-  let desiredParam = searchParams.get('login');
-  console.log(desiredParam)
-
+  const a = useContext(NodeContext)
 
   const submit =async(e)=>{
       try {
           e.preventDefault()
           axios.defaults.withCredentials = true;
           await axios.get('http://localhost:8000/sanctum/csrf-cookie');
-          const rslt = await axios.post("/studlogin",formValue);
-          if(rslt.data.user === false){
-            throw "Invalid login credentials"}
+          const rslt = await axios.post(`${label}/login`,formValue);
+
+          if(rslt.data.user === false)
+            throw "Invalid login credentials"
+          
+          // a.setUser({...a.user,lable : rslt.data.label})
           cookies.set('token',rslt.data.token);
-          alert("loged in successfully");
-          redirect('/myclass')
+          a.setUser({...a.user, lable : rslt.data.label, student_id : rslt.data.student_id, gender : rslt.data.user.gender})
+          console.log(rslt);
+          alert(`${rslt.data.label} loged in successfully`);
+          redirect(`/myclass/${rslt.data.student_id}`)
         } catch (error) {
           e.preventDefault()
           if(error){
@@ -100,22 +101,22 @@ export default function Login() {
             <form className="grid gap-4 md:gap-7" onSubmit={(e)=>e.preventDefault}>
                 <input type="email" placeholder='Email' className='text-base md:text-xl font-light font-sans px-3 py-2 rounded-md outline-none border-slate-400 ' autoComplete='false' name='email' value={formValue.email} onChange={upDateValues} required/>
                 <input type="password" placeholder='Password' className='text-base md:text-xl font-light font-sans px-3 py-2 rounded-md outline-none border-slate-400 ' autoComplete='false' name='password' value={formValue.password} onChange={upDateValues} required/>
-                <div className='text-xs md:text-sm text-center'>Don't remember password?
+                {/* <div className='text-xs md:text-sm text-center'>Don't remember password?
                 <Link to='/reset' className='px-2 font-bold text-blue-600 hover:underline hover:underline-offset-2'>
                  Forgot Password
                 </Link>
-                 </div>
+                 </div> */}
                 <button className='text-base bg-green-400 rounded-md md:text-xl font-["Source Sans Pro", "sans-serif"] font-bold px-2 py-3 shadow-lg text-slate-700 outline-none border-none active:bg-green-300 active:text-slate-600' onClick={submit}>
-                    Submit
+                    Login
                 </button>
             </form>
 
 
-                <div className='text-xs md:text-sm text-center'>Don't have an account?
+                {/* <div className='text-xs md:text-sm text-center'>Don't have an account?
                 <Link to='/register' className='px-2 font-bold text-green-600 hover:underline hover:underline-offset-2 '>
                  Register Here
                 </Link>
-                 </div>
+                 </div> */}
                  
           </div>
 

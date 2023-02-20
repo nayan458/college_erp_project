@@ -1,3 +1,7 @@
+// import { useContext } from "react"
+
+// const user = useContext()
+
 const links = [
     {
       to: '/myClass',
@@ -25,7 +29,7 @@ const links = [
     //   icon : <i class="fa-solid fa-circle-arrow-down"></i>
     // },
     {
-      to:'/myClassmates',
+      to:'/myClassmates/4/1',
       name:'My Classmates',
       icon : <i className="fa-solid fa-users"></i>
     },

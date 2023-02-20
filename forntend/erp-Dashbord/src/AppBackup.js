@@ -2,7 +2,6 @@ import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import './App.css';
 
 import Message from './pages/Message';
-import Admin from './pages/Admin';
 import Backpack from './pages/Backpack';
 import Login from './pages/Login';
 import MyClass from './pages/MyClass';
@@ -24,10 +23,12 @@ import Protected from './Protected';
 import Logout from './pages/Logout';
 import Demo from './pages/Demo';
 import Profile from './pages/Profile';
+import NodeState from './contexts/NodeState';
 
 function AppBackup() {
   return (
     <>
+    <NodeState>
       <BrowserRouter>
         <Routes>
           <Route element={<Protected/>}>
@@ -41,7 +42,7 @@ function AppBackup() {
 
               <Route path='/backpack' element={<Backpack/>}/>
 
-              <Route path='/myClass' element={<MyClass/>}/>
+              <Route path='/myClass/:student' element={<MyClass/>}/>
 
               <Route path='/notifications' element={<Notifications/>}/>
 
@@ -59,7 +60,7 @@ function AppBackup() {
 
               <Route path='/downloadableMaterials' element={<DownloadableMaterials/>}/>
 
-              <Route path='/myClassmates' element={<MyClassmates/>}/>
+              <Route path='/myClassmates/:student/:classe' element={<MyClassmates/>}/>
 
               <Route path='/myProgress' element={<MyProgress/>}/>
 
@@ -74,13 +75,14 @@ function AppBackup() {
 
               <Route path='/register' element={<Register/>}/>
 
-              <Route path='/login' element={<Login/>}/>
+              <Route path='/login/:label' element={<Login/>}/>
 
               <Route path='/*' element={<Error/>}/>
 
               <Route path='/demo' element={<Demo/>}/>
         </Routes>
       </BrowserRouter>
+      </NodeState>
     </>
 
   );

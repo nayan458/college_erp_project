@@ -27,7 +27,10 @@ use Maatwebsite\Excel\Row;
 
 Route::group(['middleware' => 'auth:sanctum'],function () {
     Route::controller(StudentsController::class)->group(function(){
-        Route::get('/myData','myData');
+        Route::get('student/myData','myData');
+    });
+    Route::controller(TeachersController::class)->group(function(){
+        Route::get('teacher/myData','myData');
     });
 });;
 
@@ -157,13 +160,15 @@ Route::controller(TeachersController::class)->prefix('teacher')->group(function(
     // teacher view assignments submitions(pending)
     Route::get('assignmentSubmition','view_assignment_submition');
 
+    // Route::get('/myData','myData');
+
     // teacher grades or validates submited assignments
     
     // teacher view quiz submitions
     
     // teacher grades or validates submited quiz
 
-    Route::any('/any','getall');
+    // Route::any('/any','getall');
 });
 
 
@@ -202,28 +207,29 @@ Route::controller(TeachersController::class)->prefix('teacher')->group(function(
 */
 
 Route::controller(StudentsController::class)->prefix('student')->group(function(){
-    // Student view classes(pending)
+    // Student view classes(done)
     Route::get('/classes/{student_id}','view_classes');
 
-    // Studnet view assignments
-    // Route::get('/assignments/{$class_id}');
+    // Studnet view assignments(need schema update)
     Route::get('/viewAssignments/{student_id}/{class_id}','view_assignment');
-
-    // Student download assignment
+    // Student download assignment(done)
     Route::get('/download/{student_id}/{class_id}/{ass_id}','download_assignment');
 
-    // Studnet submit assignments
+    // Studnet submit assignments(done)
     Route::post('/submit_assignment/{student_id}/{class_id}','submit_assignment');
     // Studnet view quiz
 
     // Student submit quiz
 
-    // student view classmats
+    // student view classmats(done)
     Route::get('/classmate/{student_id}/{class_id}','view_classmates');
+
+    // Route::get('/myData','myData');
 
 });
 
 Route::controller(AuthenticationController::class)->group(function(){
-    Route::post('/studlogin','studentLogin');
-    Route::post('/teacherLogin','teacherLogin');
+    Route::post('student/login','studentLogin');
+    Route::post('teacher/login','teacherLogin');
+    Route::post('/updatePassword','updatePassword');
 });

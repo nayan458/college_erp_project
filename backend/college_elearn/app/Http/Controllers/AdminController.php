@@ -64,6 +64,8 @@ class AdminController extends Controller
                     'tech_lname'=>'required',
     
                     'email'=>'required|email',
+                    
+                    'gender'=>'required',
     
                     'username'=>'required',
     
@@ -85,6 +87,7 @@ class AdminController extends Controller
                 'tech_fname' => $data['tech_fname'],
                 'tech_lname' => $data['tech_lname'],
                 'email' => $data['email'],
+                'gender' => $data['gender'],
                 'username' => $data['username'],
                 'password' => Hash::make($data['password']),
                 'location' => $data['location'],
@@ -103,6 +106,7 @@ class AdminController extends Controller
                     'fname' => 'required',
                     'lname' => 'required',
                     'email' => 'required|email',
+                    'gender' => 'required',
                     'username' => 'required|unique:students',
                     'password' => 'required',
                     'location' => 'required',
@@ -120,6 +124,7 @@ class AdminController extends Controller
                 'fname' => $data['fname'],
                 'lname' => $data['lname'],
                 'email' => $data['email'],
+                'gender' => $data['gender'],
                 'username' => $data['username'],
                 'password' => Hash::make($data['password']),
                 'location' => $data['location'],

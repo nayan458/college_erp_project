@@ -19,6 +19,7 @@ class Student extends Authenticatable
         'fname',
         'lname',
         'email',
+        'gender',
         'password',
         'username',
         'location',
@@ -33,18 +34,9 @@ class Student extends Authenticatable
 
     public $timestamps = false;
 
-    // one student can be registered to many classes
-    public function Std_class(){
-        return $this->hasMany(Std_class::class,'student_id','student_id');
-    }
-
-    public function student()
-    {
-        return $this->belongsTo(Student::class);
-    }
-
+    // done
     public function classes()
     {
-        return $this->belongsTo(Classes::class);
+        return $this->belongsToMany(Classe::class,'std_classes','student_id','classe_id');
     }
 }

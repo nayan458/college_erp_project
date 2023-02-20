@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Classe;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class TeachersController extends Controller
 {
@@ -64,7 +66,7 @@ class TeachersController extends Controller
         function view_student_class($class_id){
 
             return DB::table('students')
-                ->select(['fname','lname','email','location','std_semester'])
+                ->select(['fname','lname','email','gender','location','std_semester'])
                 ->join('std_classes','std_classes.student_id','=','students.student_id')
                 ->where('std_classes.classe_id','=',$class_id)
                 ->get(); 
@@ -92,5 +94,27 @@ class TeachersController extends Controller
     // test any api
         function getall(Request $req){
             return DB::table($req->table)->get();
+        }
+
+        function myData(){
+            // return $token->name;
+            // if($token->tokenable_type == 'App\Model\Teacher') {
+                $user = Auth::user();
+                return response()->json([
+                    "fname" => $user->tech_fname,
+                    "lname" => $user->tech_lname,
+                    "student_id" => $user->tech_id,
+                    "lable" => "teacher"
+                ]);
+            // } else {
+            //     $user = Auth::user();
+            //     return response()->json([
+            //         "fname" => $user->fname,
+            //         "lname" => $user->lname,
+            //         "student_id" => $user->student_id,
+            //         "lable" => "student"
+            //     ]);
+            // }
+
         }
 }

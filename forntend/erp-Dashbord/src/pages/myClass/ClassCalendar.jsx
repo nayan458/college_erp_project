@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Calendar from '../../components/Calendar'
 import Dashbord from '../../components/Dashbord'
 import MainPage from '../../components/MainPage'
 import TopNav from '../../components/TopNav'
+import NodeContext from '../../contexts/NodeContext'
 import links from './Links'
 
 export default function ClassCalendar() {
+  const a = useContext(NodeContext)
   return (
     <>
       <TopNav/>
       <MainPage comp={<Calendar/>} />
-      <Dashbord links={links}/>
+      <Dashbord links={a.links}/>
     </>
   )
 }
