@@ -43,7 +43,7 @@ class StudentsController extends Controller
                 return(["error"=>"404 Page not found"]);
             }
             $query = DB::table('assignments')->select('ass_desc')->where('assignment_id',$ass_id)->first();
-            $path = $query->ass_desc;
+            $path = $query->ass_filelocation;
             return Storage::download($path);
         }
 
@@ -57,14 +57,14 @@ class StudentsController extends Controller
                 return(["error"=>"404 page don't exist"]);
             }
             $path = 'assignment_Submitions/'.$student_id.'/'.$cls_id;
-
             $req->assignment->storeAS($path,$req->name.'.pdf');
             DB::table('assignments_subs')->insert([
                 'assignment_id'=>$req->ass_id,
+                'ass_sub_filelocation' => $path.'/'.$req->name.'.pdf',
                 'student_id'=>$student_id,
                 'status'=>'submitted',
             ]);
-            return (["success"]);
+            return response()->json(["path" => $req->file('assignment')->isValid()],200);
         }
     // Studnet view quiz
 

@@ -6,6 +6,7 @@ use App\Exports\UsersExport;
 use App\Models\Classe;
 use Illuminate\Http\Request;
 use App\Models\Department;
+use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -75,4 +76,30 @@ class testControllerAll extends Controller
     public function collection(){
         return Excel::download(new UsersExport,'hello.xlsx');
     }
+
+    public function getassignment($clas_id){
+        // $output1 = Classe::with('assignment')->where('classe_id',$req->clas_)->first()->assignment;
+        // $output2 = DB::table('assignments_subs')->where('student_id',1)->get();
+        // $output = $output1->join($output2, 'assignments_subs.assignment_id', '=','assignments.assignment_id')->get();
+        $output = DB::table('assignments')
+                    ->where('classe_id',$clas_id)
+                    ->where('student_id',1)
+                    // ->first()->assignment
+                    ->join('assignments_subs','assignments.assignment_id','=','assignments_subs.assignment_id')
+                    
+                    ->get();
+        // $output = $output1->join();
+        echo $output;
+        // return Student::with('assignments')->get();
+    }
 }
+
+// assignments_subs.assignment_id
+// {
+//     "assignment_id":8,
+//     "ass_name":"adhar4",
+//     "ass_desc":"adhar4",
+//     "ass_filelocation":"assignments\/1\/1\/adhar4.pdf",
+//     "classe_id":1,
+//     "uploaded_at":"2023-02-2319:41:59"
+// }

@@ -9,6 +9,10 @@ export default function Logout() {
     useEffect(() => {
         let cookie = new Cookies()
         cookie.remove('token');
+        cookie.remove('name');
+        cookie.remove('gender');
+        cookie.remove('lable');
+        cookie.remove('student_id');
         redirect(`/login/${a.user.lable}`)
     }, [])
     

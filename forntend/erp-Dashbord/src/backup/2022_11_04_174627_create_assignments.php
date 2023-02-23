@@ -17,9 +17,8 @@ return new class extends Migration
             $table->id('assignment_id')->unique();
             $table->string('ass_name');
             $table->string('ass_desc');
-            $table->string('ass_filelocation');
+            // $table->string('ass_filelocation');
             $table->bigInteger('classe_id')->unsigned();
-            $table->timestamp('uploaded_at');
             $table->foreign('classe_id')->references('classe_id')->on('classes')->onUpdate('cascade')->onDelete('cascade');
         });
     }

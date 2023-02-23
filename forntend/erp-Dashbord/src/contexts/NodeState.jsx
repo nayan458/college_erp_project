@@ -18,6 +18,10 @@ export default function NodeState(props) {
 
   // to get user details
     const [user, setUser] = useState({
+        // "name" : cookie.get('name'),
+        // "lable" : cookie.get('lable'),
+        // "student_id" : cookie.get('student_id'),
+        // "gender" : cookie.get('gender')
         "name" : "",
         "lable" : "",
         "student_id" : "",
@@ -32,8 +36,11 @@ export default function NodeState(props) {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 }
             })
+            cookie.set('name',result.data.fname + " " + result.data.lname)
+            cookie.set('lable',result.data.lable)
+            cookie.set('student_id',result.data.student_id)
             setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable, student_id : result.data.student_id});
-            // console.log(user);
+            console.log(user);
         } catch (error) {
             console.log(error);
         }}
@@ -113,12 +120,11 @@ export default function NodeState(props) {
     const changeActiveClass=(class_id)=>{
       setActiveClass(class_id);
     }
-    
 
     // useEffect(() => {
-        // userData()
-        // getClasses()
-      // }, [])
+    //   userData()
+    //   getClasses()
+    // }, [])
     
     return (
         <NodeContext.Provider value={{user,setUser,userData,myClasses,getClasses,links,ActiveClass,setActiveClass}}>

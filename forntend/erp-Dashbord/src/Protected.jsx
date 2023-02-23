@@ -7,9 +7,9 @@ function Protected() {
     useEffect(() => {
         let cookie = new Cookies();
         if(cookie.get('token'))
-        setauth(true)
+            setauth(true)
         else
-        setauth(false)
+            setauth(false)
     }, [])
     
     return(

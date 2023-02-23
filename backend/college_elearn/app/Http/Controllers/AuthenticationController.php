@@ -34,7 +34,7 @@ class AuthenticationController extends Controller
             $token = $user->tokens()->delete();
             $token = $user->createToken('student_token')->plainTextToken;
             return response()->json([                
-                "user" => $student,
+                "user" => $user,
                 "student_id" => $user->student_id,
                 "token" => $token,
                 "label" => "student"

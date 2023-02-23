@@ -14,7 +14,9 @@ class Assignment extends Model
     protected $fillable = [
         'ass_name',
         'ass_desc',
+        'uploaded_at',
+        'ass_filelocation'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 }

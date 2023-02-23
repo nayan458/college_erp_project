@@ -16,8 +16,6 @@ return new class extends Migration
         Schema::create('assignments_subs', function (Blueprint $table) {
             $table->bigInteger('assignment_id')->unsigned();
             $table->bigInteger('student_id')->unsigned();
-            $table->string('ass_sub_filelocation');
-            $table->timestamp('uploaded_at');
 
             $table->foreign('assignment_id')->references('assignment_id')->on('assignments')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('student_id')->references('student_id')->on('students')->onUpdate('cascade')->onDelete('cascade');

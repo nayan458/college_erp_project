@@ -24,6 +24,7 @@ import Logout from './pages/Logout';
 import Demo from './pages/Demo';
 import Profile from './pages/Profile';
 import NodeState from './contexts/NodeState';
+import File from './components/File';
 
 function AppBackup() {
   return (
@@ -31,7 +32,7 @@ function AppBackup() {
     <NodeState>
       <BrowserRouter>
         <Routes>
-          <Route element={<Protected/>}>
+          {/* <Route element={<Protected/>}> */}
               <Route path='/' element={<Message/>}/>
 
               <Route path='/message' element={<Message/>}/>
@@ -55,6 +56,7 @@ function AppBackup() {
               <Route path='/announcements' element={<Announcements/>}/>
 
               <Route path='/assignments' element={<Assignments/>}/>
+              <Route path='/files' element={<File/>}/>
 
               <Route path='/classCalendar' element={<ClassCalendar/>}/>
 
@@ -70,7 +72,7 @@ function AppBackup() {
 
               <Route path='/logout' element={<Logout/>}/>
 
-          </Route>
+          {/* </Route> */}
 
 
               <Route path='/register' element={<Register/>}/>

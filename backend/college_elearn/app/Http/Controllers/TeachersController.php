@@ -39,15 +39,17 @@ class TeachersController extends Controller
                 return(["error"=>"class doesnot exists"]);
             }
             $path = 'assignments/'.$tech_id.'/'.$clas_id;
-            $rslt = $request->assignment->storeAS($path,$request->ass_name.'.pdf');
+            $rslt = $request->assignment->storeAS($path,$request->name.'.pdf');
             DB::table('assignments')->insert([
-                'ass_name' => $request->ass_name,
-                'ass_desc' => $path.'/'.$request->ass_name.'.pdf',
+                'ass_name' => $request->name,
+                'ass_desc' => $request->desc,
+                'ass_filelocation' => $path.'/'.$request->name.'.pdf',
                 'classe_id' => $clas_id
             ]);
                 // $rslt = $path.'/'.$req->ass_name.'.pdf';
             // return(["success"=>]);
             return(["success"=>$rslt]);
+            // return(["ass_name"=>$request->name,"ass_desc" => $request->desc]);
         }
 
     // teacher view classes(done)

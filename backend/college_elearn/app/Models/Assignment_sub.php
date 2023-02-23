@@ -9,5 +9,12 @@ class Assignment_sub extends Model
 {
     use HasFactory;
 
-    public $timestamps = false;
+    protected $fillable = [
+        'assignment_id',
+        'student_id',
+        'ass_sub_filelocation',
+        'status'
+    ];
+
+    // public $timestamps = false;
 }

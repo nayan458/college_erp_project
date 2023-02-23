@@ -39,4 +39,9 @@ class Student extends Authenticatable
     {
         return $this->belongsToMany(Classe::class,'std_classes','student_id','classe_id');
     }
+
+    // on progress
+    // public function assignments(){
+    //     return $this->belongsToMany(Assignment::class,'assignments_subs','student_id','assignment_id');
+    // }
 }

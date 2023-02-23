@@ -36,6 +36,7 @@ export default function TopNav() {
     //     }}
 
         useEffect(() => {
+            console.log("a.userData is called")
             a.userData();
         }, []);
 

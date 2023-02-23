@@ -36,6 +36,7 @@ export default function Login() {
           
           // a.setUser({...a.user,lable : rslt.data.label})
           cookies.set('token',rslt.data.token);
+          cookies.set('gender',rslt.data.user.gender);
           a.setUser({...a.user, lable : rslt.data.label, student_id : rslt.data.student_id, gender : rslt.data.user.gender})
           console.log(rslt);
           alert(`${rslt.data.label} loged in successfully`);

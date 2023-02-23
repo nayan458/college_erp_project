@@ -46,6 +46,8 @@ Route::controller(testControllerAll::class)->group(function(){
 
     Route::post('/user','put_user');
     Route::get('/export','collection');
+
+    Route::get('/asi/{clas_id}','getassignment');
 });
 
 
@@ -155,7 +157,7 @@ Route::controller(TeachersController::class)->prefix('teacher')->group(function(
     Route::get('/viewAssignments/{tech_id}/{class_id}','view_assignment');
 
     // teacher add assignments
-    Route::post('/addAssignment/{username}/{class_id}','add_assignment');
+    Route::post('/submit_assignment/{tech_id}/{class_id}','add_assignment');
 
     // teacher view assignments submitions(pending)
     Route::get('assignmentSubmition','view_assignment_submition');

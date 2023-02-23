@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { SubmitionData } from '../db/AnouncementDb'
 import NodeContext from '../contexts/NodeContext'
 import Cookies from 'universal-cookie'
-import axios, { Axios } from 'axios'
+import axios from 'axios'
 import fileDownload from 'js-file-download'
 import { Empty } from '../pages/Backpack'
 import { ClipLoader } from 'react-spinners'
@@ -63,33 +63,56 @@ export default function Assignment() {
     const [assignmentSubmitionData, setAssignmentSubmitionData] = useState({
         assignment : null,
         name : "Hello",
-        ass_id : ""
+        ass_id : "",
+        desc : ""
     })
 
     let name, value
+
     const updateHandeler=(e)=>{
         name = e.target.name
         value = e.target.value
         setAssignmentSubmitionData({...assignmentSubmitionData,[name] : value})
-        console.log(assignmentSubmitionData)
+        // console.log(assignmentSubmitionData)
     }
 
-    const submitAssignment=(e)=>{
+    const fileHandeler= file =>{
+        setAssignmentSubmitionData({...assignmentSubmitionData, assignment : file[0]})
+        // console.log(assignmentSubmitionData);
+    }
+
+
+    const submitAssignment=async(e)=>{
         e.preventDefault()
         let cookie = new Cookies()
-        axios.post(`${a.user.lable}/submit_assignment/${a.user.student_id}/${a.ActiveClass}`,assignmentSubmitionData,
-        {
-            headers : {
-                'Authorizations' : 'Bearer' + cookie.get('token')
-              }
-        }).then(()=>{
+        let formdata = new FormData()
+        formdata.append('assignment',assignmentSubmitionData.assignment);
+        formdata.append('name',assignmentSubmitionData.name);
+        formdata.append('ass_id',assignmentSubmitionData.ass_id);
+        formdata.append('desc',assignmentSubmitionData.desc);
+        let boundary = `--${Date.now()}`;
+        try{
+            let result = await axios.post(`${a.user.lable}/submit_assignment/${a.user.student_id}/${a.ActiveClass}`,
+            formdata,
+            {
+                headers : {
+                    'Content-Type': `multipart/form-data; boundary=${boundary}`,
+                    'Authorizations' : 'Bearer' + cookie.get('token')
+                }
+            })
+            setLoder(true)
+            getAssignments()
             alert("assignment submited successfully")
-        })
+            // console.log(result);
+            close()
+        }catch(err){
+            console.log(err);
+        }
     }
     const open=(elem)=>{
         setuploadEditor(true)
         setAssignmentSubmitionData({...assignmentSubmitionData,ass_id : elem.assignment_id})
-        console.log(assignmentSubmitionData)
+        // console.log(assignmentSubmitionData)
     }
     useEffect(() => {
         setLoder(true)
@@ -140,7 +163,7 @@ export default function Assignment() {
                     assignments.map((elem)=>{
                     return(
                         <>
-                            <div className='truncate'>{elem.assignment_id}</div>
+                            <div className='truncate'>{elem.uploaded_at}</div>
                             <div className='truncate'>{elem.ass_name}</div>
                             <div className='truncate'>{elem.ass_desc}</div>
                             <div className='flex text-slate-50 font-semibold gap-2'>
@@ -194,14 +217,18 @@ export default function Assignment() {
                     File
                 </div>
                 <div>
-                        <input type="file" className='truncate' value={assignmentSubmitionData.assignment} name='assignment' onChange={updateHandeler}/>
+                        <input type="file" className='truncate' name='assignment' onChange={e => fileHandeler(e.target.files)}/>
                 </div>
                 <div>
                     <input placeholder='File Name' name='name' className='mail-inputs' type="text" value={assignmentSubmitionData.name} onChange={updateHandeler}/>
                 </div>
+                {a.user.lable === 'teacher' ? 
                 <div>
-                    <input placeholder='Descriptioin' name='desc' className='mail-inputs' type="text" value=""/>
+                    <input placeholder='Descriptioin' name='desc' className='mail-inputs' type="text" value={assignmentSubmitionData.desc} onChange={updateHandeler}/>
                 </div>
+                :
+                <></>
+                }
                 <div>
                     <button className='bg-green-600 text-slate-50 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center font-semibold' onClick={(e)=>submitAssignment(e)}><i class="fa-solid fa-upload"></i>Submit</button>
                 </div>
@@ -252,3 +279,7 @@ function Submitions(){
         </>
     )
 }
+
+
+
+// "SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`college_elearn`.`assignments_subs`, CONSTRAINT `assignments_subs_assignment_id_foreign` FOREIGN KEY (`assignment_id`) REFERENCES `assignments` (`assignment_id`) ON DELETE CASCADE ON UPDATE CA) (SQL: insert into `assignments_subs` (`assignment_id`, `ass_sub_filelocation`, `student_id`, `status`) values (3, assignment_Submitions/1/1/usajkjank.pdf, 1, submitted))"
