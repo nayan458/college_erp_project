@@ -77,20 +77,63 @@ class testControllerAll extends Controller
         return Excel::download(new UsersExport,'hello.xlsx');
     }
 
-    public function getassignment($clas_id){
+    public function getassignment($student_id,$class_id){
+        // $result = Student::with('assignments')->where('student_id',$class_id)->first()->assignments;
+        // $result = Student::with('assignments')->where('student_id',$class_id)->first()->assignments;
+        $result = DB::table('assignments_subs')
+                ->where('student_id',$student_id)
+                ->join('assignments','assignments_subs.assignment_id','assignments.assignment_id')
+                ->get();
+        $query = DB::table('assignments')
+            ->where('classe_id',$class_id)
+            ->whereNotExists(function($query){
+                $query->select(DB::raw(1))
+                ->from('assignments_subs')
+                ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
+            })
+            ->get()
+            ;
+        // echo $result;
+        // echo $query;
+        return response()->json([
+            "pending" => $query,
+            "submited" => $result
+        ],200);
         // $output1 = Classe::with('assignment')->where('classe_id',$req->clas_)->first()->assignment;
         // $output2 = DB::table('assignments_subs')->where('student_id',1)->get();
         // $output = $output1->join($output2, 'assignments_subs.assignment_id', '=','assignments.assignment_id')->get();
-        $output = DB::table('assignments')
-                    ->where('classe_id',$clas_id)
-                    ->where('student_id',1)
-                    // ->first()->assignment
-                    ->join('assignments_subs','assignments.assignment_id','=','assignments_subs.assignment_id')
+        // $output = DB::table('assignments')
+        //             ->where('classe_id',$class_id)
+        //             ->where('student_id',1)
+        //             // ->first()->assignment
+        //             ->join('assignments_subs','assignments.assignment_id','=','assignments_subs.assignment_id')
                     
-                    ->get();
+        //             ->get();
         // $output = $output1->join();
-        echo $output;
+        // $result = DB::table('assignments AS a')
+        //     ->leftJoin('assignments_subs AS s', 'a.assignment_id', '=', 's.assignment_id')
+        //     ->where('student_id',$class_id)
+        //     // ->select('a.assignment_id', 'a.ass_name', 's.status')
+        //     // ->whereNull('s.status')
+        //     ->get();
+        // $query = DB::table('assignments')
+        //     // ->select('assignment_id')
+        //     ->whereNotExists(function($query){
+        //         $query->select(DB::raw(1))
+        //         ->from('assignments_subs')
+        //         ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
+        //     })
+        //     ->where('classe_id',$class_id)
+        //     ->get()
+        //     ;
+        // echo $query;
+        // $result = DB::table('assignments')->whereNotExists($query);
+        // echo array_column($query,'assignment_id');
+        // echo $result;
         // return Student::with('assignments')->get();
+        // echo DB::table('assignments')->select('assignments.*')->whereNotExists(function($query){
+        //     DB::table('assignments_subs')->where('student_id',1)->get();
+        // });
     }
 }
 

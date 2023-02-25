@@ -41,7 +41,7 @@ class Student extends Authenticatable
     }
 
     // on progress
-    // public function assignments(){
-    //     return $this->belongsToMany(Assignment::class,'assignments_subs','student_id','assignment_id');
-    // }
+    public function assignments(){
+        return $this->belongsToMany(Assignment::class,'assignments_subs','student_id','assignment_id');
+    }
 }

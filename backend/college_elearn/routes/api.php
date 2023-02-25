@@ -47,7 +47,7 @@ Route::controller(testControllerAll::class)->group(function(){
     Route::post('/user','put_user');
     Route::get('/export','collection');
 
-    Route::get('/asi/{clas_id}','getassignment');
+    Route::get('/asi/{student_id}/{clas_id}','getassignment');
 });
 
 

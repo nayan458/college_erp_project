@@ -36,7 +36,7 @@ export default function NodeState(props) {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 }
             })
-            cookie.set('name',result.data.fname + " " + result.data.lname)
+            cookie.set('name',result.data.fname + " " + result.data.lname,{path : '/login/student'})
             cookie.set('lable',result.data.lable)
             cookie.set('student_id',result.data.student_id)
             setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable, student_id : result.data.student_id});
