@@ -13,41 +13,33 @@ export default function ClassRoom() {
     <>
       <div className='w-full h-full col-span-4 bg-slate-100/75  flex flex-col align-middle items-center overflow-y-auto'>
 
-      <div className='w-full flex p-5 gap-5 flex-wrap justify-center'>
-        {
-          
-          a.myClasses.map(elem=>{
-          return(
-            <>
-            <Link to={`/myClassmates/${a.user.student_id}/${elem.classe_id}`}>
-              <div className='w-auto h-auto bg-green-300 p-2 rounded-md'>
-                <div className='flex'>
-                  {/* <img src={elem.img} className='rounded-full w-20 h-20 border-[4px] border-green-200 ' alt='img'></img> */}
-                  <div className='p-2'>
-                    <p className='font-[Righteous] text-sm'>{elem.class_name}</p>
-                    <p className='text-[.8rem]'>
-                      {/* {elem.title} */}
-                      class desc {elem.class_desc}
-                    </p>
+      
+        <div className='grid w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 text-slate-800 rounded-md font-normal items-center'>
+          <div className='p-5 font-bold text-slate-500'>
+            Your Classes
+          </div>
+          {
+            a.myClasses.map(elem=>{
+            return(
+              <>
+              <Link to={`/myClassmates/${a.user.student_id}/${elem.classe_id}`} className='truncate shadow-sm'>
+                <div className=' bg-slate-100 hover:bg-slate-200 p-2 rounded-md transform duration-75 ease-linear truncate'>
+                  <div className='truncate'>
+                    <div className='py-2 pl-2'>
+                      <p className='font-[Righteous] text-sm truncate'>{elem.class_name}</p>
+                      <p className='text-[.8rem] truncate'>
+                        {elem.class_desc}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-            </>
-          )
-        })
-        }
-        {/* <div className='w-auto h-auto bg-blue-200 p-2 rounded-md'>
-              <div className='flex'>
-                <div className='p-2'>
-                  <p className='font-[Righteous] text-sm'>Create a new class</p>
-                  <p className='text-[.8rem] text-center '>
-                    +
-                  </p>
-                </div>
-              </div>
-            </div> */}
-      </div>
+              </Link>
+              </>
+            )
+          })
+          }
+          
+        </div>
 
       </div>
     </>

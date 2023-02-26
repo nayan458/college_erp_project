@@ -22,13 +22,13 @@ export default function Student() {
         if(a.user.lable === "student")
             result = axios.get(`student/classmate/${student}/${classe}`,{
                 headers : {
-                    'Authorizations' : 'Bearer' + cookie.get('token')
+                    'Authorization': 'Bearer ' + cookie.get('token')
                 }
             })
         else{
             result = axios.get(`teacher/classStudents/${classe}`,{
                 headers : {
-                    'Authorizations' : 'Bearer' + cookie.get('token')
+                    'Authorization': 'Bearer ' + cookie.get('token')
                 }
             })
 

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assignments_sub;
 use App\Models\Classe;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class TeachersController extends Controller
@@ -27,7 +29,6 @@ class TeachersController extends Controller
      * TEACHER'S ROLLS, FUNCTIONALITIES
      */
 
-    // teacher add students
     // teacher add assignments(done)
 
         function add_assignment(Request $request,$tech_id,$class_id){
@@ -50,6 +51,15 @@ class TeachersController extends Controller
             // return(["success"=>]);
             return(["success"=>$rslt]);
             // return(["ass_name"=>$request->name,"ass_desc" => $request->desc]);
+        }
+    
+    // teacher download added assignment(done)
+        
+        function download_assignment($tech_id,$class_id,$ass_id){
+
+            $query = DB::table('assignments')->select('ass_filelocation')->where('assignment_id',$ass_id)->first();
+            $path = $query->ass_filelocation;
+            return Storage::download($path);
         }
 
     // teacher view classes(done)
@@ -86,21 +96,44 @@ class TeachersController extends Controller
             }
             return Classe::with('assignment')->where('classe_id',$clas_id)->first()->assignment;
         }
-    // teacher view assignments submitions(pending)
+    // teacher view assignments submitions(done)
         function view_assignment_submition($ass_id,){
-            echo Classe::with('assignment_submition')->get();
-        }
-    // teacher view quiz submitions    
-    // teacher grades or validates submited assignments
-    // teacher grades or validates submited quiz
-    // test any api
-        function getall(Request $req){
-            return DB::table($req->table)->get();
+
+            $result = Assignments_sub::with('assignments')
+            ->where('assignment_id',$ass_id)
+            ->get();
+    
+            return response()->json(["submissions"=>$result],200);
         }
 
+    // download student submission for review    
+        function download_student_assignment_submissions($student_id,$ass_id){
+            
+            $query = DB::table('assignments_subs')->select('ass_sub_filelocation')->where('assignment_id',$ass_id)->where('student_id',$student_id)->first();
+            $path = $query->ass_sub_filelocation;
+            return Storage::download($path);
+
+        }
+
+    // teacher grades or validates submited assignments
+        function assignment_status(Request $requset){
+            try{
+                $result = DB::table('assignments_subs')->where('assignment_id',$requset->assignment_id)->where('student_id',$requset->student_id)->update(['status' => $requset->status]);
+            }catch(\Throwable $th){
+                return response(["error"=>"invalid"]);
+            }
+            return $result;
+        }
+
+    // Delete assignment
+        function deleteAssignment($assignment_id){
+            $result = DB::table('assignments')->where('assignment_id',$assignment_id)->delete();
+            return response()->json(["message" => "ok"]);
+        }        
+
+    // return user detail if authenticated
         function myData(){
-            // return $token->name;
-            // if($token->tokenable_type == 'App\Model\Teacher') {
+
                 $user = Auth::user();
                 return response()->json([
                     "fname" => $user->tech_fname,
@@ -108,15 +141,6 @@ class TeachersController extends Controller
                     "student_id" => $user->tech_id,
                     "lable" => "teacher"
                 ]);
-            // } else {
-            //     $user = Auth::user();
-            //     return response()->json([
-            //         "fname" => $user->fname,
-            //         "lname" => $user->lname,
-            //         "student_id" => $user->student_id,
-            //         "lable" => "student"
-            //     ]);
-            // }
 
         }
 }

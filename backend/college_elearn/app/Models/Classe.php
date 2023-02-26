@@ -18,10 +18,10 @@ class Classe extends Model
 
     public $timestamps = false;
 
-    public function students(){
-        // return $this->hasMany(Student::class,'classe_id','classe_id');
-        return $this->hasManyThrough(Student::class,Std_class::class);
-    }
+    // public function students(){
+    //     // return $this->hasMany(Student::class,'classe_id','classe_id');
+    //     return $this->hasManyThrough(Student::class,Std_class::class);
+    // }
 
     // public function teachers(){
     //     return $this->belongsTo(Teacher::class,'tech_id','tech_id');
@@ -30,9 +30,5 @@ class Classe extends Model
     // done
     public function assignment(){
         return $this->hasMany(Assignment::class,'classe_id','classe_id');
-    }
-
-    public function assignment_submition(){
-        return $this->hasManyThrough(Assignment_sub::class,Assignment::class,'assignment_id','assignment_id');
     }
 }

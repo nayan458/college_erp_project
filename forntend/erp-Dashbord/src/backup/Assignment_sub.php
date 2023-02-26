@@ -17,7 +17,12 @@ class Assignment_sub extends Model
     ];
 
     // public $timestamps = false;
+    // public function assignments(){
+    //     return $this->hasMany(Assignments::class,'assignment_id','assignment_id');
+    // }
+    
     public function assignments(){
-        return $this->hasMany(Assignments::class,'assignment_id','assignment_id');
+        return $this->hasMany(Student::class,'student_id','student_id');
     }
+
 }

@@ -40,7 +40,7 @@ export default function NodeState(props) {
             cookie.set('lable',result.data.lable)
             cookie.set('student_id',result.data.student_id)
             setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable, student_id : result.data.student_id});
-            console.log(user);
+            // console.log(user);
         } catch (error) {
             console.log(error);
         }}
@@ -51,11 +51,12 @@ export default function NodeState(props) {
         try{
             result = axios.get(`${user.lable}/classes/${user.student_id}`,{
                 headers : {
-                  'Authorizations' : 'Bearer' + cookie.get('token')
+                    'Authorization': 'Bearer ' + cookie.get('token')
                 }
             })
             setMyClasses((await result).data)
             // console.log(`Hello : ${myClasses}`)
+            
         }catch(error){
             // console.log(error);
         }

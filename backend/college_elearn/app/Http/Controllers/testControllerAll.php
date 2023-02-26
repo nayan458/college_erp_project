@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\UsersExport;
+use App\Models\Assignment;
+use App\Models\Assignments_sub;
 use App\Models\Classe;
 use Illuminate\Http\Request;
 use App\Models\Department;
@@ -10,6 +12,7 @@ use App\Models\Student;
 use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class testControllerAll extends Controller
@@ -134,6 +137,40 @@ class testControllerAll extends Controller
         // echo DB::table('assignments')->select('assignments.*')->whereNotExists(function($query){
         //     DB::table('assignments_subs')->where('student_id',1)->get();
         // });
+    }
+
+    public function getAssignmentSubmissions($ass_id){
+
+        $result = Assignments_sub::with('assignments')
+        ->where('assignment_id',$ass_id)
+        ->get();
+
+        return response()->json(["submissions"=>$result],200);
+    }
+
+    function download_student_assignment_submissions($student_id,$ass_id){
+        // try{
+        //     $clas_id = DB::table('std_classes')->where('student_id',$student_id)->where('classe_id',$class_id)->first()->classe_id;
+        // } catch(\Throwable $th){
+        //     return(["error"=>"404 Page not found"]);
+        // }
+        $query = DB::table('assignments_subs')->where('assignment_id',$ass_id)->where('student_id',$student_id)->first();
+        $path = $query->ass_sub_filelocation;
+        return Storage::download($path);
+        // echo $query;
+    }
+    function assignment_status(Request $requset){
+        try{
+            $result = DB::table('assignments_subs')->where('assignment_id',$requset->assignment_id)->where('student_id',$requset->student_id)->update(['status' => $requset->status]);
+        }catch(\Throwable $th){
+            return response(["error"=>"invalid"]);
+        }
+        return $result;
+    }
+
+    function deleteAssignment($assignment_id){
+        $result = DB::table('assignments')->where('assignment_id',$assignment_id)->delete();
+        return response()->json(["message" => "ok"]);
     }
 }
 

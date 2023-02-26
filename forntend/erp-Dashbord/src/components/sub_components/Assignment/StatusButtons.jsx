@@ -6,7 +6,7 @@ export default function StatusButtons({status}) {
         {
             status === 'submitted' ?
             <div className='text-slate-500'>submitted</div>
-            : status === 'aproved'?
+            : status === 'approve'?
             <div className='text-green-500'>approved</div>
             : status === 'rejected'?
             <div className='text-red-500'>rejected</div>

@@ -11,14 +11,8 @@ import StatusButtons from './StatusButtons'
 export default function StudentAssignment() {
     const [uploadEditor, setuploadEditor] = useState(false)
     const [loder, setLoder] = useState(true)
-    // const open=()=>{
-    //     setuploadEditor(true)
-    // }
+    
     const close=()=>setuploadEditor(false)
-
-    const [SubmitionDashbord, setSubmitionDashbord] = useState(false)
-    const open_sub=()=> setSubmitionDashbord(true)
-    const close_sub=()=> setSubmitionDashbord(false)
 
     // to get assignments
     const [assignments, setassignments] = useState([])
@@ -30,10 +24,10 @@ export default function StudentAssignment() {
       let result
       try{
         let cookie = new Cookies();  
-        // result = axios.get(`student/viewAssignments/${a.user.student_id}/${a.ActiveClass}`,{
-        result = axios.get(`/asi/${a.user.student_id}/${a.ActiveClass}`,{
+        // result = axios.get(`/asi/${a.user.student_id}/${a.ActiveClass}`,{
+        result = axios.get(`student/viewAssignments/${a.user.student_id}/${a.ActiveClass}`,{
             headers : {
-                'Authorizations' : 'Bearer' + cookie.get('token')
+                'Authorization' : 'Bearer ' + cookie.get('token')
               }
         })
         setassignments((await result).data.pending)
@@ -54,7 +48,7 @@ export default function StudentAssignment() {
         axios.get(`student/download/${a.user.student_id}/${a.ActiveClass}/${elem.assignment_id}`,{
             responseType : "blob",
             headers : {
-                'Authorizations' : 'Bearer' + cookie.get('token')
+                'Authorization' : 'Bearer ' + cookie.get('token')
               }
         }
         ).then((response)=>{
@@ -103,7 +97,7 @@ export default function StudentAssignment() {
             {
                 headers : {
                     'Content-Type': `multipart/form-data; boundary=${boundary}`,
-                    'Authorizations' : 'Bearer' + cookie.get('token')
+                    'Authorization' : 'Bearer ' + cookie.get('token')
                 }
             })
             setLoder(true)

@@ -32,25 +32,81 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
     Route::controller(TeachersController::class)->group(function(){
         Route::get('teacher/myData','myData');
     });
+
+    /*
+    ||--------------------------------------------------------------------------
+    || TEACHERS Routes
+    ||--------------------------------------------------------------------------
+    ||
+    || Here are teacher routes that are used to define.
+    || routes are loaded by the TeachersController
+    ||
+    */
+
+    Route::controller(TeachersController::class)->prefix('teacher')->group(function(){
+
+        // teacher view classes(done)
+        Route::get('/classes/{username}','view_class');
+        
+        // view students in a class(done)
+        Route::get('classStudents/{class_id}','view_student_class');
+
+        // Teacher view assignments(done)
+        Route::get('/viewAssignments/{tech_id}/{class_id}','view_assignment');
+
+        // teacher add assignments(done)
+        Route::post('/submit_assignment/{tech_id}/{class_id}','add_assignment');
+
+        // teacher download added assignment
+        Route::get('/download/{tech_id}/{class_id}/{ass_id}','download_assignment');
+
+        // teacher view assignments submissions(pending)
+        Route::get('assignmentSubmition/{assignment_id}','view_assignment_submition');
+
+        // teacher download students assignment
+        Route::get('downloadStudentAsssignment/{ass_id}/{student_id}','download_student_assignment_submissions');
+
+        // teacher update student submmision status
+        Route::post('assignmentStatus','assignment_status');
+
+        // teacher delete assignment
+        Route::delete('deleteAssignment/{ass_id}','deleteAssignment');
+    });
+
+    /*
+    ||--------------------------------------------------------------------------
+    || STUDENTS Routes
+    ||--------------------------------------------------------------------------
+    ||
+    || Here are Student routes that are used to define.
+    || routes are loaded by the StudentsController  
+    ||
+    */
+
+    Route::controller(StudentsController::class)->prefix('student')->group(function(){
+        // Student view classes(done)
+        Route::get('/classes/{student_id}','view_classes');
+
+        // Studnet view assignments(need schema update)
+        Route::get('/viewAssignments/{student_id}/{class_id}','view_assignment');
+        // Student download assignment(done)
+        Route::get('/download/{student_id}/{class_id}/{ass_id}','download_assignment');
+
+        // Studnet submit assignments(done)
+        Route::post('/submit_assignment/{student_id}/{class_id}','submit_assignment');
+        // Studnet view quiz
+
+        // Student submit quiz
+
+        // student view classmats(done)
+        Route::get('/classmate/{student_id}/{class_id}','view_classmates');
+
+        // Route::get('/myData','myData');
+
+    });
+
+
 });;
-
-Route::controller(testControllerAll::class)->group(function(){
-
-    Route::get('/get','get');
-    Route::get('/get_tech','get_tech');
-    
-    Route::post('/put','put');
-    Route::post('/put_tech','put_tech');
-    Route::get('/get_cls','get_class');
-    Route::post('/put_cls/{tech_name}','put_class');
-
-    Route::post('/user','put_user');
-    Route::get('/export','collection');
-
-    Route::get('/asi/{student_id}/{clas_id}','getassignment');
-});
-
-
 
 /*
 ||--------------------------------------------------------------------------
@@ -112,66 +168,35 @@ Route::controller(AdminController::class)->group(function(){
 ||
 */
 
+// Route::controller(TeachersController::class)->prefix('teacher')->group(function(){
 
-// Route::controller(TeachersController::class)->group(function(){
-//     // teacher creates class
-//     Route::post('/createClass/{username}','create_class');
-
-//     // teacher add students
-
-//     Route::post('/addStudents/{username}/{class_id}','add_students');
-
-//     // teacher add assignments
-
-//     Route::post('putAssignments/{username}/{class_id}','add_assignment');
-//     // teacher add quiz
-
-//     // teacher view classes
-
+//     // teacher view classes(done)
 //     Route::get('/classes/{username}','view_class');
-
-//     // view students in a class
-
-//     Route::get('classStudents/{username}/{class_id}','view_student_class');
-
-//     // teacher view assignments submitions
-
-//     // teacher grades or validates submited assignments
     
-//     // teacher view quiz submitions
-    
-//     // teacher grades or validates submited quiz
+//     // view students in a class(done)
+//     Route::get('classStudents/{class_id}','view_student_class');
 
-//     Route::any('/any','getall');
+//     // Teacher view assignments(done)
+//     Route::get('/viewAssignments/{tech_id}/{class_id}','view_assignment');
+
+//     // teacher add assignments(done)
+//     Route::post('/submit_assignment/{tech_id}/{class_id}','add_assignment');
+
+//     // teacher download added assignment
+//     Route::get('/download/{tech_id}/{class_id}/{ass_id}','download_assignment');
+
+//     // teacher view assignments submissions(pending)
+//     Route::get('assignmentSubmition/{assignment_id}','view_assignment_submition');
+
+//     // teacher download students assignment
+//     Route::get('downloadStudentAsssignment/{ass_id}/{student_id}','download_student_assignment_submissions');
+
+//     // teacher update student submmision status
+//     Route::post('assignmentStatus','assignment_status');
+
+//     // teacher delete assignment
+//     Route::delete('deleteAssignment/{ass_id}','deleteAssignment');
 // });
-
-Route::controller(TeachersController::class)->prefix('teacher')->group(function(){
-
-    // teacher view classes
-    Route::get('/classes/{username}','view_class');
-    
-    // view students in a class
-    Route::get('classStudents/{class_id}','view_student_class');
-
-    // Teacher view assignments
-    Route::get('/viewAssignments/{tech_id}/{class_id}','view_assignment');
-
-    // teacher add assignments
-    Route::post('/submit_assignment/{tech_id}/{class_id}','add_assignment');
-
-    // teacher view assignments submitions(pending)
-    Route::get('assignmentSubmition','view_assignment_submition');
-
-    // Route::get('/myData','myData');
-
-    // teacher grades or validates submited assignments
-    
-    // teacher view quiz submitions
-    
-    // teacher grades or validates submited quiz
-
-    // Route::any('/any','getall');
-});
 
 
 
@@ -185,50 +210,27 @@ Route::controller(TeachersController::class)->prefix('teacher')->group(function(
 ||
 */
 
-/*
-    // Route::controller(StudentsController::class)->group(function(){
-    //     // Student view classes
-    //     Route::get('/class/{uername}','view_classes');
+// Route::controller(StudentsController::class)->prefix('student')->group(function(){
+//     // Student view classes(done)
+//     Route::get('/classes/{student_id}','view_classes');
 
-    //     // Studnet view assignments
-    //     // Route::get('/assignments/{$class_id}');
-    //     Route::get('/viewAssignments/{username}/{class_id}','view_assignment');
+//     // Studnet view assignments(need schema update)
+//     Route::get('/viewAssignments/{student_id}/{class_id}','view_assignment');
+//     // Student download assignment(done)
+//     Route::get('/download/{student_id}/{class_id}/{ass_id}','download_assignment');
 
-    //     // Student download assignment
-    //     Route::get('/download/{username}/{class_id}/{ass_id}','download_assignment');
+//     // Studnet submit assignments(done)
+//     Route::post('/submit_assignment/{student_id}/{class_id}','submit_assignment');
+//     // Studnet view quiz
 
-    //     // Studnet submit assignments
-    //     Route::post('/submit_assignment/{username}/{class_id}','submit_assignment');
-    //     // Studnet view quiz
+//     // Student submit quiz
 
-    //     // Student submit quiz
+//     // student view classmats(done)
+//     Route::get('/classmate/{student_id}/{class_id}','view_classmates');
 
-    //     // student view classmats
-    //     Route::get('/classmate/{username}/{class}','view_classmates');
-    // });
-*/
+//     // Route::get('/myData','myData');
 
-Route::controller(StudentsController::class)->prefix('student')->group(function(){
-    // Student view classes(done)
-    Route::get('/classes/{student_id}','view_classes');
-
-    // Studnet view assignments(need schema update)
-    Route::get('/viewAssignments/{student_id}/{class_id}','view_assignment');
-    // Student download assignment(done)
-    Route::get('/download/{student_id}/{class_id}/{ass_id}','download_assignment');
-
-    // Studnet submit assignments(done)
-    Route::post('/submit_assignment/{student_id}/{class_id}','submit_assignment');
-    // Studnet view quiz
-
-    // Student submit quiz
-
-    // student view classmats(done)
-    Route::get('/classmate/{student_id}/{class_id}','view_classmates');
-
-    // Route::get('/myData','myData');
-
-});
+// });
 
 Route::controller(AuthenticationController::class)->group(function(){
     Route::post('student/login','studentLogin');

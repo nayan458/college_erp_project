@@ -126,11 +126,12 @@ export default function Assignment() {
   return (
     <>
         {
-            a.user.lable === 'student' 
-            ?
+            a.user.lable === 'student' ?
             <StudentAssignment/>
-            :
+            : a.user.lable === 'teacher' ?
             <TeacherAssignment/>
+            :
+            <Empty msg="User not found" hide={true} img={true}/>
 
         }
 
