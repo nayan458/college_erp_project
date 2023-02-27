@@ -15,8 +15,6 @@ export default function Dashbord(props) {
     const open = ()=> setdashbord(true)
     const close = ()=> setdashbord(false)
 
-    // const [ActiveLink, setActiveLink] = useState(false)
-
     const a = useContext(NodeContext)
 
     const links = [
@@ -25,35 +23,12 @@ export default function Dashbord(props) {
             name : 'My class',
             icon : <i className="fa-solid fa-users"></i>
         },
-        // {
-        //     to:'/message',
-        //     name : 'Message',
-        //     icon : <i className="fa-solid fa-envelope"></i>
-        // },
-        {
-            to:'/notifications',
-            name : 'Notification',
-            icon : <i className="fa-solid fa-circle-info"></i>
-        },
-        {
-            to:'/backpack',
-            name : 'Backpack',
-            icon : <i className="fa-solid fa-suitcase"></i>
-        },
         {
             to:'/logout',
             name : 'Logout',
             icon : <i class="fa-solid fa-power-off"></i>
         },
     ]
-
-    // const [user, setUser] = useState({
-    //     name : "",
-    //     lable : "",
-    //     gender : "male"
-    // })
-
-    // const a = useContext(NodeContext);
         useEffect(() => {
             a.userData();
         }, []);
@@ -101,18 +76,6 @@ export default function Dashbord(props) {
                     )
                 })
             }
-            {/* <Link to='/myClass'>
-                <BubbleBig name="My class" icon={<i className="fa-solid fa-users"></i>} />
-            </Link>
-            <Link to='/message'>
-                <BubbleBig name="Messages" icon={<i className="fa-solid fa-envelope"></i>} />
-            </Link>
-            <Link to='/notificatioins'>
-                <BubbleBig name="Notifications" icon={<i className="fa-solid fa-circle-info"></i>} />
-            </Link>
-            <Link to='/backpack'>
-                <BubbleBig name="Backpack" icon={<i className="fa-solid fa-suitcase"></i>} />
-            </Link> */}
 
 
             </div>
@@ -162,23 +125,6 @@ export default function Dashbord(props) {
                     
 
             }
-                {/* <Link to='/myClass'>
-                    <Bubble name="My Class" icon={<i className="fa-solid fa-users xl:text-2xl md:text-lg" to='/myClass'></i>}/>
-                </Link>
-                <Link to='/message'>
-                    <Bubble name="Messages" icon={<i className="fa-solid fa-envelope xl:text-2xl md:text-lg"></i>}/>
-                </Link>
-                <Link to='/notifications'>
-                    <Bubble name="Notifications" icon={<i className="fa-solid fa-circle-info xl:text-2xl md:text-lg"></i>}/>
-                </Link>
-                <Link to='/backpack'>
-                    <Bubble name="Backpack" icon={<i className="fa-solid fa-suitcase xl:text-2xl md:text-lg"></i>}/>
-                </Link> */}
-
-                
-                
-                
-                
 
             </div>
         </nav>

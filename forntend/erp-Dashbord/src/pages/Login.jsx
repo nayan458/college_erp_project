@@ -10,12 +10,18 @@ export default function Login() {
   
   const cookies = new Cookies();
   const redirect = useNavigate();
-  // const [data, setdata] = useState('')
+
+  const [label, setLabel] = useState("teacher")
+
+  const handelLabel=(e)=>{
+    setLabel(e.target.value)
+  }
+
 
   const [formValue, setFormValue] = useState({email : '',password : ''})
 
   let name,value;
-  const {label} = useParams()
+  
   let upDateValues=(e)=>{
     name = e.target.name;
     value = e.target.value;
@@ -103,22 +109,14 @@ export default function Login() {
             <form className="grid gap-4 md:gap-7" onSubmit={(e)=>e.preventDefault}>
                 <input type="email" placeholder='Email' className='text-base md:text-xl font-light font-sans px-3 py-2 rounded-md outline-none border-slate-400 ' autoComplete='false' name='email' value={formValue.email} onChange={upDateValues} required/>
                 <input type="password" placeholder='Password' className='text-base md:text-xl font-light font-sans px-3 py-2 rounded-md outline-none border-slate-400 ' autoComplete='false' name='password' value={formValue.password} onChange={upDateValues} required/>
-                {/* <div className='text-xs md:text-sm text-center'>Don't remember password?
-                <Link to='/reset' className='px-2 font-bold text-blue-600 hover:underline hover:underline-offset-2'>
-                 Forgot Password
-                </Link>
-                 </div> */}
+                <select className='text-base md:text-xl font-light font-sans px-3 py-2 rounded-md outline-none border-slate-400 ' onChange={handelLabel} value={label} required>
+                  <option value="teacher">Teacher</option>
+                  <option value="student">Student</option>
+                </select>
                 <button className='text-base bg-green-400 rounded-md md:text-xl font-["Source Sans Pro", "sans-serif"] font-bold px-2 py-3 shadow-lg text-slate-700 outline-none border-none active:bg-green-300 active:text-slate-600' onClick={submit}>
                     Login
                 </button>
             </form>
-
-
-                {/* <div className='text-xs md:text-sm text-center'>Don't have an account?
-                <Link to='/register' className='px-2 font-bold text-green-600 hover:underline hover:underline-offset-2 '>
-                 Register Here
-                </Link>
-                 </div> */}
                  
           </div>
 
