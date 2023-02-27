@@ -278,10 +278,10 @@ export default function TeacherAssignment() {
             :
                 <div className='grid grid-cols-4 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 text-slate-800 p-5 rounded-md font-normal items-center'>
                 {   assignments.length > 0 ?
-                    assignments.map((elem)=>{
+                    assignments.map((elem,i)=>{
                     return(
                         <>
-                            <div className='truncate'>{elem.uploaded_at}</div>
+                            <div className='truncate' key={i}>{elem.uploaded_at}</div>
                             <div className='truncate'>{elem.ass_name}</div>
                             <div className='truncate'>{elem.ass_desc}</div>
                             <div className='flex text-slate-50 font-semibold gap-2'>
@@ -330,7 +330,8 @@ export default function TeacherAssignment() {
                     <Empty msg="No Assignments" hide={true} img={true}/>
                 </>
                 }                
-            </div>}
+            </div>
+            }
         </div>
 
 
@@ -398,7 +399,7 @@ export default function TeacherAssignment() {
                                     {submissionData.map((elem,index)=>{
                                         return(
                                             <>
-                                                    <div className='col-span-2'>{elem.uploaded_at}</div>
+                                                    <div className='col-span-2' key={index}>{elem.uploaded_at}</div>
                                                     <div className='col-span-2'>
                                                         <StatusButtons status={elem.status}/>
                                                     </div>

@@ -1,7 +1,6 @@
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
 import './App.css';
 
-import Message from './pages/Message';
 import Login from './pages/Login';
 import MyClass from './pages/MyClass';
 import Assignments from './pages/myClass/Assignments';
@@ -18,20 +17,19 @@ function AppBackup() {
     <NodeState>
       <BrowserRouter>
         <Routes>
-          {/* <Route element={<Protected/>}> */}
-              <Route path='/' element={<Message/>}/>
+          <Route element={<Protected/>}>
 
-              <Route path='/myClass/:student' element={<MyClass/>}/>
+              <Route path='/myClass' element={<MyClass/>}/>
 
               <Route path='/assignments' element={<Assignments/>}/>
 
               <Route path='/classCalendar' element={<ClassCalendar/>}/>
 
-              <Route path='/myClassmates/:student/:classe' element={<MyClassmates/>}/>
+              <Route path='/myClassmates' element={<MyClassmates/>}/>
 
               <Route path='/logout' element={<Logout/>}/>
 
-          {/* </Route> */}
+          </Route>
 
               <Route path='/login' element={<Login/>}/>
 

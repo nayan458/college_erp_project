@@ -1,6 +1,5 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react'
 import Cookies from 'universal-cookie'
 import NodeContext from './NodeContext'
 
@@ -11,17 +10,11 @@ export default function NodeState(props) {
   // Active class
   const [ActiveClass, setActiveClass] = useState(-1)
 
-  const {label} = useParams()
-
   // to get student classes
   const [myClasses, setMyClasses] = useState([])
 
   // to get user details
     const [user, setUser] = useState({
-        // "name" : cookie.get('name'),
-        // "lable" : cookie.get('lable'),
-        // "student_id" : cookie.get('student_id'),
-        // "gender" : cookie.get('gender')
         "name" : "",
         "lable" : "",
         "student_id" : "",
@@ -40,7 +33,7 @@ export default function NodeState(props) {
             cookie.set('lable',result.data.lable)
             cookie.set('student_id',result.data.student_id)
             setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable, student_id : result.data.student_id});
-            // console.log(user);
+
         } catch (error) {
             console.log(error);
         }}
@@ -55,24 +48,18 @@ export default function NodeState(props) {
                 }
             })
             setMyClasses((await result).data)
-            // console.log(`Hello : ${myClasses}`)
             
         }catch(error){
-            // console.log(error);
+            
         }
     }
 
     const links = [
         {
-          to: `/myClass/${user.student_id}`,
+          to: `/myClass`,
           name : 'Back',
           icon : <i class="fa-solid fa-arrow-right-from-bracket"></i>
         },
-        // {
-        //   to:'/announcements',
-        //   name:'Announcements',
-        //   icon : <i class="fa-solid fa-circle-info"></i>
-        // },
         {
           to:'/assignments',
           name:'Assignments',
@@ -83,49 +70,17 @@ export default function NodeState(props) {
           name:'Class Calendar',
           icon : <i class="fa-regular fa-calendar-days"></i>
         },
-        // {
-        //   to:'/downloadableMaterials',
-        //   name:'Downloadable Materials',
-        //   icon : <i class="fa-solid fa-circle-arrow-down"></i>
-        // },
         {
-          to:`/myClassmates/${user.student_id}/${ActiveClass}`,
+          to:`/myClassmates`,
           name:'Students',
           icon : <i className="fa-solid fa-users"></i>
         },
-        // {
-        //   to:'/myProgress',
-        //   name:'My Progress',
-        //   icon : <i class="fa-solid fa-chart-line"></i>
-        // },
-        // {
-        //   to:'/quiz',
-        //   name:'Quiz',
-        //   icon : <i class="fa-solid fa-brain"></i>
-        // },
-        // {
-        //   to:'/subjectOverview',
-        //   name:'Subject Overview',
-        //   icon : <i class="fa-solid fa-book-open-reader"></i>
-        // },
         {
           to:'/logout',
           name : 'Logout',
           icon : <i class="fa-solid fa-power-off"></i>
       },
     ]
-
-    // Active class
-    // const [ActiveClass, setActiveClass] = useState(-1)
-
-    const changeActiveClass=(class_id)=>{
-      setActiveClass(class_id);
-    }
-
-    // useEffect(() => {
-    //   userData()
-    //   getClasses()
-    // }, [])
     
     return (
         <NodeContext.Provider value={{user,setUser,userData,myClasses,getClasses,links,ActiveClass,setActiveClass}}>

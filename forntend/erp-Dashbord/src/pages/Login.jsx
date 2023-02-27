@@ -40,14 +40,11 @@ export default function Login() {
           if(rslt.data.user === false)
             throw "Invalid login credentials"
           
-          // a.setUser({...a.user,lable : rslt.data.label})
           cookies.set('token',rslt.data.token);
           cookies.set('gender',rslt.data.user.gender);
-          console.log(rslt.data.token)
           a.setUser({...a.user, lable : rslt.data.label, student_id : rslt.data.student_id, gender : rslt.data.user.gender})
-          console.log(rslt);
           alert(`${rslt.data.label} loged in successfully`);
-          redirect(`/myclass/${rslt.data.student_id}`)
+          redirect(`/myclass`)
         } catch (error) {
           e.preventDefault()
           if(error){
@@ -59,7 +56,7 @@ export default function Login() {
   useEffect(() => {
     let cookies = new Cookies();
     if(cookies.get('token'))
-      redirect('/')
+      redirect(`/myclass`)
   }, [])
 
   return (

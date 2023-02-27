@@ -44,7 +44,8 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
         Route::get('/classes/{username}','view_class');
         
         // view students in a class(done)
-        Route::get('classStudents/{class_id}','view_student_class');
+        // Route::get('classStudents/{class_id}','view_student_class');
+        Route::get('/classmate/{student_id}/{class_id}','view_student_class');
 
         // Teacher view assignments(done)
         Route::get('/viewAssignments/{tech_id}/{class_id}','view_assignment');

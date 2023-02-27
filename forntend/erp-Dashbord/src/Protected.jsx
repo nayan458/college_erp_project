@@ -13,7 +13,7 @@ function Protected() {
     }, [])
     
     return(
-        auth ? <Outlet/> : <Navigate to='/login/student'/>
+        auth ? <Outlet/> : <Navigate to='/login'/>
     )
 }
 

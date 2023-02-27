@@ -75,7 +75,7 @@ class TeachersController extends Controller
         }
     // view students in a class (done)
 
-        function view_student_class($class_id){
+        function view_student_class($tech_id,$class_id){
 
             return DB::table('students')
                 ->select(['fname','lname','email','gender','location','std_semester'])

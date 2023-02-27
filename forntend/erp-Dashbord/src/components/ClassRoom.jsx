@@ -1,10 +1,15 @@
 import React, { useContext, useEffect} from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Navigate, NavLink, redirect } from 'react-router-dom'
 import NodeContext from '../contexts/NodeContext'
 
 export default function ClassRoom() {
 
   const a = useContext(NodeContext)
+
+  const navigateToClass=(id)=>{
+    a.setActiveClass(id)
+  }
+
   useEffect(() => {
     a.getClasses()
   }, [])
@@ -19,10 +24,10 @@ export default function ClassRoom() {
             Your Classes
           </div>
           {
-            a.myClasses.map(elem=>{
+            a.myClasses.map((elem,i)=>{
             return(
               <>
-              <Link to={`/myClassmates/${a.user.student_id}/${elem.classe_id}`} className='truncate shadow-sm'>
+              <NavLink to="/myClassmates" className='truncate shadow-sm' key={i} onMouseEnter={()=>navigateToClass(elem.classe_id)} exact strict>
                 <div className=' bg-slate-100 hover:bg-slate-200 p-2 rounded-md transform duration-75 ease-linear truncate'>
                   <div className='truncate'>
                     <div className='py-2 pl-2'>
@@ -33,7 +38,7 @@ export default function ClassRoom() {
                     </div>
                   </div>
                 </div>
-              </Link>
+              </NavLink>
               </>
             )
           })

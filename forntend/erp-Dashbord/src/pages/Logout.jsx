@@ -8,12 +8,16 @@ export default function Logout() {
     const a = useContext(NodeContext)
     useEffect(() => {
         let cookie = new Cookies()
-        cookie.remove('token');
-        cookie.remove('name');
-        cookie.remove('gender');
-        cookie.remove('lable');
-        cookie.remove('student_id');
-        redirect(`/login/${a.user.lable}`)
+        try{
+          cookie.remove('token');
+          cookie.remove('name');
+          cookie.remove('gender');
+          cookie.remove('lable');
+          cookie.remove('student_id');
+        }catch(error){
+          
+        }
+        redirect(`/login`)
     }, [])
     
   return (<>

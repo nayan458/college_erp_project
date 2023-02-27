@@ -4,7 +4,6 @@ import MainPage from '../../components/MainPage'
 import Student from '../../components/Student'
 import TopNav from '../../components/TopNav'
 import NodeContext from '../../contexts/NodeContext'
-import links from './Links'
 
 export default function MyClassmates() {
   const a = useContext(NodeContext)
