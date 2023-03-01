@@ -14,51 +14,54 @@ export default function StudentAssignment() {
     
     const close=()=>setuploadEditor(false)
 
-    // to get assignments
-    const [assignments, setassignments] = useState([])
-    const [assignmentsStatus, setassignmentsStatus] = useState([])
-
     const a = useContext(NodeContext)
 
-    const getAssignments = async()=>{
-      let result
-      try{
-        let cookie = new Cookies();  
-        // result = axios.get(`/asi/${a.user.student_id}/${a.ActiveClass}`,{
-        result = axios.get(`student/viewAssignments/${a.user.student_id}/${a.ActiveClass}`,{
-            headers : {
-                'Authorization' : 'Bearer ' + cookie.get('token')
-              }
-        })
-        setassignments((await result).data.pending)
-        setassignmentsStatus((await result).data.submited)
-        // console.log((await result).data)
-      } catch(err){
+    // to get assignments
 
-      }
-      setLoder(false)
-    }
+        const [assignments, setassignments] = useState([])
+        const [assignmentsStatus, setassignmentsStatus] = useState([])
+
+
+        const getAssignments = async()=>{
+            let result
+            try{
+                
+                let cookie = new Cookies();
+                result = axios.get(`student/viewAssignments/${a.user.student_id}/${a.ActiveClass}`,{
+                    headers : {
+                        'Authorization' : 'Bearer ' + cookie.get('token')
+                    }
+                })
+                setassignments((await result).data.pending)
+                setassignmentsStatus((await result).data.submited)
+
+            } catch(err){
+
+            }
+            setLoder(false)
+        }
 
     // download assignment
 
-    const downloadAssignment=(e,elem)=>{
-        e.preventDefault()
-        let cookie = new Cookies();
+        const downloadAssignment=(e,elem)=>{
+            e.preventDefault()
+            let cookie = new Cookies();
 
-        axios.get(`student/download/${a.user.student_id}/${a.ActiveClass}/${elem.assignment_id}`,{
-            responseType : "blob",
-            headers : {
-                'Authorization' : 'Bearer ' + cookie.get('token')
-              }
+            axios.get(`student/download/${a.user.student_id}/${a.ActiveClass}/${elem.assignment_id}`,{
+                responseType : "blob",
+                headers : {
+                    'Authorization' : 'Bearer ' + cookie.get('token')
+                }
+            }
+            ).then((response)=>{
+                fileDownload(response.data,`${elem.ass_name}.pdf`)
+            }).catch((error)=>{
+                console.log(error);
+            })
         }
-        ).then((response)=>{
-            fileDownload(response.data,`${elem.ass_name}.pdf`)
-        }).catch((error)=>{
-            console.log(error);
-        })
-    }
 
     // submit assignment
+
     const [assignmentSubmitionData, setAssignmentSubmitionData] = useState({
         assignment : null,
         name : "Hello",
@@ -71,12 +74,10 @@ export default function StudentAssignment() {
         name = e.target.name
         value = e.target.value
         setAssignmentSubmitionData({...assignmentSubmitionData,[name] : value})
-        // console.log(assignmentSubmitionData)
     }
 
     const fileHandeler= file =>{
         setAssignmentSubmitionData({...assignmentSubmitionData, assignment : file[0]})
-        // console.log(assignmentSubmitionData);
     }
 
     const [submit, setSubmit] = useState(true)
@@ -92,7 +93,7 @@ export default function StudentAssignment() {
         formdata.append('desc',assignmentSubmitionData.desc);
         let boundary = `--${Date.now()}`;
         try{
-            let result = await axios.post(`student/submit_assignment/${a.user.student_id}/${a.ActiveClass}`,
+            await axios.post(`student/submit_assignment/${a.user.student_id}/${a.ActiveClass}`,
             formdata,
             {
                 headers : {
@@ -104,21 +105,25 @@ export default function StudentAssignment() {
             setSubmit(true)
             getAssignments()
             alert("assignment submited successfully")
-            // console.log(result);
             close()
         }catch(err){
             console.log(err);
         }
     }
-    const open=(elem)=>{
-        setuploadEditor(true)
-        setAssignmentSubmitionData({...assignmentSubmitionData,ass_id : elem.assignment_id})
-        // console.log(assignmentSubmitionData)
-    }
-    useEffect(() => {
-        setLoder(true)
-        getAssignments();
-    }, [])
+
+    // open the upload editor
+        const open=(elem)=>{
+            setuploadEditor(true)
+            setAssignmentSubmitionData({...assignmentSubmitionData,ass_id : elem.assignment_id})
+        }
+
+    // useEffect Hook
+        useEffect(() => {
+            setLoder(true)
+            getAssignments();
+        }, [])
+
+    // ************************************** Main **************************************** //
   return (
     <>
          <div className='w-full h-full bg-slate-200 col-span-4 flex flex-col items-center'>
@@ -128,7 +133,7 @@ export default function StudentAssignment() {
                     <div className='col-span-2 lg:col-span-1 truncate'>DESCRIPTION</div>
                     <div className='flex gap-2 items-center col-span-3 lg:col-span-1'>
                         <div className='underline underline-offset-4 font-bold text-xs truncate'>
-                            SUBMIT
+                            SUBMIT/STATUS
                         </div>
                     </div>
             </div>
@@ -142,12 +147,12 @@ export default function StudentAssignment() {
                 </div>
             :
                 <div className='grid grid-cols-4 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 text-slate-800 p-5 rounded-md font-normal items-center'>
-                {   assignments.length || assignmentsStatus.length > 0 ?
+                {   assignments.length > 0 || assignmentsStatus.length > 0 ?
                     <>
-                        {assignments.map((elem)=>{
+                        {assignments.map((elem,i)=>{
                             return(
                                 <>
-                                    <div className='truncate'>{elem.uploaded_at}</div>
+                                    <div className='truncate' key={i}>{elem.uploaded_at}</div>
                                     <div className='truncate'>{elem.ass_name}</div>
                                     <div className='truncate'>{elem.ass_desc}</div>
                                     <div className='flex text-slate-50 font-semibold gap-2'>
@@ -171,10 +176,10 @@ export default function StudentAssignment() {
                             )
                         })}
                         {
-                            assignmentsStatus.map((elem)=>{
+                            assignmentsStatus.map((elem,i)=>{
                                 return(
                                     <>
-                                        <div className='truncate'>{elem.uploaded_at}</div>
+                                        <div className='truncate' key={i}>{elem.uploaded_at}</div>
                                         <div className='truncate'>{elem.ass_name}</div>
                                         <div className='truncate'>{elem.ass_desc}</div>
                                         <div className='truncate'>

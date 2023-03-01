@@ -40,7 +40,7 @@ export default function Login() {
           if(rslt.data.user === false)
             throw "Invalid login credentials"
           
-          cookies.set('token',rslt.data.token);
+          cookies.set('token',rslt.data.token,{ expires: new Date(Date.now() + 3600000) });
           cookies.set('gender',rslt.data.user.gender);
           a.setUser({...a.user, lable : rslt.data.label, student_id : rslt.data.student_id, gender : rslt.data.user.gender})
           alert(`${rslt.data.label} loged in successfully`);
@@ -107,6 +107,7 @@ export default function Login() {
                 <input type="email" placeholder='Email' className='text-base md:text-xl font-light font-sans px-3 py-2 rounded-md outline-none border-slate-400 ' autoComplete='false' name='email' value={formValue.email} onChange={upDateValues} required/>
                 <input type="password" placeholder='Password' className='text-base md:text-xl font-light font-sans px-3 py-2 rounded-md outline-none border-slate-400 ' autoComplete='false' name='password' value={formValue.password} onChange={upDateValues} required/>
                 <select className='text-base md:text-xl font-light font-sans px-3 py-2 rounded-md outline-none border-slate-400 ' onChange={handelLabel} value={label} required>
+                  <option>--Select User--</option>
                   <option value="teacher">Teacher</option>
                   <option value="student">Student</option>
                 </select>

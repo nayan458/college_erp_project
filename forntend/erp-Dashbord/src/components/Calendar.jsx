@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 export default function Calendar() {
     const d = new Date();
@@ -13,14 +13,20 @@ export default function Calendar() {
         }
     }
     getdateData();
+
     let emptyDate = []
+
     let putEmptyDates=()=>{
-        let g = new Date(`${d.getFullYear}-${d.getMonth()}-01`);
+        let yr = d.getFullYear()
+        let mnth = d.getMonth()+1
+        let g = new Date(`${yr}-${mnth}-01`);
         for(let i=0; i< g.getDay(); i++){
             emptyDate.push(i);
-            console.log(i)}
+        }
     }
+
     putEmptyDates();
+
   return (
     <>
         <div className='w-full h-full bg-slate-200 col-span-4 overflow-y-auto flex flex-col items-center'>

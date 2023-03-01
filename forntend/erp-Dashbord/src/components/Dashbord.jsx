@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
-import Bubble from './Bubble'
+import Bubble from './sub_components/sidenav/Bubble'
 import Logo from './media/svg/Logo'
 import male from './media/img/maleIcon.png'
 import female from './media/img/femaleIcon.png'
-import BubbleBig from './BubbleBig'
-import UserNav from './UserNav'
+import BubbleBig from './sub_components/sidenav/BubbleBig'
+import UserNav from './sub_components/sidenav/UserNav'
 import { Link } from 'react-router-dom'
 import NodeContext from '../contexts/NodeContext'
 
@@ -50,9 +50,9 @@ export default function Dashbord(props) {
                 </div>
             </div>
 
-            <Link to='/profile'>
+            {/* <Link to='/profile'> */}
                 <UserNav name={a.user.name} lable={a.user.lable} img={a.user.gender === "male" ? male : a.user.gender === "female" ? female : male}/>
-            </Link>
+            {/* </Link> */}
             <div className="inner-nav">
             {
                 props.links ?
@@ -93,11 +93,11 @@ export default function Dashbord(props) {
                 </button>
 
             </div>
-            <Link to='/profile'>
+            {/* <Link to='/profile'> */}
                 <span className="rounded-full cursor-pointer">
                     <img className="rounded-full w-11 h-11 border-[2px] border-blue-600 md:mt-24 sm:mt-12 mt-6" src={a.user.gender === "male" ? male : a.user.gender === "female" ? female : male} alt="" />
                 </span>
-            </Link>
+            {/* </Link> */}
 
             <div className="inner-nav pt-3">
 

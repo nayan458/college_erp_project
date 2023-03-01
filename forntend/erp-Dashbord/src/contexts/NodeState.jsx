@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import Cookies from 'universal-cookie'
+import instance from '../Api/api';
 import NodeContext from './NodeContext'
 
 export default function NodeState(props) {
@@ -24,7 +25,8 @@ export default function NodeState(props) {
     const userData = async() => {
         let result
         try {
-            result = await axios.get(`${user.lable}/myData`, {
+          
+            result = await instance.get(`/myData`, {
                 headers: {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 }
@@ -41,8 +43,9 @@ export default function NodeState(props) {
 
     const getClasses = async()=>{
         let result 
+        let cookie = new Cookies()
         try{
-            result = axios.get(`${user.lable}/classes/${user.student_id}`,{
+            result = instance.get(`/classes/${cookie.get('student_id')}`,{
                 headers : {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 }
@@ -81,9 +84,23 @@ export default function NodeState(props) {
           icon : <i class="fa-solid fa-power-off"></i>
       },
     ]
-    
+
+    // students in a class
+    const [classmates, setClassmates] = useState([])
+
+    const getClassMates=async(classe_id)=>{
+      let cookie = new Cookies()
+        let result = await instance.get(`/classmate/${user.student_id}/${classe_id}`,{
+                headers : {
+                    'Authorization': 'Bearer ' + cookie.get('token')
+                }
+            })
+          setClassmates(result.data)
+          setActiveClass(classe_id)
+    }
+
     return (
-        <NodeContext.Provider value={{user,setUser,userData,myClasses,getClasses,links,ActiveClass,setActiveClass}}>
+        <NodeContext.Provider value={{user,setUser,userData,myClasses,getClasses,links,ActiveClass,setActiveClass,classmates,getClassMates}}>
             {props.children}
         </NodeContext.Provider>
   )

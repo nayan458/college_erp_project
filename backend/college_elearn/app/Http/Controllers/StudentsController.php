@@ -33,16 +33,28 @@ class StudentsController extends Controller
                 ->where('student_id',$student_id)
                 ->join('assignments','assignments_subs.assignment_id','assignments.assignment_id')
                 ->get();
-
-            $query = DB::table('assignments')
-                ->where('classe_id',$class_id)
-                ->whereNotExists(function($query){
-                    $query->select(DB::raw(1))
-                    ->from('assignments_subs')
-                    ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
-                })
-                ->get();
-
+            // if($result->count() > 0)
+            // [1 2 3 4] [2 4] $result = [2 4] $query = [1 3]
+                $query = DB::table('assignments')
+                    ->where('classe_id',$class_id)
+                    ->whereNotExists(function($qury){
+                        $qury->select(DB::raw(1))
+                        ->from('assignments_subs')
+                        ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
+                    })
+                    ->get();
+            // else
+                // $query = DB::table('assignments')->where('classe_id',$class_id)->get();
+                // $query = DB::selectraw;
+                
+            // $query = DB::table('assignments')
+            // ->whereNot(function ($query) {
+                // $query->DB::table('assignments_subs')
+                // $query->where('clearance', true)
+                        // ->orWhere('price', '<', 10);
+            // })
+            // ->get();
+                
             return response()->json([
                 "pending" => $query,
                 "submited" => $result

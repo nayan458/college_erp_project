@@ -66,7 +66,7 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
         Route::post('assignmentStatus','assignment_status');
 
         // teacher delete assignment
-        Route::delete('deleteAssignment/{ass_id}','deleteAssignment');
+        Route::post('deleteAssignment/{ass_id}','deleteAssignment');
     });
 
     /*

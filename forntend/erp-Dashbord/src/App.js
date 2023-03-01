@@ -1,5 +1,5 @@
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
-import './App.css';
+import './css/App.css';
 
 import Login from './pages/Login';
 import MyClass from './pages/MyClass';
@@ -11,7 +11,7 @@ import Protected from './Protected';
 import Logout from './pages/Logout';
 import NodeState from './contexts/NodeState';
 
-function AppBackup() {
+function App() {
   return (
     <>
     <NodeState>
@@ -19,6 +19,7 @@ function AppBackup() {
         <Routes>
           <Route element={<Protected/>}>
 
+              <Route path='/' element={<MyClass/>}/>
               <Route path='/myClass' element={<MyClass/>}/>
 
               <Route path='/assignments' element={<Assignments/>}/>
@@ -26,6 +27,7 @@ function AppBackup() {
               <Route path='/classCalendar' element={<ClassCalendar/>}/>
 
               <Route path='/myClassmates' element={<MyClassmates/>}/>
+              <Route path='/myClassmates/:ActClass' element={<MyClassmates/>}/>
 
               <Route path='/logout' element={<Logout/>}/>
 
@@ -42,4 +44,4 @@ function AppBackup() {
   );
 }
 
-export default AppBackup;
+export default App;

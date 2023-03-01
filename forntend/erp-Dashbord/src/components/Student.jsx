@@ -13,7 +13,7 @@ export default function Student() {
     const [loder, setLoder] = useState(true)
 
     const a = useContext(NodeContext)
-    
+
     let getstudents=async()=>{
         let cookie = new Cookies()
         let result = await axios.get(`${a.user.lable}/classmate/${a.user.student_id}/${a.ActiveClass}`,{
@@ -25,9 +25,9 @@ export default function Student() {
         setLoder(false)
     }
 
-    
+
     useEffect(() => {
-      getstudents()
+        getstudents()
     }, [])
     
   return (
@@ -69,4 +69,3 @@ export default function Student() {
     </>
   )
 }
-

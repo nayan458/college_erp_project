@@ -12,9 +12,6 @@ export default function TeacherAssignment() {
     const [loder, setLoder] = useState(true)
     const [submitionLoad, setsubmitionLoad] = useState(true)
 
-    // const open=()=>{
-    //     setuploadEditor(true)
-    // }
     const close=()=>setuploadEditor(false)
 
     const [SubmitionDashbord, setSubmitionDashbord] = useState(false)
@@ -22,151 +19,175 @@ export default function TeacherAssignment() {
 
     const close_sub=()=> setSubmitionDashbord(false)
 
-    const view_subs=async(elem)=> {
-        setsubmitionLoad(true)
-        let cookie = new Cookies()
+    // teacher view assignment submitssion by students
+        const view_subs=async(elem)=> {
+            setsubmitionLoad(true)
+            let cookie = new Cookies()
+            try{
+                let result = await axios.get(`teacher/assignmentSubmition/${elem.assignment_id}`,{
+                    headers : {
+                        'Authorization': 'Bearer ' + cookie.get('token')
+                    }
+                })
+                setsubmissionData(result.data.submissions)
+            }catch(error){
+                
+            }
+            setsubmitionLoad(false)
+            setSubmitionDashbord(true)
+        }
+
+    // to get assignments
+        const [assignments, setassignments] = useState([])
+
+        const a = useContext(NodeContext)
+
+        const getAssignments = async()=>{
+        let result
         try{
-            // let result = await axios.get(`/asisubs/${elem.assignment_id}`)
-            let result = await axios.get(`teacher/assignmentSubmition/${elem.assignment_id}`,{
+            let cookie = new Cookies();  
+            result = axios.get(`${a.user.lable}/viewAssignments/${a.user.student_id}/${a.ActiveClass}`,{
                 headers : {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 }
             })
-            setsubmissionData(result.data.submissions)
-            // console.log(submissionData);
-        }catch(error){
-            
+            setassignments((await result).data)
+        } catch(err){
+
         }
-        setsubmitionLoad(false)
-        setSubmitionDashbord(true)
-    }
-
-    // to get assignments
-    const [assignments, setassignments] = useState([])
-
-    const a = useContext(NodeContext)
-
-    const getAssignments = async()=>{
-      let result
-      try{
-        let cookie = new Cookies();  
-        result = axios.get(`${a.user.lable}/viewAssignments/${a.user.student_id}/${a.ActiveClass}`,{
-            headers : {
-                'Authorization': 'Bearer ' + cookie.get('token')
-            }
-        })
-        setassignments((await result).data)
-      } catch(err){
-
-      }
-      setLoder(false)
-    }
-
-    // download assignment
-
-    const downloadAssignment=(e,elem)=>{
-        e.preventDefault()
-        let cookie = new Cookies();
-
-        axios.get(`${a.user.lable}/download/${a.user.student_id}/${a.ActiveClass}/${elem.assignment_id}`,{
-            responseType : "blob",
-            headers : {
-                'Authorization' : 'Bearer ' + cookie.get('token')
-            }
+        setLoder(false)
         }
-        ).then((response)=>{
-            fileDownload(response.data,`${elem.ass_name}.pdf`)
-        }).catch((error)=>{
-            console.log(error);
-        })
-    }
-    // download student assignment submissions
 
-    const downloadAssignmentSubmisions=(e,elem)=>{
-        e.preventDefault()
-        let cookie = new Cookies();
-        axios.get(`teacher/downloadStudentAsssignment/${elem.student_id}/${elem.assignment_id}`,{
-            headers : {
-                'Authorization': 'Bearer ' + cookie.get('token')
-            },
-            responseType : "blob",
-        }).then((response)=>{
-            fileDownload(response.data,`${elem.assignments[0].fname}.pdf`)
-        }).catch((error)=>{
-            console.log(error)
-        })
-    }
-    // submit assignment
-    const [assignmentSubmitionData, setAssignmentSubmitionData] = useState({
-        assignment : null,
-        name : "Hello",
-        ass_id : "",
-        desc : ""
-    })
+    // download assignment added by the user itself
 
-    let name, value
+        const downloadAssignment=(e,elem)=>{
+            e.preventDefault()
+            let cookie = new Cookies();
 
-    const updateHandeler=(e)=>{
-        name = e.target.name
-        value = e.target.value
-        setAssignmentSubmitionData({...assignmentSubmitionData,[name] : value})
-        // console.log(assignmentSubmitionData)
-    }
-
-    const fileHandeler= file =>{
-        setAssignmentSubmitionData({...assignmentSubmitionData, assignment : file[0]})
-        // console.log(assignmentSubmitionData);
-    }
-
-
-    const submitAssignment=async(e)=>{
-        e.preventDefault()
-        let cookie = new Cookies()
-        let formdata = new FormData()
-        formdata.append('assignment',assignmentSubmitionData.assignment);
-        formdata.append('name',assignmentSubmitionData.name);
-        formdata.append('ass_id',assignmentSubmitionData.ass_id);
-        formdata.append('desc',assignmentSubmitionData.desc);
-        let boundary = `--${Date.now()}`;
-        try{
-            let result = await axios.post(`${a.user.lable}/submit_assignment/${a.user.student_id}/${a.ActiveClass}`,
-            formdata,
-            {
+            axios.get(`${a.user.lable}/download/${a.user.student_id}/${a.ActiveClass}/${elem.assignment_id}`,{
+                responseType : "blob",
                 headers : {
-                    'Content-Type': `multipart/form-data; boundary=${boundary}`,
                     'Authorization' : 'Bearer ' + cookie.get('token')
                 }
+            }
+            ).then((response)=>{
+                fileDownload(response.data,`${elem.ass_name}.pdf`)
+            }).catch((error)=>{
+                console.log(error);
             })
-            setLoder(true)
-            getAssignments()
-            alert("assignment submited successfully")
-            // console.log(result);
-            close()
-        }catch(err){
-            console.log(err);
         }
-    }
-    const open=(elem)=>{
-        setuploadEditor(true)
-        setAssignmentSubmitionData({...assignmentSubmitionData,ass_id : elem.assignment_id})
-        // console.log(assignmentSubmitionData)
-    }
 
-    // assignment change status
-    const approve=async(elem,index)=>{
-        // setsubmissionData([...submissionData,submissionData[index].status = 'rejecte'])
-        // console.log(submissionData)
-        if(elem.status != 'approve'){
-            try{    
-                    setsubmitionLoad(true)
-                    
-                    let cookie = new Cookies()
-                    const fd = new FormData();
+    // download student assignment submissions
 
-                    fd.append('assignment_id',elem.assignment_id)
-                    fd.append('student_id',elem.student_id)
-                    fd.append('status','approve')
+        const downloadAssignmentSubmisions=(e,elem)=>{
+            e.preventDefault()
+            let cookie = new Cookies();
+            axios.get(`teacher/downloadStudentAsssignment/${elem.student_id}/${elem.assignment_id}`,{
+                headers : {
+                    'Authorization': 'Bearer ' + cookie.get('token')
+                },
+                responseType : "blob",
+            }).then((response)=>{
+                fileDownload(response.data,`${elem.assignments[0].fname}.pdf`)
+            }).catch((error)=>{
+                console.log(error)
+            })
+        }
 
+    // teacher adds an assignment
+        const [assignmentSubmitionData, setAssignmentSubmitionData] = useState({
+            assignment : null,
+            name : "Hello",
+            ass_id : "",
+            desc : ""
+        })
+
+        let name, value
+
+        const updateHandeler=(e)=>{
+            name = e.target.name
+            value = e.target.value
+            setAssignmentSubmitionData({...assignmentSubmitionData,[name] : value})
+        }
+
+        const fileHandeler= file =>{
+            setAssignmentSubmitionData({...assignmentSubmitionData, assignment : file[0]})
+        }
+
+        
+        const submitAssignment=async(e)=>{
+            e.preventDefault()
+            let cookie = new Cookies()
+            let formdata = new FormData()
+            formdata.append('assignment',assignmentSubmitionData.assignment);
+            formdata.append('name',assignmentSubmitionData.name);
+            formdata.append('ass_id',assignmentSubmitionData.ass_id);
+            formdata.append('desc',assignmentSubmitionData.desc);
+            let boundary = `--${Date.now()}`;
+            try{
+                let result = await axios.post(`${a.user.lable}/submit_assignment/${a.user.student_id}/${a.ActiveClass}`,
+                formdata,
+                {
+                    headers : {
+                        'Content-Type': `multipart/form-data; boundary=${boundary}`,
+                        'Authorization' : 'Bearer ' + cookie.get('token')
+                    }
+                })
+                setLoder(true)
+                getAssignments()
+                alert("assignment submited successfully")
+                close()
+            }catch(err){
+                console.log(err);
+            }
+        }
+        const open=(elem)=>{
+            setuploadEditor(true)
+            setAssignmentSubmitionData({...assignmentSubmitionData,ass_id : elem.assignment_id})
+        }
+
+    // teacher approve assignment
+        const approve=async(elem,index)=>{
+            if(elem.status != 'approve'){
+                try{    
+                        setsubmitionLoad(true)
+                        
+                        let cookie = new Cookies()
+                        const fd = new FormData();
+
+                        fd.append('assignment_id',elem.assignment_id)
+                        fd.append('student_id',elem.student_id)
+                        fd.append('status','approve')
+
+                        await axios.post(`teacher/assignmentStatus`,fd,
+                            {
+                                headers : {
+                                    'Authorization' : 'Bearer ' + cookie.get('token')
+                                }
+                            }
+                        )
+                        elem.status = 'approve'
+                    }
+                    catch(error){
+
+                }
+            }
+            setsubmitionLoad(false)
+        }
+
+    // teacher reject assignment
+        const reject=async(elem)=>{
+            if(elem.status != 'rejected'){
+                setsubmitionLoad(true)
+
+                let cookie = new Cookies()
+                const fd = new FormData();
+                
+                fd.append('assignment_id',elem.assignment_id)
+                fd.append('student_id',elem.student_id)
+                fd.append('status','rejected')
+
+                try{    
                     await axios.post(`teacher/assignmentStatus`,fd,
                         {
                             headers : {
@@ -174,65 +195,37 @@ export default function TeacherAssignment() {
                             }
                         }
                     )
-                    elem.status = 'approve'
+                    elem.status = 'rejected'
                 }
                 catch(error){
 
+                }
             }
+            setsubmitionLoad(false)
         }
-        setsubmitionLoad(false)
-    }
-    const reject=async(elem)=>{
-        // setsubmissionData([...submissionData,submissionData[index].status = 'rejecte'])
-        // console.log(submissionData)
-        if(elem.status != 'rejected'){
-            setsubmitionLoad(true)
+
+    // teacher deletes an uploaded assignment
+        const del_ass=async(elem)=>{
+
+            setLoder(true)
 
             let cookie = new Cookies()
             const fd = new FormData();
-            
             fd.append('assignment_id',elem.assignment_id)
-            fd.append('student_id',elem.student_id)
-            fd.append('status','rejected')
-
-            try{    
-                await axios.post(`teacher/assignmentStatus`,fd,
-                    {
-                        headers : {
-                            'Authorization' : 'Bearer ' + cookie.get('token')
-                        }
+            try{
+                await axios.post(`teacher/deleteAssignment/${elem.assignment_id}`,
+                fd,
+                {
+                    headers : {
+                        'Authorization' : 'Bearer ' + cookie.get('token')
                     }
-                )
-                elem.status = 'rejected'
-            }
-            catch(error){
-
-            }
-        }
-        setsubmitionLoad(false)
-    }
-
-    const del_ass=async(elem)=>{
-
-        setLoder(true)
-
-        let cookie = new Cookies()
-        const fd = new FormData();
-        fd.append('assignment_id',elem.assignment_id)
-        try{
-            let result = await axios.delete(`teacher/deleteAssignment/${elem.assignment_id}`,
-            fd,
-            {
-                headers : {
-                    'Authorization' : 'Bearer ' + cookie.get('token')
                 }
-            }
-            )
-            getAssignments()
-        }catch(error){
+                )
+                getAssignments()
+            }catch(error){
 
+            }
         }
-    }
 
     useEffect(() => {
         setLoder(true)
@@ -246,7 +239,6 @@ export default function TeacherAssignment() {
                     <div className='col-span-2 lg:col-span-1'>FILE NAME</div>
                     <div className='col-span-2 lg:col-span-1 truncate'>DESCRIPTION</div>
                     <div className='flex gap-2 items-center col-span-3 lg:col-span-1'>
-                        {/* <div className='cursor-pointer underline underline-offset-4 hover:text-slate-700 font-bold text-xs truncate'> */}
                         {   a.user.lable === "teacher" ?
                             <div className='underline underline-offset-4 font-bold text-xs truncate'>
                                 SUBMITIONS
