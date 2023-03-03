@@ -73,4 +73,10 @@ class AuthenticationController extends Controller
             $user->save();
             return $user;
         }
+
+        function logout(){
+            $result = Auth::logout();
+            return response()->json(["result" => $result]);
+            // return response()->json(["result" => 1]);
+        }
 }

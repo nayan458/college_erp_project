@@ -37,10 +37,10 @@ export default function Calendar() {
                 
             </div>
             <div className='grid grid-cols-7 gap-4 w-[85%] mt-2 bg-slate-50 p-5 rounded-md md:hidden'>
-            {daysSort.map((elem)=>{
+            {daysSort.map((elem,i)=>{
                 return(
                     <>
-                        <div className={elem===daysSort[d.getDay()]?'flex justify-center font-bold':'flex justify-center'}>{elem}</div>
+                        <div className={elem===daysSort[d.getDay()]?'flex justify-center font-bold':'flex justify-center'} key={i}>{elem}</div>
                     </>
                 )
             })}
@@ -48,10 +48,10 @@ export default function Calendar() {
             </div>
             <div className='w-[85%] hidden md:block'>
                 <div className='md:grid grid-cols-7 gap-4 w-[100%] mt-2 bg-slate-50 p-5 rounded-md'>
-                {days.map((elem)=>{
+                {days.map((elem,i)=>{
                     return(
                         <>
-                            <div className={elem===days[d.getDay()]?'flex justify-center font-bold':'flex justify-center'}>{elem}</div>
+                            <div className={elem===days[d.getDay()]?'flex justify-center font-bold':'flex justify-center'} key={i}>{elem}</div>
                         </>
                     )
                 })}
@@ -60,17 +60,17 @@ export default function Calendar() {
 
             </div>
             <div className='grid grid-cols-7 gap-4 w-[85%] mt-2 bg-slate-50 p-5 rounded-md'>
-            {emptyDate.map(()=>{
+            {emptyDate.map((elem,i)=>{
                 return(
                     <>
-                        <div className='flex justify-center py-3 border-[2px] border-slate-100 rounded-md'></div>
+                        <div className='flex justify-center py-3 border-[2px] border-slate-100 rounded-md' key={i}></div>
                     </>
                 )
             })}
-            {dates.map((elem)=>{
+            {dates.map((elem,i)=>{
                 return(
                     <>
-                        <div className={elem===d.getDate()?'flex justify-center py-3 border-[2px] border-slate-100 rounded-md hover:bg-blue-50 font-bold':'flex justify-center py-3 border-[2px] border-slate-100 rounded-md hover:bg-blue-50 '}>{elem}</div>
+                        <div className={elem===d.getDate()?'flex justify-center py-3 border-[2px] border-slate-100 rounded-md hover:bg-blue-50 font-bold':'flex justify-center py-3 border-[2px] border-slate-100 rounded-md hover:bg-blue-50 '} key={i}>{elem}</div>
                     </>
                 )
             })}

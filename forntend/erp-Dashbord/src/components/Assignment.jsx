@@ -1,4 +1,5 @@
-import React, { useContext} from 'react'
+import React, { useContext, useEffect} from 'react'
+import { useParams } from 'react-router-dom'
 import NodeContext from '../contexts/NodeContext'
 import { Empty } from '../pages/Backpack'
 import StudentAssignment from './sub_components/Assignment/StudentAssignment'
@@ -7,6 +8,13 @@ import TeacherAssignment from './sub_components/Assignment/TeacherAssignment'
 export default function Assignment() {
 
   const a = useContext(NodeContext)
+
+  const {ActClass} = useParams()
+
+  useEffect(()=>{
+    a.setActiveClass(ActClass)
+  },[])
+
 
   return (
     <>

@@ -1,5 +1,6 @@
-import axios from 'axios'
+// import axios from 'axios'
 import React, { useState } from 'react'
+import { useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie'
 import instance from '../Api/api';
 import NodeContext from './NodeContext'
@@ -7,6 +8,8 @@ import NodeContext from './NodeContext'
 export default function NodeState(props) {
 
   let cookie = new Cookies();
+
+  const{ ActClass } = useParams()
 
   // Active class
   const [ActiveClass, setActiveClass] = useState(-1)
@@ -26,7 +29,7 @@ export default function NodeState(props) {
         let result
         try {
           
-            result = await instance.get(`/myData`, {
+            result = await instance.get(`/${cookie.get('lable')}/myData`, {
                 headers: {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 }
@@ -44,53 +47,43 @@ export default function NodeState(props) {
     const getClasses = async()=>{
         let result 
         let cookie = new Cookies()
-        try{
-            result = instance.get(`/classes/${cookie.get('student_id')}`,{
-                headers : {
-                    'Authorization': 'Bearer ' + cookie.get('token')
-                }
-            })
-            setMyClasses((await result).data)
-            
-        }catch(error){
-            
+        if(cookie.get('student_id')){
+          try{
+              result = await instance.get(`${cookie.get('lable')}/classes/${cookie.get('student_id')}`,{
+                  headers : {
+                      'Authorization': 'Bearer ' + cookie.get('token')
+                  }
+              })
+              setMyClasses(result.data.classes)
+          }catch(error){
+              console.log("error ocured")
+          }
         }
+        else return
     }
-
-    const links = [
-        {
-          to: `/myClass`,
-          name : 'Back',
-          icon : <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        },
-        {
-          to:'/assignments',
-          name:'Assignments',
-          icon : <i class="fa-solid fa-book"></i>
-        },
-        {
-          to:'/classCalendar',
-          name:'Class Calendar',
-          icon : <i class="fa-regular fa-calendar-days"></i>
-        },
-        {
-          to:`/myClassmates`,
-          name:'Students',
-          icon : <i className="fa-solid fa-users"></i>
-        },
-        {
-          to:'/logout',
-          name : 'Logout',
-          icon : <i class="fa-solid fa-power-off"></i>
-      },
-    ]
+    // const getClasses = async()=>{
+    //     let result 
+    //     let cookie = new Cookies()
+    //     try{
+    //         result = instance.get(`${cookie.get('lable')}/classes/${cookie.get('student_id')}`,{
+    //             headers : {
+    //                 'Authorization': 'Bearer ' + cookie.get('token')
+    //             }
+    //         })
+    //         setMyClasses((await result).data)
+    //         console.log((await result).data)
+    //         console.log(myClasses)
+    //     }catch(error){
+            
+    //     }
+    // }
 
     // students in a class
     const [classmates, setClassmates] = useState([])
 
     const getClassMates=async(classe_id)=>{
       let cookie = new Cookies()
-        let result = await instance.get(`/classmate/${user.student_id}/${classe_id}`,{
+        let result = await instance.get(`${cookie.get('lable')}/classmate/${user.student_id}/${classe_id}`,{
                 headers : {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 }
@@ -99,8 +92,64 @@ export default function NodeState(props) {
           setActiveClass(classe_id)
     }
 
+    const links = [
+      {
+        to: `/myClass`,
+        name : 'Back',
+        icon : <i className="fa-solid fa-arrow-right-from-bracket"/>
+      },
+      {
+        to:`/assignments/${ActiveClass}`,
+        name:'Assignments',
+        icon : <i className="fa-solid fa-book"/>
+      },
+      {
+        to:'/classCalendar',
+        name:'Class Calendar',
+        icon : <i className="fa-regular fa-calendar-days"/>
+      },
+      {
+        to:`/myClassmates/${ActiveClass}`,
+        name:'Students',
+        icon : <i className="fa-solid fa-users"/>
+      },
+      {
+        to:'/logout',
+        name : 'Logout',
+        icon : <i className="fa-solid fa-power-off"/>
+    },
+  ]  
+
+  const getClassesFirst = async(class_id)=>{
+    let result 
+    let cookie = new Cookies()
+    try{
+        result = instance.get(`${cookie.get('lable')}/classes/${class_id}`,{
+            headers : {
+                'Authorization': 'Bearer ' + cookie.get('token')
+            }
+        })
+        setMyClasses((await result).data.classes)
+        // console.log("$$$")
+        // console.log(myClasses)
+        // console.log("$$$")
+        
+    }catch(error){
+        
+    }
+}
+
     return (
-        <NodeContext.Provider value={{user,setUser,userData,myClasses,getClasses,links,ActiveClass,setActiveClass,classmates,getClassMates}}>
+        <NodeContext.Provider value={
+            {
+              user,setUser,
+              userData,
+              myClasses,getClasses
+              ,links
+              ,ActiveClass,setActiveClass,
+              classmates,getClassMates,getClassesFirst
+            }
+          }>
             {props.children}
         </NodeContext.Provider>
   )

@@ -19,14 +19,15 @@ export default function Dashbord(props) {
 
     const links = [
         {
-            to:`/myClass/${a.user.student_id}`,
+            // to:`/myClass/${a.user.student_id}`,
+            to:`/myClass`,
             name : 'My class',
             icon : <i className="fa-solid fa-users"></i>
         },
         {
             to:'/logout',
             name : 'Logout',
-            icon : <i class="fa-solid fa-power-off"></i>
+            icon : <i className="fa-solid fa-power-off"></i>
         },
     ]
         useEffect(() => {
@@ -56,20 +57,20 @@ export default function Dashbord(props) {
             <div className="inner-nav">
             {
                 props.links ?
-                props.links.map((elem)=>{
+                props.links.map((elem,i)=>{
                     return(
                         <>
-                        <Link to={elem.to}>
+                        <Link to={elem.to} key={i}>
                             <BubbleBig name={elem.name} icon={elem.icon} />
                         </Link>                
                         </>
                     )
                 })
                 :
-                links.map((elem)=>{
+                links.map((elem,i)=>{
                     return(
                         <>
-                        <Link to={elem.to}>
+                        <Link to={elem.to} key={i}>
                             <BubbleBig name={elem.name} icon={elem.icon} />
                         </Link>                
                         </>
@@ -103,20 +104,20 @@ export default function Dashbord(props) {
 
             {
                 props.links?
-                    props.links.map((elem)=>{
+                    props.links.map((elem,i)=>{
                         return(
                             <>
-                                <Link to={elem.to}>
+                                <Link to={elem.to} key={i}>
                                     <Bubble name={elem.name} icon={elem.icon} />
                                 </Link>
                             </>
                         )
                     })
                 :
-                    links.map((elem)=>{
+                    links.map((elem,i)=>{
                         return(
                             <>
-                                <Link to={elem.to}>
+                                <Link to={elem.to} key={i}>
                                     <Bubble name={elem.name} icon={elem.icon} />
                                 </Link>
                             </>

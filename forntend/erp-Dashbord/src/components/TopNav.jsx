@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import male from './media/img/maleIcon.png'
 import female from './media/img/femaleIcon.png'
@@ -11,8 +11,10 @@ export default function TopNav() {
 
     const a = useContext(NodeContext)
 
-    useEffect(() => {
-        a.userData();
+    
+    useMemo(async() => {
+        console.log("called userData")
+        await a.userData();
     }, []);
 
   return (

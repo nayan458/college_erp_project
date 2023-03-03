@@ -6,6 +6,8 @@ import male from './media/img/maleIcon.png'
 import female from './media/img/femaleIcon.png'
 import { Empty } from '../pages/Backpack'
 import ClipLoader from 'react-spinners/ClipLoader'
+import { useParams } from 'react-router-dom'
+import instance from '../Api/api'
 
 export default function Student() {
 
@@ -14,14 +16,21 @@ export default function Student() {
 
     const a = useContext(NodeContext)
 
+    const { ActClass } = useParams()
+
     let getstudents=async()=>{
         let cookie = new Cookies()
-        let result = await axios.get(`${a.user.lable}/classmate/${a.user.student_id}/${a.ActiveClass}`,{
-                headers : {
-                    'Authorization': 'Bearer ' + cookie.get('token')
-                }
-            })
-        setstudents(result.data)
+        try{
+            await axios.get('http://localhost:8000/sanctum/csrf-cookie');
+            let result = await instance.get(`${cookie.get('lable')}/classmate/${cookie.get('student_id')}/${ActClass}`,{
+                    headers : {
+                        'Authorization': 'Bearer ' + cookie.get('token')
+                    }
+                })
+            setstudents(result.data)
+        } catch(error){
+            console.log('error' + error)
+        }
         setLoder(false)
     }
 

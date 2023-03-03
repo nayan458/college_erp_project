@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Ramsey\Uuid\Rfc4122\UuidV5;
 
 class StudentsController extends Controller
 {
@@ -18,47 +19,69 @@ class StudentsController extends Controller
      */
     // Student view classes(done)
         function view_classes($student_id){
-
-                    return Student::with('classes')
+            try{
+                    $classes =  Student::with('classes')
                             ->where('student_id',$student_id)
                             ->get()
                             ->pluck('classes')
                             ->first();
+                }  catch (\Throwable $th) {
+                    return response()-> json(["error"=>"404 page don't exist"],401);
                 }
+                return response()->json(["classes"=>$classes],200);
+        }
 
-    // Studnet view assignments(done)
+    // Studnet view assignments(pending)
         function view_assignment($student_id,$class_id){
 
             $result = DB::table('assignments_subs')
                 ->where('student_id',$student_id)
                 ->join('assignments','assignments_subs.assignment_id','assignments.assignment_id')
                 ->get();
-            // if($result->count() > 0)
-            // [1 2 3 4] [2 4] $result = [2 4] $query = [1 3]
-                $query = DB::table('assignments')
-                    ->where('classe_id',$class_id)
-                    ->whereNotExists(function($qury){
-                        $qury->select(DB::raw(1))
-                        ->from('assignments_subs')
-                        ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
-                    })
-                    ->get();
-            // else
-                // $query = DB::table('assignments')->where('classe_id',$class_id)->get();
-                // $query = DB::selectraw;
-                
-            // $query = DB::table('assignments')
-            // ->whereNot(function ($query) {
-                // $query->DB::table('assignments_subs')
-                // $query->where('clearance', true)
-                        // ->orWhere('price', '<', 10);
-            // })
-            // ->get();
-                
+
+            $query = DB::table('assignments')
+                ->where('classe_id',$class_id);
+
+            $data = data::whereNotExists(function($query){
+                    $query->select(DB::raw(1))
+                    ->from('assignments_subs')
+                    ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
+                })
+                ->get();
+
             return response()->json([
-                "pending" => $query,
+                "pending" => $data,
                 "submited" => $result
             ],200);
+            // $result = DB::table('assignments_subs')
+            //     ->where('student_id',$student_id)
+            //     ->join('assignments','assignments_subs.assignment_id','assignments.assignment_id')
+            //     ->get();
+
+            //     $query = DB::table('assignments')
+            //         ->where('classe_id',$class_id)
+            //         ->whereNotExists(function($qury){
+            //             $qury->select(DB::raw(1))
+            //             ->from('assignments_subs')
+            //             ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
+            //         })
+            //         ->get();
+            // // else
+            //     // $query = DB::table('assignments')->where('classe_id',$class_id)->get();
+            //     // $query = DB::selectraw;
+                
+            // // $query = DB::table('assignments')
+            // // ->whereNot(function ($query) {
+            //     // $query->DB::table('assignments_subs')
+            //     // $query->where('clearance', true)
+            //             // ->orWhere('price', '<', 10);
+            // // })
+            // // ->get();
+                
+            // return response()->json([
+            //     "pending" => $query,
+            //     "submited" => $result
+            // ],200);
 
         }
     // student downloads assignment
@@ -78,19 +101,17 @@ class StudentsController extends Controller
             } catch (\Throwable $th) {
                 return(["error"=>"404 page don't exist"]);
             }
+            $uuid = UuidV5::uuid4();
             $path = 'assignment_Submitions/'.$student_id.'/'.$cls_id;
-            $req->assignment->storeAS($path,$req->name.'.pdf');
+            $req->assignment->storeAS($path,$uuid.'.pdf');
             DB::table('assignments_subs')->insert([
                 'assignment_id'=>$req->ass_id,
-                'ass_sub_filelocation' => $path.'/'.$req->name.'.pdf',
+                'ass_sub_filelocation' => $path.'/'.$uuid.'.pdf',
                 'student_id'=>$student_id,
                 'status'=>'submitted',
             ]);
             return response()->json(["path" => $req->file('assignment')->isValid()],200);
         }
-    // Studnet view quiz
-
-    // Student submit quiz
 
     // student view classmats
         function view_classmates($student_id,$class_id){

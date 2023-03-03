@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\PersonalAccessToken;
+use Ramsey\Uuid\Rfc4122\UuidV5;
 
 class TeachersController extends Controller
 {
@@ -39,18 +40,16 @@ class TeachersController extends Controller
             } catch(\Throwable $th){
                 return(["error"=>"class doesnot exists"]);
             }
+            $uuid = UuidV5::uuid4();
             $path = 'assignments/'.$tech_id.'/'.$clas_id;
-            $rslt = $request->assignment->storeAS($path,$request->name.'.pdf');
+            $rslt = $request->assignment->storeAS($path,$uuid.'.pdf');
             DB::table('assignments')->insert([
                 'ass_name' => $request->name,
                 'ass_desc' => $request->desc,
-                'ass_filelocation' => $path.'/'.$request->name.'.pdf',
+                'ass_filelocation' => $path.'/'.$uuid.'.pdf',
                 'classe_id' => $clas_id
             ]);
-                // $rslt = $path.'/'.$req->ass_name.'.pdf';
-            // return(["success"=>]);
             return(["success"=>$rslt]);
-            // return(["ass_name"=>$request->name,"ass_desc" => $request->desc]);
         }
     
     // teacher download added assignment(done)
@@ -65,13 +64,12 @@ class TeachersController extends Controller
     // teacher view classes(done)
 
         function view_class($tech_id){
-            
-            // echo DB::table('classes')
-            // ->where('tech_id','=',$tech_id)
-            // ->get();
-
-            return Teacher::with('view_classes')->where('tech_id',$tech_id)->first()->view_classes;
-            // echo Teacher::with('view_classes')->find(")->get();
+            try{
+                $classes = Teacher::with('view_classes')->where('tech_id',$tech_id)->first()->view_classes;
+            }  catch (\Throwable $th) {
+                return response()->json(["error"=>"404 page don't exist"],401);
+            }
+            return response()->json(["classes" => $classes],200);
         }
     // view students in a class (done)
 
@@ -81,9 +79,7 @@ class TeachersController extends Controller
                 ->select(['fname','lname','email','gender','location','std_semester'])
                 ->join('std_classes','std_classes.student_id','=','students.student_id')
                 ->where('std_classes.classe_id','=',$class_id)
-                ->get(); 
-
-            // return Classe::with('students')->get();
+                ->get();
 
         }
 

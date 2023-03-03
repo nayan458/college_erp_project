@@ -22,11 +22,11 @@ function App() {
               <Route path='/' element={<MyClass/>}/>
               <Route path='/myClass' element={<MyClass/>}/>
 
-              <Route path='/assignments' element={<Assignments/>}/>
+              <Route path='/assignments/:ActClass' element={<Assignments/>}/>
 
               <Route path='/classCalendar' element={<ClassCalendar/>}/>
 
-              <Route path='/myClassmates' element={<MyClassmates/>}/>
+              <Route path='/myClassmates/:ActClass' element={<MyClassmates/>}/>
               <Route path='/myClassmates/:ActClass' element={<MyClassmates/>}/>
 
               <Route path='/logout' element={<Logout/>}/>

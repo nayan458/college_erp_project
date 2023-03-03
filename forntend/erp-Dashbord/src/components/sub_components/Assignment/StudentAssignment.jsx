@@ -1,14 +1,19 @@
 import axios from 'axios'
 import fileDownload from 'js-file-download'
 import React, { useContext, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { ClipLoader } from 'react-spinners'
 import Cookies from 'universal-cookie'
+import instance from '../../../Api/api'
 import NodeContext from '../../../contexts/NodeContext'
 import { Empty } from '../../../pages/Backpack'
 import StatusButtons from './StatusButtons'
 
 
 export default function StudentAssignment() {
+
+    const { ActClass } = useParams()
+
     const [uploadEditor, setuploadEditor] = useState(false)
     const [loder, setLoder] = useState(true)
     
@@ -27,7 +32,7 @@ export default function StudentAssignment() {
             try{
                 
                 let cookie = new Cookies();
-                result = axios.get(`student/viewAssignments/${a.user.student_id}/${a.ActiveClass}`,{
+                result = instance.get(`student/viewAssignments/${a.user.student_id}/${ActClass}`,{
                     headers : {
                         'Authorization' : 'Bearer ' + cookie.get('token')
                     }
@@ -47,7 +52,7 @@ export default function StudentAssignment() {
             e.preventDefault()
             let cookie = new Cookies();
 
-            axios.get(`student/download/${a.user.student_id}/${a.ActiveClass}/${elem.assignment_id}`,{
+            instance.get(`student/download/${a.user.student_id}/${ActClass}/${elem.assignment_id}`,{
                 responseType : "blob",
                 headers : {
                     'Authorization' : 'Bearer ' + cookie.get('token')
@@ -93,7 +98,7 @@ export default function StudentAssignment() {
         formdata.append('desc',assignmentSubmitionData.desc);
         let boundary = `--${Date.now()}`;
         try{
-            await axios.post(`student/submit_assignment/${a.user.student_id}/${a.ActiveClass}`,
+            await instance.post(`student/submit_assignment/${a.user.student_id}/${ActClass}`,
             formdata,
             {
                 headers : {
@@ -160,13 +165,13 @@ export default function StudentAssignment() {
                                         <button className='bg-blue-600 hover:bg-blue-400 p-2 rounded-sm flex gap-2 items-center cursor-pointer' onClick={
                                                                                                                                                                 (e)=>downloadAssignment(e,elem)
                                                                                                                                                                     }>
-                                            <i class="fa-solid fa-download"></i>
+                                            <i className="fa-solid fa-download"></i>
                                             <span className='hidden lg:block'>
                                                 download
                                             </span>
                                         </button>
                                             <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  onClick={()=>open(elem)}>
-                                                <i class="fa-solid fa-upload"></i>
+                                                <i className="fa-solid fa-upload"></i>
                                                 <span className='hidden lg:block'>
                                                     Submit
                                                 </span>
@@ -223,7 +228,7 @@ export default function StudentAssignment() {
                 <div>
                     {
                         submit ?
-                            <button className='bg-green-600 text-slate-50 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center font-semibold' onClick={(e)=>submitAssignment(e)}><i class="fa-solid fa-upload"></i>Submit</button>
+                            <button className='bg-green-600 text-slate-50 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center font-semibold' onClick={(e)=>submitAssignment(e)}><i className="fa-solid fa-upload"></i>Submit</button>
                         :
                             <button className='bg-green-300 text-slate-50 hover:cursor-not-allowed p-2 rounded-sm flex gap-2 items-center font-semibold'>Submitting...</button>
                     }

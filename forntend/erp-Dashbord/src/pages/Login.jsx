@@ -11,7 +11,7 @@ export default function Login() {
   const cookies = new Cookies();
   const redirect = useNavigate();
 
-  const [label, setLabel] = useState("teacher")
+  const [label, setLabel] = useState("student")
 
   const handelLabel=(e)=>{
     setLabel(e.target.value)
@@ -31,6 +31,7 @@ export default function Login() {
   const a = useContext(NodeContext)
 
   const submit =async(e)=>{
+    cookies.set('lable',label)
       try {
           e.preventDefault()
           axios.defaults.withCredentials = true;
@@ -39,18 +40,25 @@ export default function Login() {
 
           if(rslt.data.user === false)
             throw "Invalid login credentials"
-          
+
           cookies.set('token',rslt.data.token,{ expires: new Date(Date.now() + 3600000) });
           cookies.set('gender',rslt.data.user.gender);
+
           a.setUser({...a.user, lable : rslt.data.label, student_id : rslt.data.student_id, gender : rslt.data.user.gender})
+          try{
+            a.getClassesFirst(rslt.data.student_id)
+          }catch(err){
+            console.log(err)
+          }
           alert(`${rslt.data.label} loged in successfully`);
-          redirect(`/myclass`)
         } catch (error) {
           e.preventDefault()
           if(error){
             alert("Invalid login credentials");
+          }
+          return
         }
-      }
+        redirect(`/myclass`)
   }
 
   useEffect(() => {

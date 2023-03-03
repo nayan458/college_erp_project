@@ -66,7 +66,7 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
         Route::post('assignmentStatus','assignment_status');
 
         // teacher delete assignment
-        Route::post('deleteAssignment/{ass_id}','deleteAssignment');
+        Route::delete('deleteAssignment/{ass_id}','deleteAssignment');
     });
 
     /*
@@ -101,9 +101,13 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
 
     });
 
-
+    
+    
 });;
 
+Route::controller(AuthenticationController::class)->group(function(){
+    Route::post('/logout','logout');
+});
 /*
 ||--------------------------------------------------------------------------
 || ADMIN Routes

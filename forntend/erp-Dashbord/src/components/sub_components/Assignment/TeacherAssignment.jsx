@@ -1,13 +1,18 @@
 import axios from 'axios'
 import fileDownload from 'js-file-download'
 import React, { useContext, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { ClipLoader } from 'react-spinners'
 import Cookies from 'universal-cookie'
+import instance from '../../../Api/api'
 import NodeContext from '../../../contexts/NodeContext'
 import { Empty } from '../../../pages/Backpack'
 import StatusButtons from './StatusButtons'
 
 export default function TeacherAssignment() {
+
+    const {ActClass} = useParams()
+
     const [uploadEditor, setuploadEditor] = useState(false)
     const [loder, setLoder] = useState(true)
     const [submitionLoad, setsubmitionLoad] = useState(true)
@@ -19,12 +24,12 @@ export default function TeacherAssignment() {
 
     const close_sub=()=> setSubmitionDashbord(false)
 
-    // teacher view assignment submitssion by students
+    // teacher view assignment submitssion by students (done)
         const view_subs=async(elem)=> {
             setsubmitionLoad(true)
             let cookie = new Cookies()
             try{
-                let result = await axios.get(`teacher/assignmentSubmition/${elem.assignment_id}`,{
+                let result = await instance.get(`teacher/assignmentSubmition/${elem.assignment_id}`,{
                     headers : {
                         'Authorization': 'Bearer ' + cookie.get('token')
                     }
@@ -37,34 +42,38 @@ export default function TeacherAssignment() {
             setSubmitionDashbord(true)
         }
 
-    // to get assignments
+    // to get assignments (done)
         const [assignments, setassignments] = useState([])
 
         const a = useContext(NodeContext)
-
+        
         const getAssignments = async()=>{
         let result
+        let url = (`teacher/viewAssignments/${a.user.student_id}/${ActClass}`)
         try{
             let cookie = new Cookies();  
-            result = axios.get(`${a.user.lable}/viewAssignments/${a.user.student_id}/${a.ActiveClass}`,{
+            result = instance.get(url
+            ,{
                 headers : {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 }
-            })
+            }
+            )
             setassignments((await result).data)
+            // console.log(await result)
         } catch(err){
-
+            console.log("error arived : "+err)
         }
         setLoder(false)
         }
 
-    // download assignment added by the user itself
+    // download assignment added by the user itself (done)
 
         const downloadAssignment=(e,elem)=>{
             e.preventDefault()
             let cookie = new Cookies();
 
-            axios.get(`${a.user.lable}/download/${a.user.student_id}/${a.ActiveClass}/${elem.assignment_id}`,{
+            instance.get(`${a.user.lable}/download/${a.user.student_id}/${ActClass}/${elem.assignment_id}`,{
                 responseType : "blob",
                 headers : {
                     'Authorization' : 'Bearer ' + cookie.get('token')
@@ -77,12 +86,12 @@ export default function TeacherAssignment() {
             })
         }
 
-    // download student assignment submissions
+    // download student assignment submissions (done)
 
         const downloadAssignmentSubmisions=(e,elem)=>{
             e.preventDefault()
             let cookie = new Cookies();
-            axios.get(`teacher/downloadStudentAsssignment/${elem.student_id}/${elem.assignment_id}`,{
+            instance.get(`teacher/downloadStudentAsssignment/${elem.student_id}/${elem.assignment_id}`,{
                 headers : {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 },
@@ -94,7 +103,7 @@ export default function TeacherAssignment() {
             })
         }
 
-    // teacher adds an assignment
+    // teacher adds an assignment (done)
         const [assignmentSubmitionData, setAssignmentSubmitionData] = useState({
             assignment : null,
             name : "Hello",
@@ -125,7 +134,7 @@ export default function TeacherAssignment() {
             formdata.append('desc',assignmentSubmitionData.desc);
             let boundary = `--${Date.now()}`;
             try{
-                let result = await axios.post(`${a.user.lable}/submit_assignment/${a.user.student_id}/${a.ActiveClass}`,
+                let result = await instance.post(`${a.user.lable}/submit_assignment/${a.user.student_id}/${ActClass}`,
                 formdata,
                 {
                     headers : {
@@ -134,6 +143,7 @@ export default function TeacherAssignment() {
                     }
                 })
                 setLoder(true)
+                console.log(result)
                 getAssignments()
                 alert("assignment submited successfully")
                 close()
@@ -159,7 +169,7 @@ export default function TeacherAssignment() {
                         fd.append('student_id',elem.student_id)
                         fd.append('status','approve')
 
-                        await axios.post(`teacher/assignmentStatus`,fd,
+                        await instance.post(`teacher/assignmentStatus`,fd,
                             {
                                 headers : {
                                     'Authorization' : 'Bearer ' + cookie.get('token')
@@ -188,7 +198,7 @@ export default function TeacherAssignment() {
                 fd.append('status','rejected')
 
                 try{    
-                    await axios.post(`teacher/assignmentStatus`,fd,
+                    await instance.post(`teacher/assignmentStatus`,fd,
                         {
                             headers : {
                                 'Authorization' : 'Bearer ' + cookie.get('token')
@@ -204,7 +214,7 @@ export default function TeacherAssignment() {
             setsubmitionLoad(false)
         }
 
-    // teacher deletes an uploaded assignment
+    // teacher deletes an uploaded assignment (done)
         const del_ass=async(elem)=>{
 
             setLoder(true)
@@ -213,8 +223,7 @@ export default function TeacherAssignment() {
             const fd = new FormData();
             fd.append('assignment_id',elem.assignment_id)
             try{
-                await axios.post(`teacher/deleteAssignment/${elem.assignment_id}`,
-                fd,
+                await instance.delete(`teacher/deleteAssignment/${elem.assignment_id}`,
                 {
                     headers : {
                         'Authorization' : 'Bearer ' + cookie.get('token')
@@ -238,25 +247,16 @@ export default function TeacherAssignment() {
                     <div className='col-span-2 lg:col-span-1'>DATE UPLOAD</div>
                     <div className='col-span-2 lg:col-span-1'>FILE NAME</div>
                     <div className='col-span-2 lg:col-span-1 truncate'>DESCRIPTION</div>
-                    <div className='flex gap-2 items-center col-span-3 lg:col-span-1'>
-                        {   a.user.lable === "teacher" ?
+                    <div className='flex gap-2 justify-center items-center col-span-3 lg:col-span-1'>
+                        
                             <div className='underline underline-offset-4 font-bold text-xs truncate'>
-                                SUBMITIONS
+                                SUBMISSIONS
                             </div>
-                            :
-                            <div className='underline underline-offset-4 font-bold text-xs truncate'>
-                                SUBMIT
-                            </div>
-                        }
-                        {   a.user.lable === "teacher" ?
-                            <button className='bg-green-600 text-slate-50 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center font-semibold' onClick={open}><i class="fa-solid fa-upload"></i>
-                            <span className='hidden sm:block'>
-                                upload
-                            </span>
-                        </button>
-                        :
-                        <></>
-                        }
+                            <button className='bg-green-600 text-slate-50 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center font-semibold' onClick={open}><i className="fa-solid fa-upload"></i>
+                                <span className='hidden sm:block'>
+                                    upload
+                                </span>
+                            </button>
                     </div>
             </div>
             { loder ?
@@ -281,14 +281,14 @@ export default function TeacherAssignment() {
                                 <button className='bg-blue-600 hover:bg-blue-400 p-2 rounded-sm flex gap-2 items-center cursor-pointer' onClick={
                                                                                                                                                         (e)=>downloadAssignment(e,elem)
                                                                                                                                                             }>
-                                    <i class="fa-solid fa-download"></i>
+                                    <i className="fa-solid fa-download"></i>
                                     <span className='hidden lg:block'>
                                         download
                                     </span>
                                 </button>
                                 {   a.user.lable === "student" ?
                                     <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  onClick={()=>open(elem)}>
-                                        <i class="fa-solid fa-upload"></i>
+                                        <i className="fa-solid fa-upload"></i>
                                         <span className='hidden lg:block'>
                                             Submit
                                         </span>
@@ -297,7 +297,7 @@ export default function TeacherAssignment() {
                                     <>
                                         <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  
                                             onClick={()=>view_subs(elem)}>
-                                        <i class="fa-solid fa-eye"></i>
+                                        <i className="fa-solid fa-eye"></i>
                                             <span className='hidden lg:block'>
                                                 view
                                             </span>
@@ -305,7 +305,7 @@ export default function TeacherAssignment() {
                                         <button className='bg-red-600 hover:bg-red-400 p-2 rounded-sm flex gap-2 items-center'
                                             onClick={()=>del_ass(elem)}
                                         >
-                                        <i class="fa-solid fa-trash"></i>
+                                        <i className="fa-solid fa-trash"></i>
                                             <span className='hidden lg:block'>
                                                 delete
                                             </span>
@@ -353,7 +353,7 @@ export default function TeacherAssignment() {
                 <></>
                 }
                 <div>
-                    <button className='bg-green-600 text-slate-50 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center font-semibold' onClick={(e)=>submitAssignment(e)}><i class="fa-solid fa-upload"></i>Submit</button>
+                    <button className='bg-green-600 text-slate-50 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center font-semibold' onClick={(e)=>submitAssignment(e)}><i className="fa-solid fa-upload"></i>Submit</button>
                 </div>
             </form>
         </div>
@@ -402,7 +402,7 @@ export default function TeacherAssignment() {
                                                                         (e)=>downloadAssignmentSubmisions(e,elem)
                                                                     }
                                                             >
-                                                            <i class="fa-solid fa-download"></i>
+                                                            <i className="fa-solid fa-download"></i>
                                                             <span className='hidden lg:block'>
                                                                 download
                                                             </span>
@@ -414,7 +414,7 @@ export default function TeacherAssignment() {
                                                                         ()=>approve(elem,index)
                                                                     }
                                                             >
-                                                            <i class="fa-regular fa-circle-check"></i>
+                                                            <i className="fa-regular fa-circle-check"></i>
                                                             <span className='hidden lg:block'>
                                                                 approve
                                                             </span>
@@ -424,7 +424,7 @@ export default function TeacherAssignment() {
                                                                         ()=>reject(elem)
                                                                     }
                                                             >
-                                                            <i class="fa-regular fa-file-excel"></i>
+                                                            <i className="fa-regular fa-file-excel"></i>
                                                             <span className='hidden lg:block'>
                                                                 reject
                                                             </span>

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect} from 'react'
 import { Link } from 'react-router-dom'
+import Cookies from 'universal-cookie'
 import NodeContext from '../contexts/NodeContext'
 
 export default function ClassRoom() {
@@ -7,7 +8,9 @@ export default function ClassRoom() {
   const a = useContext(NodeContext)
 
   const navigateToClass=(id)=>{
+    // let cookie = new Cookies()
     a.setActiveClass(id)
+    
   }
 
   useEffect(() => {
@@ -27,7 +30,10 @@ export default function ClassRoom() {
             a.myClasses.map((elem,i)=>{
             return(
               <>
-              <Link to={`/classCalendar`} className='truncate shadow-sm' key={i} onMouseEnter={()=>navigateToClass(elem.classe_id)} onClick={()=>a.getClassMates(elem.classe_id)}>
+              <Link to={`/assignments/${elem.classe_id}`} className='truncate shadow-sm' key={i} >
+                {/* // onMouseEnter={()=>navigateToClass(elem.classe_id)} 
+                // onClick={()=>a.navigateToClass(elem.classe_id)}> */}
+
                 <div className=' bg-slate-100 hover:bg-slate-200 p-2 rounded-md transform duration-75 ease-linear truncate'>
                   <div className='truncate'>
                     <div className='py-2 pl-2'>
