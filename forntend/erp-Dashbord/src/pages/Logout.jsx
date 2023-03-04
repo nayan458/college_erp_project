@@ -1,7 +1,6 @@
 import React, { useContext, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie'
-import instance from '../Api/api';
 import NodeContext from '../contexts/NodeContext';
 
 export default function Logout() {

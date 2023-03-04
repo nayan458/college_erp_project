@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react'
+import Cookies from 'universal-cookie';
 
 export default function Calendar() {
+
+    const cookie = new Cookies()
+
     const d = new Date();
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const daysSort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

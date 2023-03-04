@@ -97,17 +97,16 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
         // student view classmats(done)
         Route::get('/classmate/{student_id}/{class_id}','view_classmates');
 
-        // Route::get('/myData','myData');
-
     });
 
+    Route::controller(AuthenticationController::class)->group(function(){
+        Route::post('logout','logout');
+        Route::post('islogin','is_login');
+    });
     
     
 });;
 
-Route::controller(AuthenticationController::class)->group(function(){
-    Route::post('/logout','logout');
-});
 /*
 ||--------------------------------------------------------------------------
 || ADMIN Routes

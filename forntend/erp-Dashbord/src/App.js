@@ -20,13 +20,13 @@ function App() {
           <Route element={<Protected/>}>
 
               <Route path='/' element={<MyClass/>}/>
+              
               <Route path='/myClass' element={<MyClass/>}/>
 
               <Route path='/assignments/:ActClass' element={<Assignments/>}/>
 
               <Route path='/classCalendar' element={<ClassCalendar/>}/>
 
-              <Route path='/myClassmates/:ActClass' element={<MyClassmates/>}/>
               <Route path='/myClassmates/:ActClass' element={<MyClassmates/>}/>
 
               <Route path='/logout' element={<Logout/>}/>

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Laravel\Sanctum\HasApiTokens;
 
 class AuthenticationController extends Controller
@@ -75,8 +76,15 @@ class AuthenticationController extends Controller
         }
 
         function logout(){
-            $result = Auth::logout();
-            return response()->json(["result" => $result]);
-            // return response()->json(["result" => 1]);
+            $user = Auth::user();
+            $token = $user->tokens()->delete();
+            return response()->json(["result" => $token]);
+        }
+
+        function is_login(){
+            if(Auth::user())
+                return true;
+            else
+                return false;
         }
 }

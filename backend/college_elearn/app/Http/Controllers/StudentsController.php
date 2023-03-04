@@ -34,54 +34,55 @@ class StudentsController extends Controller
     // Studnet view assignments(pending)
         function view_assignment($student_id,$class_id){
 
-            $result = DB::table('assignments_subs')
-                ->where('student_id',$student_id)
-                ->join('assignments','assignments_subs.assignment_id','assignments.assignment_id')
-                ->get();
-
-            $query = DB::table('assignments')
-                ->where('classe_id',$class_id);
-
-            $data = data::whereNotExists(function($query){
-                    $query->select(DB::raw(1))
-                    ->from('assignments_subs')
-                    ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
-                })
-                ->get();
-
-            return response()->json([
-                "pending" => $data,
-                "submited" => $result
-            ],200);
             // $result = DB::table('assignments_subs')
             //     ->where('student_id',$student_id)
             //     ->join('assignments','assignments_subs.assignment_id','assignments.assignment_id')
             //     ->get();
 
-            //     $query = DB::table('assignments')
-            //         ->where('classe_id',$class_id)
-            //         ->whereNotExists(function($qury){
-            //             $qury->select(DB::raw(1))
-            //             ->from('assignments_subs')
-            //             ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
-            //         })
-            //         ->get();
-            // // else
-            //     // $query = DB::table('assignments')->where('classe_id',$class_id)->get();
-            //     // $query = DB::selectraw;
-                
-            // // $query = DB::table('assignments')
-            // // ->whereNot(function ($query) {
-            //     // $query->DB::table('assignments_subs')
-            //     // $query->where('clearance', true)
-            //             // ->orWhere('price', '<', 10);
-            // // })
-            // // ->get();
-                
+            // $query = DB::table('assignments')
+            //     ->where('classe_id',$class_id);
+
+            // $data = data::whereNotExists(function($query){
+            //         $query->select(DB::raw(1))
+            //         ->from('assignments_subs')
+            //         ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
+            //     })
+            //     ->get();
+
             // return response()->json([
-            //     "pending" => $query,
+            //     "pending" => $data,
             //     "submited" => $result
             // ],200);
+
+            $result = DB::table('assignments_subs')
+                ->where('student_id',$student_id)
+                ->join('assignments','assignments_subs.assignment_id','assignments.assignment_id')
+                ->get();
+
+                $query = DB::table('assignments')
+                    ->where('classe_id',$class_id)
+                    ->whereNotExists(function($qury){
+                        $qury->select(DB::raw(1))
+                        ->from('assignments_subs')
+                        ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
+                    })
+                    ->get();
+            // else
+                // $query = DB::table('assignments')->where('classe_id',$class_id)->get();
+                // $query = DB::selectraw;
+                
+            // $query = DB::table('assignments')
+            // ->whereNot(function ($query) {
+                // $query->DB::table('assignments_subs')
+                // $query->where('clearance', true)
+                        // ->orWhere('price', '<', 10);
+            // })
+            // ->get();
+                
+            return response()->json([
+                "pending" => $query,
+                "submited" => $result
+            ],200);
 
         }
     // student downloads assignment

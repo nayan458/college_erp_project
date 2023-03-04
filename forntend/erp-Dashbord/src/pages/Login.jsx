@@ -5,38 +5,21 @@ import Cookies from 'universal-cookie'
 import axios from 'axios'
 import college_logo from '../components/media/img/college_logo.png'
 import NodeContext from '../contexts/NodeContext'
+import useAuth from '../hooks/useAuth'
 
 export default function Login() {
   
   const cookies = new Cookies();
   const redirect = useNavigate();
 
-  const [label, setLabel] = useState("student")
-
-  const handelLabel=(e)=>{
-    setLabel(e.target.value)
-  }
-
-
-  const [formValue, setFormValue] = useState({email : '',password : ''})
-
-  let name,value;
-  
-  let upDateValues=(e)=>{
-    name = e.target.name;
-    value = e.target.value;
-    setFormValue({...formValue,[name]:value})
-  }
-
   const a = useContext(NodeContext)
+  const { login, upDateValues, formValue, label, handelLabel } = useAuth()
 
   const submit =async(e)=>{
     cookies.set('lable',label)
       try {
           e.preventDefault()
-          axios.defaults.withCredentials = true;
-          await axios.get('http://localhost:8000/sanctum/csrf-cookie');
-          const rslt = await axios.post(`${label}/login`,formValue);
+          const rslt = await login()
 
           if(rslt.data.user === false)
             throw "Invalid login credentials"
@@ -45,11 +28,13 @@ export default function Login() {
           cookies.set('gender',rslt.data.user.gender);
 
           a.setUser({...a.user, lable : rslt.data.label, student_id : rslt.data.student_id, gender : rslt.data.user.gender})
+          
           try{
             a.getClassesFirst(rslt.data.student_id)
           }catch(err){
             console.log(err)
           }
+          
           alert(`${rslt.data.label} loged in successfully`);
         } catch (error) {
           e.preventDefault()
@@ -62,9 +47,16 @@ export default function Login() {
   }
 
   useEffect(() => {
-    let cookies = new Cookies();
-    if(cookies.get('token'))
-      redirect(`/myclass`)
+    // let cookies = new Cookies();
+    // if(cookies.get('token') != undefined)
+    //   redirect(`/myclass`)
+    // else{
+          cookies.remove('token');  
+          cookies.remove('name');
+          cookies.remove('gender');
+          cookies.remove('lable');
+          cookies.remove('student_id');
+    // }
   }, [])
 
   return (

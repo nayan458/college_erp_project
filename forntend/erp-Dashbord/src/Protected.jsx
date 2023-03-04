@@ -4,8 +4,10 @@ import Cookies from 'universal-cookie'
 
 function Protected() {
     const [auth, setauth] = useState(true)
+
     useEffect(() => {
         let cookie = new Cookies();
+
         if(cookie.get('token'))
             setauth(true)
         else
