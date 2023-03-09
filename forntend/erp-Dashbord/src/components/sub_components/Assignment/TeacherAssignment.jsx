@@ -1,4 +1,3 @@
-import axios from 'axios'
 import fileDownload from 'js-file-download'
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -158,7 +157,7 @@ export default function TeacherAssignment() {
 
     // teacher approve assignment
         const approve=async(elem,index)=>{
-            if(elem.status != 'approve'){
+            if(elem.status !== 'approve'){
                 try{    
                         setsubmitionLoad(true)
                         
@@ -187,7 +186,7 @@ export default function TeacherAssignment() {
 
     // teacher reject assignment
         const reject=async(elem)=>{
-            if(elem.status != 'rejected'){
+            if(elem.status !== 'rejected'){
                 setsubmitionLoad(true)
 
                 let cookie = new Cookies()
@@ -273,7 +272,7 @@ export default function TeacherAssignment() {
                     assignments.map((elem,i)=>{
                     return(
                         <>
-                            <div className='truncate' key={i}>{elem.uploaded_at}</div>
+                            <div className='truncate'>{elem.uploaded_at}</div>
                             <div className='truncate'>{elem.ass_name}</div>
                             <div className='truncate'>{elem.ass_desc}</div>
                             <div className='flex text-slate-50 font-semibold gap-2'>
@@ -286,33 +285,22 @@ export default function TeacherAssignment() {
                                         download
                                     </span>
                                 </button>
-                                {   a.user.lable === "student" ?
-                                    <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  onClick={()=>open(elem)}>
-                                        <i className="fa-solid fa-upload"></i>
-                                        <span className='hidden lg:block'>
-                                            Submit
-                                        </span>
-                                    </button>
-                                    :
-                                    <>
-                                        <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  
-                                            onClick={()=>view_subs(elem)}>
-                                        <i className="fa-solid fa-eye"></i>
-                                            <span className='hidden lg:block'>
-                                                view
-                                            </span>
-                                        </button>
-                                        <button className='bg-red-600 hover:bg-red-400 p-2 rounded-sm flex gap-2 items-center'
+                                <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  
+                                    onClick={()=>view_subs(elem)}>
+                                <i className="fa-solid fa-eye"></i>
+                                    <span className='hidden lg:block'>
+                                        view
+                                    </span>
+                                </button>
+                                <button className='bg-red-600 hover:bg-red-400 p-2 rounded-sm flex gap-2 items-center'
                                             onClick={()=>del_ass(elem)}
                                         >
                                         <i className="fa-solid fa-trash"></i>
                                             <span className='hidden lg:block'>
                                                 delete
                                             </span>
-                                        </button>
+                                </button>
 
-                                    </>
-                                }
                             </div>
                         </>
                     )

@@ -1,17 +1,10 @@
 import React, { useContext, useEffect} from 'react'
 import { Link } from 'react-router-dom'
-import Cookies from 'universal-cookie'
 import NodeContext from '../contexts/NodeContext'
 
 export default function ClassRoom() {
 
-  const a = useContext(NodeContext)
-
-  const navigateToClass=(id)=>{
-    // let cookie = new Cookies()
-    a.setActiveClass(id)
-    
-  }
+  const a = useContext(NodeContext)  
 
   useEffect(() => {
     a.getClasses()
@@ -27,12 +20,11 @@ export default function ClassRoom() {
             Your Classes
           </div>
           {
+
             a.myClasses.map((elem,i)=>{
             return(
               <>
               <Link to={`/assignments/${elem.classe_id}`} className='truncate shadow-sm' key={i} >
-                {/* // onMouseEnter={()=>navigateToClass(elem.classe_id)} 
-                // onClick={()=>a.navigateToClass(elem.classe_id)}> */}
 
                 <div className=' bg-slate-100 hover:bg-slate-200 p-2 rounded-md transform duration-75 ease-linear truncate'>
                   <div className='truncate'>

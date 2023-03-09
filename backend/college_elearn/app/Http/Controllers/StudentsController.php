@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Assignment;
-use App\Models\Classe;
-use App\Models\Std_class;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +14,7 @@ class StudentsController extends Controller
     /**
      * STUDENT ROLLS
      */
+
     // Student view classes(done)
         function view_classes($student_id){
             try{
@@ -31,60 +29,32 @@ class StudentsController extends Controller
                 return response()->json(["classes"=>$classes],200);
         }
 
-    // Studnet view assignments(pending)
+    // Studnet view assignments(done)
         function view_assignment($student_id,$class_id){
-
-            // $result = DB::table('assignments_subs')
-            //     ->where('student_id',$student_id)
-            //     ->join('assignments','assignments_subs.assignment_id','assignments.assignment_id')
-            //     ->get();
-
-            // $query = DB::table('assignments')
-            //     ->where('classe_id',$class_id);
-
-            // $data = data::whereNotExists(function($query){
-            //         $query->select(DB::raw(1))
-            //         ->from('assignments_subs')
-            //         ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
-            //     })
-            //     ->get();
-
-            // return response()->json([
-            //     "pending" => $data,
-            //     "submited" => $result
-            // ],200);
 
             $result = DB::table('assignments_subs')
                 ->where('student_id',$student_id)
                 ->join('assignments','assignments_subs.assignment_id','assignments.assignment_id')
+                ->where('classe_id',$class_id)
                 ->get();
 
-                $query = DB::table('assignments')
-                    ->where('classe_id',$class_id)
-                    ->whereNotExists(function($qury){
-                        $qury->select(DB::raw(1))
-                        ->from('assignments_subs')
-                        ->whereRaw('assignments_subs.assignment_id = assignments.assignment_id');
-                    })
-                    ->get();
-            // else
-                // $query = DB::table('assignments')->where('classe_id',$class_id)->get();
-                // $query = DB::selectraw;
-                
-            // $query = DB::table('assignments')
-            // ->whereNot(function ($query) {
-                // $query->DB::table('assignments_subs')
-                // $query->where('clearance', true)
-                        // ->orWhere('price', '<', 10);
-            // })
-            // ->get();
-                
+            $query = DB::table('assignments')
+                ->where('classe_id',$class_id)
+                ->whereNotExists(function($qury)use($student_id){
+                    $qury->select(DB::raw(1))
+                    ->from('assignments_subs')
+                    ->where('student_id','=',$student_id)
+                    ->whereRaw('assignments.assignment_id = assignments_subs.assignment_id');
+                })
+                ->get();
+
             return response()->json([
                 "pending" => $query,
                 "submited" => $result
             ],200);
 
         }
+
     // student downloads assignment
         function download_assignment($student_id,$class_id,$ass_id){
             
@@ -116,7 +86,7 @@ class StudentsController extends Controller
 
     // student view classmats
         function view_classmates($student_id,$class_id){
-            // class.std_classes.students
+
             try {
                 $cls_id = DB::table('std_classes')->select('classe_id')->where('student_id','=',$student_id)->where('classe_id',$class_id)->first()->classe_id;
                 if(!$cls_id)

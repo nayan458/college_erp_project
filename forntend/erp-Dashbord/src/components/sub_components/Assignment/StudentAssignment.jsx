@@ -1,4 +1,3 @@
-import axios from 'axios'
 import fileDownload from 'js-file-download'
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'

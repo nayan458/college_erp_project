@@ -19,8 +19,7 @@ export default function Dashbord(props) {
 
     const links = [
         {
-            // to:`/myClass/${a.user.student_id}`,
-            to:`/myClass`,
+            to:`/`,
             name : 'My class',
             icon : <i className="fa-solid fa-users"></i>
         },

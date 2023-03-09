@@ -11,7 +11,7 @@ class Teacher extends Authenticatable
 {
     use HasFactory, HasApiTokens, Notifiable;
 
-    protected $gaurd = 'teacher';
+    protected $guard = 'teacher';
 
     protected $primaryKey = 'tech_id';
 

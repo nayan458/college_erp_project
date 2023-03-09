@@ -1,6 +1,4 @@
-// import axios from 'axios'
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom';
 import Cookies from 'universal-cookie'
 import instance from '../Api/api';
 import NodeContext from './NodeContext'
@@ -8,8 +6,6 @@ import NodeContext from './NodeContext'
 export default function NodeState(props) {
 
   let cookie = new Cookies();
-
-  const{ ActClass } = useParams()
 
   // Active class
   const [ActiveClass, setActiveClass] = useState(-1)
@@ -43,42 +39,6 @@ export default function NodeState(props) {
             console.log(error);
         }}
 
-
-    const getClasses = async()=>{
-        let result 
-        let cookie = new Cookies()
-        if(cookie.get('student_id')){
-          try{
-              result = await instance.get(`${cookie.get('lable')}/classes/${cookie.get('student_id')}`,{
-                  headers : {
-                      'Authorization': 'Bearer ' + cookie.get('token')
-                  }
-              })
-              setMyClasses(result.data.classes)
-          }catch(error){
-              console.log("error ocured")
-          }
-        }
-        else return
-    }
-    // const getClasses = async()=>{
-    //     let result 
-    //     let cookie = new Cookies()
-    //     try{
-    //         result = instance.get(`${cookie.get('lable')}/classes/${cookie.get('student_id')}`,{
-    //             headers : {
-    //                 'Authorization': 'Bearer ' + cookie.get('token')
-    //             }
-    //         })
-    //         setMyClasses((await result).data)
-    //         console.log((await result).data)
-    //         console.log(myClasses)
-    //     }catch(error){
-            
-    //     }
-    // }
-
-    // students in a class
     const [classmates, setClassmates] = useState([])
 
     const getClassMates=async(classe_id)=>{
@@ -94,7 +54,7 @@ export default function NodeState(props) {
 
     const links = [
       {
-        to: `/myClass`,
+        to: `/`,
         name : 'Back',
         icon : <i className="fa-solid fa-arrow-right-from-bracket"/>
       },
@@ -119,8 +79,29 @@ export default function NodeState(props) {
         icon : <i className="fa-solid fa-power-off"/>
     },
   ]  
+  
+  const getClasses = async()=>{
+
+    let result 
+    let cookie = new Cookies()
+    if(cookie.get('student_id')){
+      try{
+          result = await instance.get(`${cookie.get('lable')}/classes/${cookie.get('student_id')}`,{
+              headers : {
+                  'Authorization': 'Bearer ' + cookie.get('token')
+              }
+          })
+          setMyClasses(result.data.classes)
+      }catch(error){
+          console.log("error ocured")
+      }
+    }
+    else return
+}
+
 
   const getClassesFirst = async(class_id)=>{
+
     let result 
     let cookie = new Cookies()
     try{
@@ -130,13 +111,11 @@ export default function NodeState(props) {
             }
         })
         setMyClasses((await result).data.classes)
-        // console.log("$$$")
-        // console.log(myClasses)
-        // console.log("$$$")
         
     }catch(error){
         
     }
+
 }
 
     return (

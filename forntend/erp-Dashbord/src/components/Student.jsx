@@ -1,7 +1,6 @@
 import axios from 'axios'
-import React, { useContext, useEffect, useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import Cookies from 'universal-cookie'
-import NodeContext from '../contexts/NodeContext'
 import male from './media/img/maleIcon.png'
 import female from './media/img/femaleIcon.png'
 import { Empty } from '../pages/Backpack'
@@ -13,8 +12,6 @@ export default function Student() {
 
     const [students, setstudents] = useState([])
     const [loder, setLoder] = useState(true)
-
-    const a = useContext(NodeContext)
 
     const { ActClass } = useParams()
 
@@ -46,7 +43,7 @@ export default function Student() {
                 Students
             </div>
             {loder ?
-                <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-2 w-[100%] sm:w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 p-2 sm:p-5 rounded-md font-medium mb-3'>
+                <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-2 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 p-2 sm:p-5 rounded-md font-medium mb-3'>
                     <Empty msg="Loading Students" hide={true} comp={
                             <div className='py-5'>
                                 <ClipLoader/>
@@ -54,7 +51,7 @@ export default function Student() {
                         }/>
                 </div>
                 :
-                <div className='grid grid-cols-5 md:grid-cols-7 lg:grid-cols-9 gap-2 w-[100%] sm:w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 p-2 sm:p-5 rounded-md font-medium mb-3'>
+                <div className='grid grid-cols-5 md:grid-cols-7 lg:grid-cols-9 gap-2 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 p-2 sm:p-5 rounded-md font-medium mb-3'>
                     {
                         students.length > 0 ?
                             students.map((elem,i)=>{

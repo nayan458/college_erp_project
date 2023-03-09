@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Assignments_sub;
 use App\Models\Classe;
 use App\Models\Teacher;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -64,6 +65,7 @@ class TeachersController extends Controller
     // teacher view classes(done)
 
         function view_class($tech_id){
+
             try{
                 $classes = Teacher::with('view_classes')->where('tech_id',$tech_id)->first()->view_classes;
             }  catch (\Throwable $th) {
@@ -71,6 +73,7 @@ class TeachersController extends Controller
             }
             return response()->json(["classes" => $classes],200);
         }
+
     // view students in a class (done)
 
         function view_student_class($tech_id,$class_id){
@@ -85,13 +88,16 @@ class TeachersController extends Controller
 
     // teacher view assignments (done)
         function view_assignment($tech_id,$class_id){
+
             try{
                 $clas_id = DB::table('classes')->where('tech_id',$tech_id)->where('classe_id',$class_id)->first()->classe_id;
             } catch(\Throwable $th){
                 return(["error"=>"404 Page not found"]);
             }
             return Classe::with('assignment')->where('classe_id',$clas_id)->first()->assignment;
+
         }
+        
     // teacher view assignments submitions(done)
         function view_assignment_submition($ass_id,){
 
@@ -123,8 +129,18 @@ class TeachersController extends Controller
 
     // Delete assignment
         function deleteAssignment($assignment_id){
-            $result = DB::table('assignments')->where('assignment_id',$assignment_id)->delete();
-            return response()->json(["message" => "ok"]);
+            $result = DB::table('assignments')->where('assignment_id',$assignment_id);
+            // Storage::delete($result->ass_filelocation->get());
+            // $result->delete();
+            // Assignments_sub::with('assignments')
+            // ->where('assignment_id',$assignment_id)
+            // ->get();
+
+            $file = $result->get()->first()->ass_filelocation;
+            $msg = Storage::delete($file);
+            echo $msg;
+            
+            // return response()->json(["message" => "ok"]);
         }        
 
     // return user detail if authenticated

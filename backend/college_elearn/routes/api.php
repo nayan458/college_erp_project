@@ -56,7 +56,7 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
         // teacher download added assignment
         Route::get('/download/{tech_id}/{class_id}/{ass_id}','download_assignment');
 
-        // teacher view assignments submissions(pending)
+        // teacher view assignments submissions(done)
         Route::get('assignmentSubmition/{assignment_id}','view_assignment_submition');
 
         // teacher download students assignment
@@ -66,7 +66,7 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
         Route::post('assignmentStatus','assignment_status');
 
         // teacher delete assignment
-        Route::delete('deleteAssignment/{ass_id}','deleteAssignment');
+        Route::get('deleteAssignment/{ass_id}','deleteAssignment');
     });
 
     /*
@@ -80,25 +80,24 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
     */
 
     Route::controller(StudentsController::class)->prefix('student')->group(function(){
+        
         // Student view classes(done)
         Route::get('/classes/{student_id}','view_classes');
 
-        // Studnet view assignments(need schema update)
+        // Studnet view assignments(done)
         Route::get('/viewAssignments/{student_id}/{class_id}','view_assignment');
+
         // Student download assignment(done)
         Route::get('/download/{student_id}/{class_id}/{ass_id}','download_assignment');
 
         // Studnet submit assignments(done)
         Route::post('/submit_assignment/{student_id}/{class_id}','submit_assignment');
-        // Studnet view quiz
-
-        // Student submit quiz
 
         // student view classmats(done)
         Route::get('/classmate/{student_id}/{class_id}','view_classmates');
 
     });
-
+    
     Route::controller(AuthenticationController::class)->group(function(){
         Route::post('logout','logout');
         Route::post('islogin','is_login');

@@ -17,25 +17,25 @@ function App() {
     <NodeState>
       <BrowserRouter>
         <Routes>
-          <Route element={<Protected/>}>
 
-              <Route path='/' element={<MyClass/>}/>
-              
-              <Route path='/myClass' element={<MyClass/>}/>
+            <Route element={<Protected/>}>
 
-              <Route path='/assignments/:ActClass' element={<Assignments/>}/>
+                <Route path='/' element={<MyClass/>}/>
 
-              <Route path='/classCalendar' element={<ClassCalendar/>}/>
+                <Route path='/assignments/:ActClass' element={<Assignments/>}/>
 
-              <Route path='/myClassmates/:ActClass' element={<MyClassmates/>}/>
+                <Route path='/classCalendar' element={<ClassCalendar/>}/>
 
-              <Route path='/logout' element={<Logout/>}/>
+                <Route path='/myClassmates/:ActClass' element={<MyClassmates/>}/>
 
-          </Route>
+                <Route path='/logout' element={<Logout/>}/>
 
-              <Route path='/login' element={<Login/>}/>
+            </Route>
 
-              <Route path='/*' element={<Error/>}/>
+            <Route path='/login' element={<Login/>}/>
+
+            <Route path='/*' element={<Error/>}/>
+
         </Routes>
       </BrowserRouter>
       </NodeState>
