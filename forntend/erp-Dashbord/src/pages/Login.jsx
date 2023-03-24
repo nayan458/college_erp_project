@@ -46,9 +46,9 @@ export default function Login() {
   }
 
   useEffect(() => {
-    // let cookies = new Cookies();
+    let cookies = new Cookies();
     // if(cookies.get('token') != undefined)
-    //   redirect(`/myclass`)
+      // redirect(`/`)
     // else{
           cookies.remove('token');  
           cookies.remove('name');

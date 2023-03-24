@@ -9,7 +9,9 @@ import MyClassmates from './pages/myClass/MyClassmates';
 import Error from './pages/Error';
 import Protected from './Protected';
 import Logout from './pages/Logout';
-import NodeState from './contexts/NodeState';
+import NodeState from './contexts/NodeState';import AdminDashboard from './pages/Admin/AdminDashbord';
+import Unauthenticated from './pages/unauthenticated/Unauthenticated';
+;
 
 function App() {
   return (
@@ -31,6 +33,12 @@ function App() {
                 <Route path='/logout' element={<Logout/>}/>
 
             </Route>
+
+            {/* <Route element/>} */}
+
+            <Route path='/unauthorized' element={<Unauthenticated/>}></Route>
+
+            <Route path='/admin' element={<AdminDashboard/>}></Route>
 
             <Route path='/login' element={<Login/>}/>
 

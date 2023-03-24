@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Std_class;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +32,7 @@ class StudentsController extends Controller
 
     // Studnet view assignments(done)
         function view_assignment($student_id,$class_id){
-
+            // $this->authorize('view',$stdClass);
             $result = DB::table('assignments_subs')
                 ->where('student_id',$student_id)
                 ->join('assignments','assignments_subs.assignment_id','assignments.assignment_id')

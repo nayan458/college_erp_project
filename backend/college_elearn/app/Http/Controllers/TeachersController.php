@@ -15,23 +15,11 @@ use Ramsey\Uuid\Rfc4122\UuidV5;
 
 class TeachersController extends Controller
 {
-
-    function checkTeacher($username,$class_id){
-        try{
-            $tech_id = DB::table('teachers')->select('tech_id')->where('username','=',$username)->first()->tech_id;
-            $clas_id = DB::table('classes')->select('classe_id')->where('tech_id','=',$tech_id)->where('classe_id','=',$class_id)->first()->classe_id;
-            if(!$clas_id)
-                throw $clas_id;
-        } catch(\Throwable $th){
-            return false;
-        }
-        return $clas_id;
-    }
     /**
      * TEACHER'S ROLLS, FUNCTIONALITIES
      */
 
-    // teacher add assignments(done)
+    // teacher add assignments(done)(gate)
 
         function add_assignment(Request $request,$tech_id,$class_id){
             try{
@@ -62,7 +50,7 @@ class TeachersController extends Controller
             return Storage::download($path);
         }
 
-    // teacher view classes(done)
+    // teacher view classes(done)(gate)
 
         function view_class($tech_id){
 

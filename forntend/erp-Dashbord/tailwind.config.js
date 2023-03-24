@@ -7,7 +7,9 @@ module.exports = {
   darkMode:['class'],
   theme: {
     extend: {
-      
+      fontFamily : {
+        'sobit' : ['Manrope', 'sans-serif'],
+      }
     },
   },
   plugins: [],

@@ -1,0 +1,7 @@
+Backend:
+    Delete the folder along with Delete operation
+    Authorization
+Frontend:
+    logout
+    back to previous page
+    refresh token
