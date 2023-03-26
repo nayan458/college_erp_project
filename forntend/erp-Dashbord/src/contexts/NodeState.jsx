@@ -17,10 +17,10 @@ export default function NodeState(props) {
     const [user, setUser] = useState({
         "name" : "",
         "lable" : "",
-        "student_id" : "",
         "gender" : ""
     })
 
+  // to get user details
     const userData = async() => {
         let result
         try {
@@ -32,18 +32,18 @@ export default function NodeState(props) {
             })
             cookie.set('name',result.data.fname + " " + result.data.lname,{path : '/login/student'})
             cookie.set('lable',result.data.lable)
-            cookie.set('student_id',result.data.student_id)
-            setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable, student_id : result.data.student_id});
-
-        } catch (error) {
-            console.log(error);
+            setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable});
+            
+        } catch (error){
+            console.log("$$$".error);
         }}
 
+  // to get students in a class
     const [classmates, setClassmates] = useState([])
 
     const getClassMates=async(classe_id)=>{
       let cookie = new Cookies()
-        let result = await instance.get(`${cookie.get('lable')}/classmate/${user.student_id}/${classe_id}`,{
+        let result = await instance.get(`${cookie.get('lable')}/classmate/${classe_id}`,{
                 headers : {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 }
@@ -52,6 +52,7 @@ export default function NodeState(props) {
           setActiveClass(classe_id)
     }
 
+  // link inside a classroom
     const links = [
       {
         to: `/`,
@@ -80,13 +81,14 @@ export default function NodeState(props) {
     },
   ]  
   
+  // to get all the classes of the user
   const getClasses = async()=>{
 
     let result 
     let cookie = new Cookies()
-    if(cookie.get('student_id')){
+    
       try{
-          result = await instance.get(`${cookie.get('lable')}/classes/${cookie.get('student_id')}`,{
+          result = await instance.get(`${cookie.get('lable')}/classes`,{
               headers : {
                   'Authorization': 'Bearer ' + cookie.get('token')
               }
@@ -95,17 +97,16 @@ export default function NodeState(props) {
       }catch(error){
           console.log("error ocured")
       }
-    }
-    else return
+    
 }
 
 
-  const getClassesFirst = async(class_id)=>{
+  const getClassesFirst = async()=>{
 
     let result 
     let cookie = new Cookies()
     try{
-        result = instance.get(`${cookie.get('lable')}/classes/${class_id}`,{
+        result = instance.get(`${cookie.get('lable')}/classes`,{
             headers : {
                 'Authorization': 'Bearer ' + cookie.get('token')
             }
@@ -133,3 +134,12 @@ export default function NodeState(props) {
         </NodeContext.Provider>
   )
 }
+
+const student_Assignment_submission=()=>{
+  const texta = "hello world"
+  return{
+    texta
+  }
+}
+
+export {student_Assignment_submission};

@@ -94,7 +94,7 @@ class AdminController extends Controller
                 'dep_id' => $dep_id->dep_id,
             ]);
 
-            $token = $teacher->createToken('teacher_token')->plainTextToken;
+            $token = $teacher->createToken('teacher_token',['Teacher'])->plainTextToken;
 
             return(["message"=>"Registered Successfully","token"=>$token]);
         }
@@ -132,7 +132,7 @@ class AdminController extends Controller
                 'dep_id' => $dep_id->dep_id,
             ]);
             
-            $token = $student->createToken('student_token')->plainTextToken;
+            $token = $student->createToken('student_token',['Student'])->plainTextToken;
 
             return(["message"=>"Registered Successfully","token"=>$token]);
         }

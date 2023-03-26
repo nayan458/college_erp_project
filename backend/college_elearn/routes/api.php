@@ -4,10 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\TeachersController;
-use App\Http\Controllers\testControllerAll;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Maatwebsite\Excel\Row;
 
 /*
 ||--------------------------------------------------------------------------
@@ -21,12 +18,6 @@ use Maatwebsite\Excel\Row;
 */
 
 Route::group(['middleware' => 'auth:sanctum'],function () {
-    Route::controller(StudentsController::class)->group(function(){
-        Route::get('student/myData','myData');
-    });
-    Route::controller(TeachersController::class)->group(function(){
-        Route::get('teacher/myData','myData');
-    });
 
     /*
     ||--------------------------------------------------------------------------
@@ -38,35 +29,36 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
     ||
     */
 
-    Route::controller(TeachersController::class)->prefix('teacher')->group(function(){
+    Route::controller(TeachersController::class)->prefix('teacher')->middleware(['abilities:Teacher'])->group(function(){
 
-        // teacher view classes(done)
-        Route::get('/classes/{username}','view_class');
+        Route::get('myData','myData');
+
+        // teacher view classes(done)(same)
+        Route::get('/classes','view_class');
         
-        // view students in a class(done)
-        // Route::get('classStudents/{class_id}','view_student_class');
-        Route::get('/classmate/{student_id}/{class_id}','view_student_class');
+        // view students in a class(done)(authenticated)
+        Route::get('/classmate/{classe}','view_student_class');
 
-        // Teacher view assignments(done)
-        Route::get('/viewAssignments/{tech_id}/{class_id}','view_assignment');
+        // Teacher view assignments(done)(authenticated)
+        Route::get('/viewAssignments/{classe}','view_assignment');
 
-        // teacher add assignments(done)
-        Route::post('/submit_assignment/{tech_id}/{class_id}','add_assignment');
+        // teacher add assignments(done)(authenticated)
+        Route::post('/submit_assignment/{classe}','add_assignment');
 
-        // teacher download added assignment
-        Route::get('/download/{tech_id}/{class_id}/{ass_id}','download_assignment');
+        // teacher download added assignment(authenticated)
+        Route::get('/download/{assignment}','download_assignment');
 
-        // teacher view assignments submissions(done)
-        Route::get('assignmentSubmition/{assignment_id}','view_assignment_submition');
+        // teacher view assignments submissions(done)(authenticated)
+        Route::get('assignmentSubmition/{assignment}','view_assignment_submition');
 
-        // teacher download students assignment
-        Route::get('downloadStudentAsssignment/{ass_id}/{student_id}','download_student_assignment_submissions');
+        // teacher download students assignment(authenticated)
+        Route::get('/downloadStudentAsssignment/{assignment}/{student_id}','download_student_assignment_submissions');
 
-        // teacher update student submmision status
+        // teacher update student submmision status(authenticated)
         Route::post('assignmentStatus','assignment_status');
 
-        // teacher delete assignment
-        Route::get('deleteAssignment/{ass_id}','deleteAssignment');
+        // teacher delete assignment(authenticated)
+        Route::delete('deleteAssignment/{assignment}','deleteAssignment');
     });
 
     /*
@@ -79,24 +71,37 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
     ||
     */
 
-    Route::controller(StudentsController::class)->prefix('student')->group(function(){
-        
-        // Student view classes(done)
-        Route::get('/classes/{student_id}','view_classes');
+    Route::controller(StudentsController::class)->prefix('student')->middleware(['abilities:Student'])->group(function(){
 
-        // Studnet view assignments(done)
-        Route::get('/viewAssignments/{student_id}/{class_id}','view_assignment');
+        // geting personal details
+        Route::get('myData','myData');
+        
+        // Student view classes(done)(authenticated)
+        Route::get('/classes','view_classes');
+
+        // Studnet view assignments(done)(authenticated)
+        Route::get('/viewAssignments/{classe}','view_assignment');
 
         // Student download assignment(done)
-        Route::get('/download/{student_id}/{class_id}/{ass_id}','download_assignment');
+        Route::get('/download/{assignment}','download_assignment');
 
         // Studnet submit assignments(done)
-        Route::post('/submit_assignment/{student_id}/{class_id}','submit_assignment');
+        Route::post('/submit_assignment','submit_assignment');
 
         // student view classmats(done)
-        Route::get('/classmate/{student_id}/{class_id}','view_classmates');
+        Route::get('/classmate/{classe}','view_classmates');
 
     });
+
+    /*
+    ||--------------------------------------------------------------------------
+    || AUTHENTICATION Routes for Teacher and Student
+    ||--------------------------------------------------------------------------
+    ||
+    || Here are Student routes that are used to define.
+    || routes are loaded by the StudentsController  
+    ||
+    */
     
     Route::controller(AuthenticationController::class)->group(function(){
         Route::post('logout','logout');
@@ -157,5 +162,5 @@ Route::controller(AdminController::class)->group(function(){
 Route::controller(AuthenticationController::class)->group(function(){
     Route::post('student/login','studentLogin');
     Route::post('teacher/login','teacherLogin');
-    Route::post('/updatePassword','updatePassword');
+    // update password
 });

@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Assignment;
 use App\Models\Classe;
 use App\Models\Student;
 use App\Models\Teacher;
@@ -9,7 +10,7 @@ use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\DB;
 
-class ClassePolicy
+class AssignmentPolicy
 {
     use HandlesAuthorization;
 
@@ -28,19 +29,27 @@ class ClassePolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Classe  $classe
+     * @param  \App\Models\Assignment  $assignment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function teacher_view_class(Teacher $user, Classe $classe)
+    public function student_view_assignments(Student $user, Assignment $assignment) : bool
     {
-        return $classe->tech_id == $user->tech_id;
+        // find the class assignment belongs to
+        // student should belong to that class
+        return DB::table('std_classes')
+            ->where('student_id',$user->student_id)
+            ->where('classe_id',$assignment->classe_id)
+            ->exists();
     }
 
-    public function student_view_classmates(Student $user, Classe $classe) : bool
+    public function teacher_view_assignment(Teacher $teacher, Assignment $assignment) : bool
     {
-        return DB::table('std_classes')->where('classe_id',$classe->classe_id)->where('student_id',$user->student_id)->exists();
+        return DB::table('classes')
+            ->where('classe_id',$assignment->classe_id)
+            ->where('tech_id',$teacher->tech_id)
+            ->exists()
+        ;
     }
-
     /**
      * Determine whether the user can create models.
      *
@@ -56,10 +65,10 @@ class ClassePolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Classe  $classe
+     * @param  \App\Models\Assignment  $assignment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Classe $classe)
+    public function update(User $user, Assignment $assignment)
     {
         //
     }
@@ -68,10 +77,10 @@ class ClassePolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Classe  $classe
+     * @param  \App\Models\Assignment  $assignment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Classe $classe)
+    public function delete(User $user, Assignment $assignment)
     {
         //
     }
@@ -80,10 +89,10 @@ class ClassePolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Classe  $classe
+     * @param  \App\Models\Assignment  $assignment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Classe $classe)
+    public function restore(User $user, Assignment $assignment)
     {
         //
     }
@@ -92,10 +101,10 @@ class ClassePolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Classe  $classe
+     * @param  \App\Models\Assignment  $assignment
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Classe $classe)
+    public function forceDelete(User $user, Assignment $assignment)
     {
         //
     }

@@ -6,6 +6,7 @@ import Cookies from 'universal-cookie'
 import instance from '../../../Api/api'
 import NodeContext from '../../../contexts/NodeContext'
 import { Empty } from '../../../pages/Backpack'
+import LongMenu from '../../mui_components/LongMenu'
 import StatusButtons from './StatusButtons'
 
 export default function TeacherAssignment() {
@@ -48,7 +49,7 @@ export default function TeacherAssignment() {
         
         const getAssignments = async()=>{
         let result
-        let url = (`teacher/viewAssignments/${a.user.student_id}/${ActClass}`)
+        let url = (`teacher/viewAssignments/${ActClass}`)
         try{
             let cookie = new Cookies();  
             result = instance.get(url
@@ -72,7 +73,7 @@ export default function TeacherAssignment() {
             e.preventDefault()
             let cookie = new Cookies();
 
-            instance.get(`${a.user.lable}/download/${a.user.student_id}/${ActClass}/${elem.assignment_id}`,{
+            instance.get(`teacher/download/${elem.assignment_id}`,{
                 responseType : "blob",
                 headers : {
                     'Authorization' : 'Bearer ' + cookie.get('token')
@@ -90,7 +91,7 @@ export default function TeacherAssignment() {
         const downloadAssignmentSubmisions=(e,elem)=>{
             e.preventDefault()
             let cookie = new Cookies();
-            instance.get(`teacher/downloadStudentAsssignment/${elem.student_id}/${elem.assignment_id}`,{
+            instance.get(`teacher/downloadStudentAsssignment/${elem.assignment_id}/${elem.student_id}`,{
                 headers : {
                     'Authorization': 'Bearer ' + cookie.get('token')
                 },
@@ -133,7 +134,7 @@ export default function TeacherAssignment() {
             formdata.append('desc',assignmentSubmitionData.desc);
             let boundary = `--${Date.now()}`;
             try{
-                let result = await instance.post(`${a.user.lable}/submit_assignment/${a.user.student_id}/${ActClass}`,
+                let result = await instance.post(`teacher/submit_assignment/${ActClass}`,
                 formdata,
                 {
                     headers : {
@@ -241,12 +242,12 @@ export default function TeacherAssignment() {
     }, [])
   return (
     <>
-         <div className='w-full h-full bg-slate-200 col-span-4 flex flex-col items-center'>
-            <div className='grid grid-cols-9 lg:grid-cols-4 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 text-slate-500 p-5 rounded-md font-medium text-xs items-center'>
-                    <div className='col-span-2 lg:col-span-1'>DATE UPLOAD</div>
-                    <div className='col-span-2 lg:col-span-1'>FILE NAME</div>
-                    <div className='col-span-2 lg:col-span-1 truncate'>DESCRIPTION</div>
-                    <div className='flex gap-2 justify-center items-center col-span-3 lg:col-span-1'>
+         <div className='w-full h-full bg-slate-200 col-span-4 flex flex-col items-center fixed top-0 left-0 pt-[4.5rem] sm:pl-[4.3rem] '>
+            <div className='grid grid-cols-4 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 text-slate-500 p-5 rounded-md font-medium text-xs items-center text-center'>
+                    <div className=''>DATE UPLOAD</div>
+                    <div className=''>FILE NAME</div>
+                    <div className=' truncate'>DESCRIPTION</div>
+                    <div className='flex gap-2 justify-center items-center'>
                         
                             <div className='underline underline-offset-4 font-bold text-xs truncate'>
                                 SUBMISSIONS
@@ -267,22 +268,22 @@ export default function TeacherAssignment() {
                     }/>
                 </div>
             :
-                <div className='grid grid-cols-4 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 text-slate-800 p-5 rounded-md font-normal items-center'>
+                <div className='grid grid-cols-4 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 pb-3 mb-2 bg-slate-50 text-slate-800 p-5 rounded-md font-normal items-center relative overflow-y-auto'>
                 {   assignments.length > 0 ?
                     assignments.map((elem,i)=>{
                     return(
                         <>
-                            <div className='truncate'>{elem.uploaded_at}</div>
-                            <div className='truncate'>{elem.ass_name}</div>
-                            <div className='truncate'>{elem.ass_desc}</div>
-                            <div className='flex text-slate-50 font-semibold gap-2'>
+                            <div className='truncate text-center'>{elem.uploaded_at}</div>
+                            <div className='truncate text-center'>{elem.ass_name}</div>
+                            <div className='truncate text-center'>{elem.ass_desc}</div>
+                            <div className='hidden sm:flex text-slate-50 font-semibold gap-2 items-center justify-center text-sm '>
 
                                 <button className='bg-blue-600 hover:bg-blue-400 p-2 rounded-sm flex gap-2 items-center cursor-pointer' onClick={
                                                                                                                                                         (e)=>downloadAssignment(e,elem)
                                                                                                                                                             }>
                                     <i className="fa-solid fa-download"></i>
                                     <span className='hidden lg:block'>
-                                        download
+                                        down
                                     </span>
                                 </button>
                                 <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  
@@ -297,10 +298,13 @@ export default function TeacherAssignment() {
                                         >
                                         <i className="fa-solid fa-trash"></i>
                                             <span className='hidden lg:block'>
-                                                delete
+                                                del
                                             </span>
                                 </button>
 
+                            </div>
+                            <div className='flex sm:hidden justify-center align-middle items-center'>
+                                <LongMenu/>
                             </div>
                         </>
                     )

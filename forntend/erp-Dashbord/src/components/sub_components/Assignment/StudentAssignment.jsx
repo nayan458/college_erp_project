@@ -1,11 +1,12 @@
 import fileDownload from 'js-file-download'
 import React, { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ClipLoader } from 'react-spinners'
 import Cookies from 'universal-cookie'
 import instance from '../../../Api/api'
 import NodeContext from '../../../contexts/NodeContext'
 import { Empty } from '../../../pages/Backpack'
+import LongMenu from '../../mui_components/LongMenu'
 import StatusButtons from './StatusButtons'
 
 
@@ -20,6 +21,8 @@ export default function StudentAssignment() {
 
     const a = useContext(NodeContext)
 
+    const Navigate = useNavigate();
+
     // to get assignments
 
         const [assignments, setassignments] = useState([])
@@ -31,7 +34,7 @@ export default function StudentAssignment() {
             try{
                 
                 let cookie = new Cookies();
-                result = instance.get(`student/viewAssignments/${a.user.student_id}/${ActClass}`,{
+                result = instance.get(`student/viewAssignments/${ActClass}`,{
                     headers : {
                         'Authorization' : 'Bearer ' + cookie.get('token')
                     }
@@ -40,18 +43,18 @@ export default function StudentAssignment() {
                 setassignmentsStatus((await result).data.submited)
 
             } catch(err){
-
+                console.log(err)
+                Navigate('/unauthorized')
             }
             setLoder(false)
         }
 
     // download assignment
-
         const downloadAssignment=(e,elem)=>{
             e.preventDefault()
             let cookie = new Cookies();
 
-            instance.get(`student/download/${a.user.student_id}/${ActClass}/${elem.assignment_id}`,{
+            instance.get(`student/download/${elem.assignment_id}`,{
                 responseType : "blob",
                 headers : {
                     'Authorization' : 'Bearer ' + cookie.get('token')
@@ -66,54 +69,54 @@ export default function StudentAssignment() {
 
     // submit assignment
 
-    const [assignmentSubmitionData, setAssignmentSubmitionData] = useState({
-        assignment : null,
-        name : "Hello",
-        ass_id : "",
-    })
+        const [assignmentSubmitionData, setAssignmentSubmitionData] = useState({
+            assignment : null,
+            name : "Hello",
+            ass_id : "",
+        })
 
-    let name, value
+        let name, value
 
-    const updateHandeler=(e)=>{
-        name = e.target.name
-        value = e.target.value
-        setAssignmentSubmitionData({...assignmentSubmitionData,[name] : value})
-    }
-
-    const fileHandeler= file =>{
-        setAssignmentSubmitionData({...assignmentSubmitionData, assignment : file[0]})
-    }
-
-    const [submit, setSubmit] = useState(true)
-
-    const submitAssignment=async(e)=>{
-        setSubmit(false)
-        e.preventDefault()
-        let cookie = new Cookies()
-        let formdata = new FormData()
-        formdata.append('assignment',assignmentSubmitionData.assignment);
-        formdata.append('name',assignmentSubmitionData.name);
-        formdata.append('ass_id',assignmentSubmitionData.ass_id);
-        formdata.append('desc',assignmentSubmitionData.desc);
-        let boundary = `--${Date.now()}`;
-        try{
-            await instance.post(`student/submit_assignment/${a.user.student_id}/${ActClass}`,
-            formdata,
-            {
-                headers : {
-                    'Content-Type': `multipart/form-data; boundary=${boundary}`,
-                    'Authorization' : 'Bearer ' + cookie.get('token')
-                }
-            })
-            setLoder(true)
-            setSubmit(true)
-            getAssignments()
-            alert("assignment submited successfully")
-            close()
-        }catch(err){
-            console.log(err);
+        const updateHandeler=(e)=>{
+            name = e.target.name
+            value = e.target.value
+            setAssignmentSubmitionData({...assignmentSubmitionData,[name] : value})
         }
-    }
+
+        const fileHandeler= file =>{
+            setAssignmentSubmitionData({...assignmentSubmitionData, assignment : file[0]})
+        }
+
+        const [submit, setSubmit] = useState(true)
+
+        const submitAssignment=async(e)=>{
+            setSubmit(false)
+            e.preventDefault()
+            let cookie = new Cookies()
+            let formdata = new FormData()
+            formdata.append('assignment',assignmentSubmitionData.assignment);
+            formdata.append('name',assignmentSubmitionData.name);
+            formdata.append('ass_id',assignmentSubmitionData.ass_id);
+            formdata.append('desc',assignmentSubmitionData.desc);
+            let boundary = `--${Date.now()}`;
+            try{
+                await instance.post(`student/submit_assignment`,
+                formdata,
+                {
+                    headers : {
+                        'Content-Type': `multipart/form-data; boundary=${boundary}`,
+                        'Authorization' : 'Bearer ' + cookie.get('token')
+                    }
+                })
+                setLoder(true)
+                setSubmit(true)
+                getAssignments()
+                alert("assignment submited successfully")
+                close()
+            }catch(err){
+                console.log(err);
+            }
+        }
 
     // open the upload editor
         const open=(elem)=>{
@@ -130,13 +133,14 @@ export default function StudentAssignment() {
     // ************************************** Main **************************************** //
   return (
     <>
-         <div className='w-full h-full bg-slate-200 col-span-4 flex flex-col items-center'>
-            <div className='grid grid-cols-9 lg:grid-cols-4 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 text-slate-500 p-5 rounded-md font-medium text-xs items-center'>
-                    <div className='col-span-2 lg:col-span-1'>DATE UPLOAD</div>
-                    <div className='col-span-2 lg:col-span-1'>FILE NAME</div>
-                    <div className='col-span-2 lg:col-span-1 truncate'>DESCRIPTION</div>
-                    <div className='flex gap-2 items-center col-span-3 lg:col-span-1'>
-                        <div className='underline underline-offset-4 font-bold text-xs truncate'>
+         <div className='w-full h-full bg-slate-200 col-span-4 flex flex-col items-center fixed top-0 left-0 pt-[4.5rem] sm:pl-[4.3rem]'>
+           
+            <div className='grid grid-cols-4 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 text-slate-500 p-5 rounded-md font-medium text-xs items-center text-center'>
+                    <div className=''>DATE UPLOAD</div>
+                    <div className=''>FILE NAME</div>
+                    <div className=' truncate'>DESCRIPTION</div>
+                    <div className='flex gap-2 justify-center items-center text-center'>
+                        <div className='underline underline-offset-4 font-bold text-xs truncate text-center'>
                             SUBMIT/STATUS
                         </div>
                     </div>
@@ -150,35 +154,40 @@ export default function StudentAssignment() {
                     }/>
                 </div>
             :
-                <div className='grid grid-cols-4 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 text-slate-800 p-5 rounded-md font-normal items-center'>
+                <div className='grid grid-cols-4 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 mb-2 bg-slate-50 text-slate-800 p-5 rounded-md font-normal items-center text-center overflow-y-auto'>
                 {   assignments.length > 0 || assignmentsStatus.length > 0 ?
                     <>
-                        {assignments.map((elem,i)=>{
-                            return(
-                                <>
-                                    <div className='truncate' key={i}>{elem.uploaded_at}</div>
-                                    <div className='truncate'>{elem.ass_name}</div>
-                                    <div className='truncate'>{elem.ass_desc}</div>
-                                    <div className='flex text-slate-50 font-semibold gap-2'>
+                        {
+                            assignments.map((elem,i)=>{
+                                return(
+                                    <>
+                                        <div className='truncate' key={i}>{elem.uploaded_at}</div>
+                                        <div className='truncate'>{elem.ass_name}</div>
+                                        <div className='truncate'>{elem.ass_desc}</div>
+                                        <div className='sm:flex text-slate-50 font-semibold gap-2 justify-center items-center hidden'>
 
-                                        <button className='bg-blue-600 hover:bg-blue-400 p-2 rounded-sm flex gap-2 items-center cursor-pointer' onClick={
-                                                                                                                                                                (e)=>downloadAssignment(e,elem)
-                                                                                                                                                                    }>
-                                            <i className="fa-solid fa-download"></i>
-                                            <span className='hidden lg:block'>
-                                                download
-                                            </span>
-                                        </button>
-                                            <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  onClick={()=>open(elem)}>
-                                                <i className="fa-solid fa-upload"></i>
+                                            <button className='bg-blue-600 hover:bg-blue-400 p-2 rounded-sm flex gap-2 items-center cursor-pointer' onClick={
+                                                                                                                                                                    (e)=>downloadAssignment(e,elem)
+                                                                                                                                                                        }>
+                                                <i className="fa-solid fa-download"></i>
                                                 <span className='hidden lg:block'>
-                                                    Submit
+                                                    download
                                                 </span>
                                             </button>
-                                    </div>
-                                </>
-                            )
-                        })}
+                                                <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  onClick={()=>open(elem)}>
+                                                    <i className="fa-solid fa-upload"></i>
+                                                    <span className='hidden lg:block'>
+                                                        Submit
+                                                    </span>
+                                                </button>
+                                        </div>
+                                        <div className='block sm:hidden'>
+                                            <LongMenu/> 
+                                        </div>
+                                    </>
+                                )
+                            })
+                        }
                         {
                             assignmentsStatus.map((elem,i)=>{
                                 return(
@@ -187,9 +196,7 @@ export default function StudentAssignment() {
                                         <div className='truncate'>{elem.ass_name}</div>
                                         <div className='truncate'>{elem.ass_desc}</div>
                                         <div className='truncate'>
-                                        <StatusButtons status={elem.status}
-                                            
-                                        />
+                                            <StatusButtons status={elem.status}/>
                                         </div>
                                     </>
                                 )

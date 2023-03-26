@@ -6,11 +6,11 @@ import MyClass from './pages/MyClass';
 import Assignments from './pages/myClass/Assignments';
 import ClassCalendar from './pages/myClass/ClassCalendar';
 import MyClassmates from './pages/myClass/MyClassmates';
-import Error from './pages/Error';
 import Protected from './Protected';
 import Logout from './pages/Logout';
 import NodeState from './contexts/NodeState';import AdminDashboard from './pages/Admin/AdminDashbord';
-import Unauthenticated from './pages/unauthenticated/Unauthenticated';
+import Unauthenticated from './pages/errorPages/Unauthenticated';
+import PageNotFound from './pages/errorPages/PageNotFound';
 ;
 
 function App() {
@@ -42,7 +42,7 @@ function App() {
 
             <Route path='/login' element={<Login/>}/>
 
-            <Route path='/*' element={<Error/>}/>
+            <Route path='/*' element={<PageNotFound/>}/>
 
         </Routes>
       </BrowserRouter>

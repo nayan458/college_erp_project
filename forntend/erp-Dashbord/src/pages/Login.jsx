@@ -29,7 +29,7 @@ export default function Login() {
           a.setUser({...a.user, lable : rslt.data.label, student_id : rslt.data.student_id, gender : rslt.data.user.gender})
           
           try{
-            a.getClassesFirst(rslt.data.student_id)
+            a.getClassesFirst()
           }catch(err){
             console.log(err)
           }

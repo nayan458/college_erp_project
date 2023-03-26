@@ -19,7 +19,7 @@ export default function Student() {
         let cookie = new Cookies()
         try{
             await axios.get('http://localhost:8000/sanctum/csrf-cookie');
-            let result = await instance.get(`${cookie.get('lable')}/classmate/${cookie.get('student_id')}/${ActClass}`,{
+            let result = await instance.get(`${cookie.get('lable')}/classmate/${ActClass}`,{
                     headers : {
                         'Authorization': 'Bearer ' + cookie.get('token')
                     }

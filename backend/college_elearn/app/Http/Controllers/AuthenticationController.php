@@ -33,7 +33,7 @@ class AuthenticationController extends Controller
                 return response()->json(["error"=>"invalid credentials"],401);
             $user = Auth::guard('student')->user();
             $token = $user->tokens()->delete();
-            $token = $user->createToken('student_token')->plainTextToken;
+            $token = $user->createToken('student_token',['Student'])->plainTextToken;
             return response()->json([                
                 "user" => $user,
                 "student_id" => $user->student_id,
@@ -58,7 +58,7 @@ class AuthenticationController extends Controller
                 return response()->json(["error"=>"invalid credentials"],401);
             $user = Auth::guard('teacher')->user();
             $token = $user->tokens()->delete();
-            $token = $user->createToken('teacher_token')->plainTextToken;
+            $token = $user->createToken('teacher_token',['Teacher'])->plainTextToken;
 
             return response()->json([
                 "user" => $user,
@@ -68,12 +68,12 @@ class AuthenticationController extends Controller
             ],200);
         }
 
-        function updatePassword(Request $request){
-            $user = Teacher::find($request->id);
-            $user->password = Hash::make($request->password);
-            $user->save();
-            return $user;
-        }
+        // function updatePassword(Request $request){
+        //     $user = Teacher::find($request->id);
+        //     $user->password = Hash::make($request->password);
+        //     $user->save();
+        //     return $user;
+        // }
 
         function logout(){
             $user = Auth::user();
