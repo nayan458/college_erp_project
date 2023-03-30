@@ -127,6 +127,7 @@ class StudentsController extends Controller
             return response()->json([
                 "fname" => $user->fname,
                 "lname" => $user->lname,
+                "gender" => $user->gender,
                 "lable" => "student"
             ]);
         }

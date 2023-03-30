@@ -2,6 +2,7 @@ import React, { useContext, useEffect} from 'react'
 import { useParams } from 'react-router-dom'
 import NodeContext from '../contexts/NodeContext'
 import { Empty } from '../pages/Backpack'
+import StdAss from './sub_components/Assignment/StdAss'
 import StudentAssignment from './sub_components/Assignment/StudentAssignment'
 import TeacherAssignment from './sub_components/Assignment/TeacherAssignment'
 
@@ -15,6 +16,7 @@ export default function Assignment() {
     a.setActiveClass(ActClass)
   },[])
 
+  {/* <StudentAssignment/> */}
 
   return (
     <>
@@ -24,10 +26,13 @@ export default function Assignment() {
             : a.user.lable === 'teacher' ?
               <TeacherAssignment/>
             :
-              <Empty msg="User not found" hide={true} img={true}/>
+              <></>
 
         }
     </>
   )
 }
 
+
+            
+              {/* <Empty msg="User not found" hide={true} img={true}/> */}

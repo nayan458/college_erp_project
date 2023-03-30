@@ -1,134 +1,20 @@
-import fileDownload from 'js-file-download'
-import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { ClipLoader } from 'react-spinners'
-import Cookies from 'universal-cookie'
-import instance from '../../../Api/api'
-import NodeContext from '../../../contexts/NodeContext'
+import useAssignment from '../../../hooks/useAssignment'
 import { Empty } from '../../../pages/Backpack'
 import LongMenu from '../../mui_components/LongMenu'
+import { DownloadBtn, SubmitBtn } from './ActionBtns'
 import StatusButtons from './StatusButtons'
 
-export default function StudentAssignment() {
-
+export default function StdAss() {
     const { ActClass } = useParams()
-
-    const [loder, setLoder] = useState(true)
-
-    const [uploadEditor, setuploadEditor] = useState(false)
-    const close=()=>setuploadEditor(false)
-
-    const a = useContext(NodeContext)
-
-    const Navigate = useNavigate();
-
-    // to get assignments
-
-        const [assignments, setassignments] = useState([])
-        const [assignmentsStatus, setassignmentsStatus] = useState([])
-
-        const getAssignments = async()=>{
-            let result
-            try{
-                
-                let cookie = new Cookies();
-                result = instance.get(`student/viewAssignments/${ActClass}`,{
-                    headers : {
-                        'Authorization' : 'Bearer ' + cookie.get('token')
-                    }
-                })
-                setassignments((await result).data.pending)
-                setassignmentsStatus((await result).data.submited)
-
-            } catch(err){
-                console.log(err)
-                Navigate('/unauthorized')
-            }
-            setLoder(false)
-        }
-
-    // download assignment
-        const downloadAssignment=(e,elem)=>{
-            e.preventDefault()
-            let cookie = new Cookies();
-
-            instance.get(`student/download/${elem.assignment_id}`,{
-                responseType : "blob",
-                headers : {
-                    'Authorization' : 'Bearer ' + cookie.get('token')
-                }
-            }
-            ).then((response)=>{
-                fileDownload(response.data,`${elem.ass_name}.pdf`)
-            }).catch((error)=>{
-                console.log(error);
-            })
-        }
-
-    // submit assignment
-
-        const [assignmentSubmitionData, setAssignmentSubmitionData] = useState({
-            assignment : null,
-            name : "Hello",
-            ass_id : "",
-        })
-
-        let name, value
-
-        const updateHandeler=(e)=>{
-            name = e.target.name
-            value = e.target.value
-            setAssignmentSubmitionData({...assignmentSubmitionData,[name] : value})
-        }
-
-        const fileHandeler= file =>{
-            setAssignmentSubmitionData({...assignmentSubmitionData, assignment : file[0]})
-        }
-
-        const [submit, setSubmit] = useState(true)
-
-        const submitAssignment=async(e)=>{
-            setSubmit(false)
-            e.preventDefault()
-            let cookie = new Cookies()
-            let formdata = new FormData()
-            formdata.append('assignment',assignmentSubmitionData.assignment);
-            formdata.append('name',assignmentSubmitionData.name);
-            formdata.append('ass_id',assignmentSubmitionData.ass_id);
-            formdata.append('desc',assignmentSubmitionData.desc);
-            let boundary = `--${Date.now()}`;
-            try{
-                await instance.post(`student/submit_assignment`,
-                formdata,
-                {
-                    headers : {
-                        'Content-Type': `multipart/form-data; boundary=${boundary}`,
-                        'Authorization' : 'Bearer ' + cookie.get('token')
-                    }
-                })
-                setLoder(true)
-                setSubmit(true)
-                getAssignments()
-                alert("assignment submited successfully")
-                close()
-            }catch(err){
-                console.log(err);
-            }
-        }
-
-    // open the upload editor
-        const open=(elem)=>{
-            setuploadEditor(true)
-            setAssignmentSubmitionData({...assignmentSubmitionData,ass_id : elem.assignment_id})
-        }
-
-    // useEffect Hook
-        useEffect(() => {
-            setLoder(true)
-            getAssignments();
-        }, [])
-
-    // ************************************** Main **************************************** //
+    const { loder, setLoder, getAssignments, assignments, assignmentsStatus, downloadAssignment, uploadEditor, open, close, assignmentSubmitionData, fileHandeler, updateHandeler, submitAssignment, submit} = useAssignment(ActClass)
+    
+    // useEffect(() => {
+    //   getAssignments()
+    // }, [])
+    
   return (
     <>
          <div className='w-full h-full bg-slate-200 col-span-4 flex flex-col items-center fixed top-0 left-0 pt-[4.5rem] sm:pl-[4.3rem] text-[0.5rem] md:text-xs'>
@@ -162,22 +48,34 @@ export default function StudentAssignment() {
                                         <div className='truncate' key={i}>{elem.uploaded_at}</div>
                                         <div className='truncate'>{elem.ass_name}</div>
                                         <div className='truncate'>{elem.ass_desc}</div>
-                                        <div className='flex text-slate-50 font-semibold gap-2 justify-center items-center'>
+                                        <div className='sm:flex text-slate-50 font-semibold gap-2 justify-center items-center hidden'>
 
-                                            <button className='bg-blue-600 hover:bg-blue-400 p-2 rounded-sm flex gap-2 items-center cursor-pointer' onClick={
-                                                                                                                                                                    (e)=>downloadAssignment(e,elem)
-                                                                                                                                                                        }>
-                                                <i className="fa-solid fa-download"></i>
-                                                <span className='hidden lg:block'>
-                                                    download
-                                                </span>
+                                            <button className='bg-blue-600 hover:bg-blue-400 p-2 rounded-sm flex gap-2 items-center cursor-pointer' 
+                                                onClick={
+                                                        (e)=>downloadAssignment(e,elem)
+                                                            }
+                                                >
+                                                    <i className="fa-solid fa-download"></i>
+                                                    <span className='hidden lg:block'>
+                                                        download
+                                                    </span>
                                             </button>
-                                                <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  onClick={()=>open(elem)}>
+                                            <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  
+                                                onClick={
+                                                    ()=>open(elem)
+                                                    }
+                                                >
                                                     <i className="fa-solid fa-upload"></i>
                                                     <span className='hidden lg:block'>
                                                         Submit
                                                     </span>
-                                                </button>
+                                            </button>
+                                        </div>
+                                        <div className='block sm:hidden'>
+                                            <LongMenu comp={<>
+                                                <DownloadBtn elem={elem}/>
+                                                <SubmitBtn elem={elem}/>
+                                            </>}/> 
                                         </div>
                                     </>
                                 )

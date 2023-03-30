@@ -59,7 +59,7 @@ export default function Student() {
                                     <>
                                         <div className='border-[2px] border-slate-100 rounded-md flex flex-col justify-center items-center p-2' key={i}>
                                             <img src={elem.gender === "male" ? male : elem.gender === "female" ? female : male} alt='Student Img' className='h-12 w-12 md:h-16 md:w-16 lg:h-20 lg:w-20 rounded-full'/>
-                                            <div className='flex justify-center align-middle items-center text-center text-sm text-slate-800 pt-3'>{elem.fname + " " + elem.lname}</div>
+                                            <div className='flex justify-center align-middle items-center text-center text-[0.5rem] text-ellipsis md:text-sm text-slate-800 pt-3'>{elem.fname + " " + elem.lname}</div>
                                         </div>
                                     </>
                                 )

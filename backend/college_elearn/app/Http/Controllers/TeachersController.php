@@ -177,6 +177,7 @@ class TeachersController extends Controller
                 return response()->json([
                     "fname" => $user->tech_fname,
                     "lname" => $user->tech_lname,
+                    "gender" => $user->gender,
                     "lable" => "teacher"
                 ]);
 

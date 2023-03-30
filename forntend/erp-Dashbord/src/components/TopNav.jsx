@@ -11,11 +11,17 @@ export default function TopNav() {
 
     const a = useContext(NodeContext)
 
-    
-    useMemo(async() => {
-        console.log("called userData")
+    useEffect(() => {
+      const func=async()=>{
         await a.userData();
-    }, []);
+    }
+      
+      func();
+    //   return () => {
+    //     second
+    //   }
+    }, [])
+    
 
   return (
     <>

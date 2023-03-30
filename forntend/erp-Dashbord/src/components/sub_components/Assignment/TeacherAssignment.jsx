@@ -276,7 +276,7 @@ export default function TeacherAssignment() {
                             <div className='truncate text-center'>{elem.uploaded_at}</div>
                             <div className='truncate text-center'>{elem.ass_name}</div>
                             <div className='truncate text-center'>{elem.ass_desc}</div>
-                            <div className='hidden sm:flex text-slate-50 font-semibold gap-2 items-center justify-center text-sm '>
+                            <div className='flex text-slate-50 font-semibold gap-2 items-center justify-center text-sm '>
 
                                 <button className='bg-blue-600 hover:bg-blue-400 p-2 rounded-sm flex gap-2 items-center cursor-pointer' onClick={
                                                                                                                                                         (e)=>downloadAssignment(e,elem)
@@ -302,9 +302,6 @@ export default function TeacherAssignment() {
                                             </span>
                                 </button>
 
-                            </div>
-                            <div className='flex sm:hidden justify-center align-middle items-center'>
-                                <LongMenu/>
                             </div>
                         </>
                     )
