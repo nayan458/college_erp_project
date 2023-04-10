@@ -6,7 +6,6 @@ import Cookies from 'universal-cookie'
 import instance from '../../../Api/api'
 import NodeContext from '../../../contexts/NodeContext'
 import { Empty } from '../../../pages/Backpack'
-import LongMenu from '../../mui_components/LongMenu'
 import StatusButtons from './StatusButtons'
 
 export default function TeacherAssignment() {

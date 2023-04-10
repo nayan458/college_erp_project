@@ -39,8 +39,13 @@ export default function Student() {
   return (
     <>
         <div className='w-full h-full bg-slate-200 col-span-4 overflow-y-auto flex flex-col items-center'>
-            <div className='grid grid-cols-1 gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50  p-5 rounded-md font-bold text-sm text-slate-500 '>
-                Students
+            <div className='flex justify-between gap-4 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50  p-5 rounded-md font-bold text-sm text-slate-500 '>
+                <div>
+                    Students
+                </div>
+                <div className='underline cursor-pointer '>
+                    Add new students
+                </div>
             </div>
             {loder ?
                 <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-2 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 p-2 sm:p-5 rounded-md font-medium mb-3'>

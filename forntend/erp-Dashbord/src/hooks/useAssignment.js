@@ -47,6 +47,7 @@ export default function useAssignment(init) {
     // download assignment(elem)
         const downloadAssignment=(e,elem)=>{
             e.preventDefault()
+            e.stopPropagation()
             let cookie = new Cookies();
 
             instance.get(`student/download/${elem.assignment_id}`,{

@@ -6,8 +6,10 @@ import Cookies from 'universal-cookie'
 import instance from '../../../Api/api'
 import NodeContext from '../../../contexts/NodeContext'
 import { Empty } from '../../../pages/Backpack'
-import LongMenu from '../../mui_components/LongMenu'
 import StatusButtons from './StatusButtons'
+import { Button } from '@mui/material'
+import { ConstructionOutlined } from '@mui/icons-material'
+import useError from '../../../hooks/useError'
 
 export default function StudentAssignment() {
 
@@ -20,7 +22,9 @@ export default function StudentAssignment() {
 
     const a = useContext(NodeContext)
 
-    const Navigate = useNavigate();
+    // const Navigate = useNavigate();
+
+    const { checkError } = useError()
 
     // to get assignments
 
@@ -39,10 +43,9 @@ export default function StudentAssignment() {
                 })
                 setassignments((await result).data.pending)
                 setassignmentsStatus((await result).data.submited)
-
             } catch(err){
-                console.log(err)
-                Navigate('/unauthorized')
+                
+                checkError(err.response.status, err.response.data.message)
             }
             setLoder(false)
         }
@@ -60,8 +63,8 @@ export default function StudentAssignment() {
             }
             ).then((response)=>{
                 fileDownload(response.data,`${elem.ass_name}.pdf`)
-            }).catch((error)=>{
-                console.log(error);
+            }).catch((err)=>{
+                checkError(err.response.status, err.response.data.message)
             })
         }
 
@@ -112,7 +115,7 @@ export default function StudentAssignment() {
                 alert("assignment submited successfully")
                 close()
             }catch(err){
-                console.log(err);
+                checkError(err.response.status, err.response.data.message)
             }
         }
 
@@ -163,7 +166,6 @@ export default function StudentAssignment() {
                                         <div className='truncate'>{elem.ass_name}</div>
                                         <div className='truncate'>{elem.ass_desc}</div>
                                         <div className='flex text-slate-50 font-semibold gap-2 justify-center items-center'>
-
                                             <button className='bg-blue-600 hover:bg-blue-400 p-2 rounded-sm flex gap-2 items-center cursor-pointer' onClick={
                                                                                                                                                                     (e)=>downloadAssignment(e,elem)
                                                                                                                                                                         }>
@@ -172,12 +174,12 @@ export default function StudentAssignment() {
                                                     download
                                                 </span>
                                             </button>
-                                                <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  onClick={()=>open(elem)}>
-                                                    <i className="fa-solid fa-upload"></i>
-                                                    <span className='hidden lg:block'>
-                                                        Submit
-                                                    </span>
-                                                </button>
+                                            <button className='bg-green-600 hover:bg-green-400 p-2 rounded-sm flex gap-2 items-center '  onClick={()=>open(elem)}>
+                                                <i className="fa-solid fa-upload"></i>
+                                                <span className='hidden lg:block'>
+                                                    Submit
+                                                </span>
+                                            </button>
                                         </div>
                                     </>
                                 )

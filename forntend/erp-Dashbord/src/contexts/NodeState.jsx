@@ -116,7 +116,10 @@ export default function NodeState(props) {
         
     }
 
-}
+  }
+  
+  const [status, setStatus] = useState(-1)
+  const [errorMessage, seterrorMessage] = useState("")
 
     return (
         <NodeContext.Provider value={
@@ -126,7 +129,9 @@ export default function NodeState(props) {
               myClasses,getClasses
               ,links
               ,ActiveClass,setActiveClass,
-              classmates,getClassMates,getClassesFirst
+              classmates,getClassMates,getClassesFirst, 
+              status, setStatus,
+              errorMessage, seterrorMessage
             }
           }>
             {props.children}
