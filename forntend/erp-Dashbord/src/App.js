@@ -11,6 +11,7 @@ import Logout from './pages/Logout';
 import NodeState from './contexts/NodeState';import AdminDashboard from './pages/Admin/AdminDashbord';
 import Unauthenticated from './pages/errorPages/Unauthenticated';
 import PageNotFound from './pages/errorPages/PageNotFound';
+import Register from './pages/Register';
 ;
 
 function App() {
@@ -36,11 +37,15 @@ function App() {
 
             {/* <Route element/>} */}
 
+            {/* <Route path='/'></Route> */}
+
             <Route path='/unauthorized' element={<Unauthenticated/>}></Route>
 
             <Route path='/admin' element={<AdminDashboard/>}></Route>
 
             <Route path='/login' element={<Login/>}/>
+
+            <Route path='/registration' element={<Register/>}/>
 
             <Route path='/*' element={<PageNotFound/>}/>
 

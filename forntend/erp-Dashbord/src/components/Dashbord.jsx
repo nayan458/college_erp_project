@@ -41,12 +41,15 @@ export default function Dashbord(props) {
 
             <div className="text-white font-[Righteous] flex"> 
                 <div className="flex justify-between w-full item-center align-middle">
-                <Logo/>
+
+                    <Logo/>
+
                     <button className=" w-6 h-full rounded-sm" id="close-nav" onClick={close}>
                         <span>
                             <i className="fa-solid fa-backward"></i>
                         </span>
                     </button>
+                    
                 </div>
             </div>
 

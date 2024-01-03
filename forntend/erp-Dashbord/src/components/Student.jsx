@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, {useEffect, useState } from 'react'
+import React, {useContext, useEffect, useState } from 'react'
 import Cookies from 'universal-cookie'
 import male from './media/img/maleIcon.png'
 import female from './media/img/femaleIcon.png'
@@ -7,13 +7,18 @@ import { Empty } from '../pages/Backpack'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { useParams } from 'react-router-dom'
 import instance from '../Api/api'
+import NodeContext from '../contexts/NodeContext'
+
 
 export default function Student() {
 
+    const [teacher, setTeacher] = useState(false)
     const [students, setstudents] = useState([])
     const [loder, setLoder] = useState(true)
 
     const { ActClass } = useParams()
+
+    const a = useContext(NodeContext);
 
     let getstudents=async()=>{
         let cookie = new Cookies()
@@ -31,8 +36,18 @@ export default function Student() {
         setLoder(false)
     }
 
+    const addStudent=async()=>{
+        await a.userData()
+        if(a.user.lable == "teacher"){
+            setTeacher(true)
+        }
+        else{
+            console.log(a.user)
+        }
+    }
 
     useEffect(() => {
+        addStudent()
         getstudents()
     }, [])
     
@@ -43,9 +58,13 @@ export default function Student() {
                 <div>
                     Students
                 </div>
-                <div className='underline cursor-pointer '>
-                    Add new students
-                </div>
+                {   teacher ?
+                    <div className='underline cursor-pointer '>
+                        Add new students
+                    </div>
+                    :
+                    <div></div>
+                }
             </div>
             {loder ?
                 <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-2 w-[95%] md:w-[90%] lg:w-[85%] mt-2 bg-slate-50 p-2 sm:p-5 rounded-md font-medium mb-3'>

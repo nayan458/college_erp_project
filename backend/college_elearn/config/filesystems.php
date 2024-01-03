@@ -56,6 +56,13 @@ return [
             'throw' => false,
         ],
 
+        'excelReports' => [
+            'driver' => 'local',
+            'root' => storage_path('app/excelReports'), // Adjust the path as needed
+            'url' => env('APP_URL').'/storage/excelReports', // Adjust the URL if required
+            'visibility' => 'public',
+        ],
+
     ],
 
     /*

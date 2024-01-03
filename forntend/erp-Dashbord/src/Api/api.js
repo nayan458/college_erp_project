@@ -23,4 +23,19 @@ import Cookies from "universal-cookie";
         }
     )
 
+    const adminInstance = axios.create({
+        baseURL: `http://localhost:8000/api/`
+    })
+
+    adminInstance.interceptors.request.use(
+        function(request){
+            let {baseURL} = request
+            if(baseURL !== 'http://localhost:8000/api/')
+                request.baseURL =  'http://localhost:8000/api/'
+            return request
+        }
+    )
+
   export default instance
+
+  export {adminInstance}

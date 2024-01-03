@@ -9,9 +9,12 @@ export default function MyClass() {
   return (
     <>
       <TopNav/>
-      <MainPage comp={
-        <ClassRoom/>
-      }/>
+      
+      <MainPage 
+        comp={
+          <ClassRoom/>
+        }/>
+
       <Dashbord/>
     </>
   )

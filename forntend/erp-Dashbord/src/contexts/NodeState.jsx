@@ -33,9 +33,12 @@ export default function NodeState(props) {
             cookie.set('name',result.data.fname + " " + result.data.lname,{path : '/login/student'})
             cookie.set('lable',result.data.lable)
             setUser({...user,name : result.data.fname + " " + result.data.lname, lable : result.data.lable, gender : result.data.gender});
+
+            return result
         } catch (error){
             console.log("$$$".error);
-        }}
+        }
+    }
 
   // to get students in a class
     const [classmates, setClassmates] = useState([])

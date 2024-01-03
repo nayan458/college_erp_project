@@ -102,7 +102,8 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
     || routes are loaded by the StudentsController  
     ||
     */
-    
+
+
     Route::controller(AuthenticationController::class)->group(function(){
         Route::post('logout','logout');
         Route::post('islogin','is_login');
@@ -122,40 +123,61 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
 */
 
 
-Route::controller(AdminController::class)->group(function(){
+Route::controller(AdminController::class)->prefix('admin')->middleware(['abilities:admin'])->group(function(){
+    // REGISTRATION
+
+        // Register Department
+            Route::post('/registerDepartment','register_department');
+        // Register teachers
+            Route::post('/registerTeacher','register_teachers');
+        // Register students
+            Route::post('/registerStudent','register_students');
+        // Register classes and asiign teachers
+            Route::post('/registerClasses','register_classes');
+        // Add student to classes
+            Route::post('/addStudentsToClass','add_students_to_class');
+
+
+    // VIEW
+
+        // View Departments
+            Route::get('/allDepartments','view_departments');
+        // view teachers
+            Route::get('/allTeachers','all_teachers');
+        // view students
+            Route::get('/allStudents','all_students');
+        // view students
+            Route::get('/allClasses','all_classes');
+
+
+    // DELETE
     
-    // Register Department
-        Route::post('/registerDepartment','register_department');
-    // Register teachers
-        Route::post('/registerTeacher','register_teachers');
-    // Register students
-        Route::post('/registerStudent','register_students');
-    // Register classes and asiign teachers
-        Route::post('/registerClasses','register_classes');
-    // Add student to classes
-        Route::post('/addStudentsToClass','add_students_to_class');
+        // Delete Department
+            Route::delete('/deleteDepartment','delete_department');
+        // delete teachers
+            Route::delete('/deleteTeacher','delete_teachers');
+        // delete students
+            Route::delete('/deleteStudent','delete_students');
 
 
-    // View Departments
-        Route::get('/allDepartments','view_departments');
-    // view teachers
-        Route::get('/allTeachers','all_teachers');
-    // view students
-        Route::get('/allStudents','all_students');
-    // view students
-        Route::get('/allClasses','all_classes');
-    
+    // EXCEL
 
+        // admin create classes
+        Route::post('/addExcelStudent','add_students_excel');
+        // admin create classes
+        Route::post('/addExcelTeacher','add_teachers_excel');
+        // admin create classes
+        Route::post('/addExcelDepartment','add_departments_excel');
 
-    // Delete Department
-        Route::delete('/deleteDepartment','delete_department');
-    // delete teachers
-        Route::delete('/deleteTeacher','delete_teachers');
-    // delete students
-        Route::delete('/deleteStudent','delete_students');
-      
+        // admin download excel format for Student
+        Route::get('/downloadStudentExcelTemplate','downloadStudentExcelTemplate');
+        // admin download excel format Teacher
+        Route::get('/downloadTeacherExcelTemplate','downloadTeacherExcelTemplate');
+        // admin download excel format Department
+        Route::get('/downloadDepartmentExcelTemplate','downloadDepartmentExcelTemplate');
 
-    // admin create classes
+        // download Error Report
+        Route::get('/errorExcel','downloadErrorExcel');
     
 });
 
