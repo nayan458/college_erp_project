@@ -71,16 +71,16 @@ class AuthenticationController extends Controller
         //     return $user;
         // }
 
-        function logout(){
-            $user = Auth::user();
-            $token = $user->tokens()->delete();
-            return response()->json(["result" => $token]);
-        }
+    function logout(){
+        $user = Auth::user();
+        $token = $user->tokens()->delete();
+        return response()->json(["result" => $token]);
+    }
 
-        function is_login(){
-            if(Auth::user())
-                return true;
-            else
-                return false;
-        }
+    function is_login(){
+        if(Auth::user())
+            return true;
+        else
+            return false;
+    }
 }

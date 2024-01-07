@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\StudentsController;
@@ -31,7 +32,7 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
 
     Route::controller(TeachersController::class)->prefix('teacher')->middleware(['abilities:Teacher'])->group(function(){
 
-        Route::get('myData','myData');
+        Route::get('/myData','myData');
 
         // teacher view classes(done)(same)
         Route::get('/classes','view_class');
@@ -74,7 +75,7 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
     Route::controller(StudentsController::class)->prefix('student')->middleware(['abilities:Student'])->group(function(){
 
         // geting personal details
-        Route::get('myData','myData');
+        Route::get('/myData','myData');
         
         // Student view classes(done)(authenticated)
         Route::get('/classes','view_classes');
@@ -103,83 +104,102 @@ Route::group(['middleware' => 'auth:sanctum'],function () {
     ||
     */
 
+    
 
     Route::controller(AuthenticationController::class)->group(function(){
         Route::post('logout','logout');
         Route::post('islogin','is_login');
     });
     
+    /*
+    ||--------------------------------------------------------------------------
+    || ADMIN Routes
+    ||--------------------------------------------------------------------------
+    ||
+    || Here are admin routes that are used to define.
+    || routes are loaded by the AdminController 
+    ||
+    */
+    
+    
+    Route::controller(AdminController::class)->prefix('admin')->middleware(['abilities:Admin'])->group(function(){
+        // get personal information
+            Route::get('/myData','myData');
+    
+        // REGISTRATION
+    
+            // Register Department
+                Route::post('/registerDepartment','register_department');
+            // Register teachers
+                Route::post('/registerTeacher','register_teachers');
+            // Register students
+                Route::post('/registerStudent','register_students');
+            // Register classes and asiign teachers
+                Route::post('/registerClasses','register_classes');
+            // Add student to classes
+                Route::post('/addStudentsToClass','add_students_to_class');
+    
+    
+        // VIEW
+    
+            // View Departments
+                Route::get('/allDepartments','view_departments');
+            // view teachers
+                Route::get('/allTeachers','all_teachers');
+            // view students
+                Route::get('/allStudents','all_students');
+            // view students
+                Route::get('/allClasses','all_classes');
+    
+    
+        // DELETE
+        
+            // Delete Department
+                Route::delete('/deleteDepartment','delete_department');
+            // delete teachers
+                Route::delete('/deleteTeacher','delete_teachers');
+            // delete students
+                Route::delete('/deleteStudent','delete_students');
+    
+    
+        // EXCEL
+    
+            // admin create classes
+            Route::post('/addExcelStudent','add_students_excel');
+            // admin create classes
+            Route::post('/addExcelTeacher','add_teachers_excel');
+            // admin create classes
+            Route::post('/addExcelDepartment','add_departments_excel');
+    
+            // // admin download excel format for Student
+            // Route::get('/downloadStudentExcelTemplate','downloadStudentExcelTemplate');
+            // // admin download excel format Teacher
+            // Route::get('/downloadTeacherExcelTemplate','downloadTeacherExcelTemplate');
+            // // admin download excel format Department
+            // Route::get('/downloadDepartmentExcelTemplate','downloadDepartmentExcelTemplate');
+    
+            // download Error Report
+            Route::get('/errorExcel','downloadErrorExcel');
+        
+    });
     
 });;
 
-/*
-||--------------------------------------------------------------------------
-|| ADMIN Routes
-||--------------------------------------------------------------------------
-||
-|| Here are admin routes that are used to define.
-|| routes are loaded by the AdminController 
-||
-*/
 
-
-Route::controller(AdminController::class)->prefix('admin')->middleware(['abilities:admin'])->group(function(){
-    // REGISTRATION
-
-        // Register Department
-            Route::post('/registerDepartment','register_department');
-        // Register teachers
-            Route::post('/registerTeacher','register_teachers');
-        // Register students
-            Route::post('/registerStudent','register_students');
-        // Register classes and asiign teachers
-            Route::post('/registerClasses','register_classes');
-        // Add student to classes
-            Route::post('/addStudentsToClass','add_students_to_class');
-
-
-    // VIEW
-
-        // View Departments
-            Route::get('/allDepartments','view_departments');
-        // view teachers
-            Route::get('/allTeachers','all_teachers');
-        // view students
-            Route::get('/allStudents','all_students');
-        // view students
-            Route::get('/allClasses','all_classes');
-
-
-    // DELETE
-    
-        // Delete Department
-            Route::delete('/deleteDepartment','delete_department');
-        // delete teachers
-            Route::delete('/deleteTeacher','delete_teachers');
-        // delete students
-            Route::delete('/deleteStudent','delete_students');
-
-
-    // EXCEL
-
-        // admin create classes
-        Route::post('/addExcelStudent','add_students_excel');
-        // admin create classes
-        Route::post('/addExcelTeacher','add_teachers_excel');
-        // admin create classes
-        Route::post('/addExcelDepartment','add_departments_excel');
-
-        // admin download excel format for Student
-        Route::get('/downloadStudentExcelTemplate','downloadStudentExcelTemplate');
-        // admin download excel format Teacher
-        Route::get('/downloadTeacherExcelTemplate','downloadTeacherExcelTemplate');
-        // admin download excel format Department
-        Route::get('/downloadDepartmentExcelTemplate','downloadDepartmentExcelTemplate');
-
-        // download Error Report
-        Route::get('/errorExcel','downloadErrorExcel');
-    
+Route::controller(AdminAuthController::class)->prefix('admin')->group(function(){
+    Route::post('/register','register');
+    Route::post('/login','login');
 });
+
+Route::controller(AdminController::class)->group(function(){
+     // admin download excel format for Student
+     Route::get('/downloadStudentExcelTemplate','downloadStudentExcelTemplate');
+     // admin download excel format Teacher
+     Route::get('/downloadTeacherExcelTemplate','downloadTeacherExcelTemplate');
+     // admin download excel format Department
+     Route::get('/downloadDepartmentExcelTemplate','downloadDepartmentExcelTemplate'); 
+});
+
 
 Route::controller(AuthenticationController::class)->group(function(){
     Route::post('student/login','studentLogin');

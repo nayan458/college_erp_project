@@ -12,6 +12,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -323,63 +324,64 @@ class AdminController extends Controller
 
             return(["message" => "succesfully added every students"]);
         }
+    
     // Add Departments By excel sheet
-    function add_departments_excel(Request $req){
+        function add_departments_excel(Request $req){
 
-        try {
-            $data = $req->validate([
-                'file' => 'required',
-            ]);
-        } catch(\Throwable $th) {
-            return response(["ERROR" => "No file"], 403);
-        }
-    
-        $fileData = $req->file('file');
-        $datafile = Excel::toCollection([], $fileData)->first();
-        
-        $isFirstRow = true;
-        $errorRows = [];
-        
-        foreach ($datafile as $index => $row) {
-            if ($isFirstRow) {
-                $isFirstRow = false;
-                continue;
-            }
             try {
-                Department::create([
-                    'dep_name' => $row[0],
+                $data = $req->validate([
+                    'file' => 'required',
                 ]);
-            } catch (\Throwable $th) {
-                $errorRows[] = [
-                    'row_index' => $index + 1, // Index starts from 0, rows start from 1
-                    'error' => $th->getMessage(),
-                    'data' => $row,
-                ];
+            } catch(\Throwable $th) {
+                return response(["ERROR" => "No file"], 403);
             }
-        }
-    
-        if (!empty($errorRows)) {
-            $errorFileName = 'ErrorReport_' . time() . '.xlsx';
-            Excel::store(function($excel) use ($errorRows) {
-                $excel->setTitle('Error Report');
-                $excel->sheet('Errors', function($sheet) use ($errorRows) {
-                    $sheet->appendRow(['Row Index', 'Error Message', 'Data']);
-                    foreach ($errorRows as $errorRow) {
-                        $sheet->appendRow([
-                            $errorRow['row_index'],
-                            $errorRow['error'],
-                            implode(', ', $errorRow['data']),
-                        ]);
-                    }
-                });
-            }, $errorFileName, 'excelReports');
-            // return Storage::download('excelReports/'.$errorFileName);
-            return response(['error_report' => $errorFileName], 200);
-        }
         
+            $fileData = $req->file('file');
+            $datafile = Excel::toCollection([], $fileData)->first();
+            
+            $isFirstRow = true;
+            $errorRows = [];
+            
+            foreach ($datafile as $index => $row) {
+                if ($isFirstRow) {
+                    $isFirstRow = false;
+                    continue;
+                }
+                try {
+                    Department::create([
+                        'dep_name' => $row[0],
+                    ]);
+                } catch (\Throwable $th) {
+                    $errorRows[] = [
+                        'row_index' => $index + 1, // Index starts from 0, rows start from 1
+                        'error' => $th->getMessage(),
+                        'data' => $row,
+                    ];
+                }
+            }
+        
+            if (!empty($errorRows)) {
+                $errorFileName = 'ErrorReport_' . time() . '.xlsx';
+                Excel::store(function($excel) use ($errorRows) {
+                    $excel->setTitle('Error Report');
+                    $excel->sheet('Errors', function($sheet) use ($errorRows) {
+                        $sheet->appendRow(['Row Index', 'Error Message', 'Data']);
+                        foreach ($errorRows as $errorRow) {
+                            $sheet->appendRow([
+                                $errorRow['row_index'],
+                                $errorRow['error'],
+                                implode(', ', $errorRow['data']),
+                            ]);
+                        }
+                    });
+                }, $errorFileName, 'excelReports');
+                // return Storage::download('excelReports/'.$errorFileName);
+                return response(['error_report' => $errorFileName], 200);
+            }
+            
 
-        return ["message" => "successfully added Departments"];
-    }
+            return ["message" => "successfully added Departments"];
+        }
     
     //Download Template
         function downloadDepartmentExcelTemplate(){
@@ -396,5 +398,16 @@ class AdminController extends Controller
     //Download Template
         function downloadErrorExcel(){
             return Storage::download('excelReports/ErrorReport_1704121660.xlsx');
+        }
+
+    // Personal Data
+        function myData(){
+            $user = Auth::user();
+            return ([
+                "fname" => $user->name,
+                "lname" => "",
+                "gender" => "female",
+                "lable" => "admin"
+            ]);
         }
 }
