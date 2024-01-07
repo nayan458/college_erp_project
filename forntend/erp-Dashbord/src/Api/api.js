@@ -23,14 +23,16 @@ import Cookies from "universal-cookie";
         }
     )
 
+    // instance to call admin routes
+
     const adminInstance = axios.create({
-        baseURL: `http://localhost:8000/api/`
+        baseURL: `http://localhost:8000/api/admin`
     })
 
     adminInstance.interceptors.request.use(
         function(request){
             let {baseURL} = request
-            if(baseURL !== 'http://localhost:8000/api/')
+            if(baseURL !== 'http://localhost:8000/api/admin')
                 request.baseURL =  'http://localhost:8000/api/'
             return request
         }

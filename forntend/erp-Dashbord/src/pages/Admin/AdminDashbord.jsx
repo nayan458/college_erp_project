@@ -8,14 +8,9 @@ export default function AdminDashbord(){
 
   const adminLinks = [
       {
-        to:`/`,
-        name : 'My class',
-        icon : <i className="fa-solid fa-power-off"></i>
-      },
-      {
         to:'/logout',
         name : 'Logout',
-        icon : <i className="fa-solid fa-users"></i>
+        icon : <i className="fa-solid fa-power-off"></i>
       },
   ]
   return<>

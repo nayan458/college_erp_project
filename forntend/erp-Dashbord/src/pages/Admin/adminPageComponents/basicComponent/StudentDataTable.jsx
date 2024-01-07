@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import DataTable from '../muiAdminComponent/DataTable';
 import { adminInstance } from '../../../../Api/api';
 import { useState } from 'react';
+import Cookies from 'universal-cookie';
 
 export default function StudentDataTable() {
 
@@ -67,8 +68,13 @@ export default function StudentDataTable() {
     
     useEffect(() => {
         let getRows=async()=>{
+            let cookie = new Cookies
             try{
-                let teacherData = await adminInstance.get('/allStudents')
+                let teacherData = await adminInstance.get('/allStudents',{
+                    headers : {
+                        'Authorization' : 'Bearer ' + cookie.get('token')
+                    }
+                })
                 let techDataId = teacherData.data.map((elem, index)=>({
                     ...elem,
                     id: index + 1

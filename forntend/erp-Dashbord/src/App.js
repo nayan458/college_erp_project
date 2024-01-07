@@ -12,6 +12,8 @@ import NodeState from './contexts/NodeState';import AdminDashboard from './pages
 import Unauthenticated from './pages/errorPages/Unauthenticated';
 import PageNotFound from './pages/errorPages/PageNotFound';
 import Register from './pages/Register';
+import ProtectAdmin from './ProtectAdmin';
+import AdminLogin from './pages/Admin/AdminLogin';
 ;
 
 function App() {
@@ -40,12 +42,17 @@ function App() {
             {/* <Route path='/'></Route> */}
 
             <Route path='/unauthorized' element={<Unauthenticated/>}></Route>
+            
+            {/* protect admin */}
 
-            <Route path='/admin' element={<AdminDashboard/>}></Route>
+            <Route element={<ProtectAdmin/>}>
+              <Route path='/admin' element={<AdminDashboard/>}></Route>
+            </Route>
+
 
             <Route path='/login' element={<Login/>}/>
 
-            <Route path='/registration' element={<Register/>}/>
+            {/* <Route path='/registration' element={<Register/>}/> */}
 
             <Route path='/*' element={<PageNotFound/>}/>
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import DataTable from '../muiAdminComponent/DataTable'
 import { adminInstance } from '../../../../Api/api'
+import Cookies from 'universal-cookie'
 
 export default function DepartmentDataTable() {
 
@@ -33,9 +34,15 @@ export default function DepartmentDataTable() {
         }
     ]
 
+
     useEffect(() => {
         const getDepartment=async()=>{
-            let DepartmentData = await adminInstance.get('/allDepartments')
+            let cookie = new Cookies
+            let DepartmentData = await adminInstance.get('/allDepartments',{
+                headers : {
+                    'Authorization' : 'Bearer ' + cookie.get('token')
+                }
+            })
             let DepartmentDataId = await DepartmentData.data.map((elem, index)=>({
                 ...elem,
                 id : index

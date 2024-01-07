@@ -142,11 +142,11 @@ export default function NodeState(props) {
   )
 }
 
-const student_Assignment_submission=()=>{
-  const texta = "hello world"
-  return{
-    texta
-  }
-}
+// const student_Assignment_submission=()=>{
+//   const texta = "hello world"
+//   return{
+//     texta
+//   }
+// }
 
-export {student_Assignment_submission};
+// export {student_Assignment_submission};

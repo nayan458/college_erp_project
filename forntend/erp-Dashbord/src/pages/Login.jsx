@@ -1,7 +1,7 @@
 import React, { useContext, useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import LogoDark from '../components/media/svg/LogoDark'
 import Cookies from 'universal-cookie'
+import LogoDark from '../components/media/svg/LogoDark'
 import college_logo from '../components/media/img/college_logo.png'
 import NodeContext from '../contexts/NodeContext'
 import useAuth from '../hooks/useAuth'
@@ -26,7 +26,12 @@ export default function Login() {
           cookies.set('token',rslt.data.token,{ expires: new Date(Date.now() + 3600000) });
           cookies.set('gender',rslt.data.user.gender);
 
-          a.setUser({...a.user, lable : rslt.data.label, student_id : rslt.data.student_id, gender : rslt.data.user.gender})
+          a.setUser({
+            ...a.user, 
+            lable : rslt.data.label, 
+            student_id : rslt.data.student_id, 
+            gender : rslt.data.user.gender
+          })
           
           try{
             a.getClassesFirst()
@@ -42,6 +47,8 @@ export default function Login() {
           }
           return
         }
+        if(label === 'admin')
+          redirect('/admin')
         redirect(`/`)
   }
 
@@ -111,6 +118,7 @@ export default function Login() {
                         <option>--Select User--</option>
                         <option value="teacher">Teacher</option>
                         <option value="student">Student</option>
+                        <option value="admin">Admin</option>
                       </select>
                     <button className='text-base bg-green-400 rounded-md md:text-xl font-["Source Sans Pro", "sans-serif"] font-bold px-2 py-3 shadow-lg text-slate-700 outline-none border-none active:bg-green-300 active:text-slate-600' onClick={submit}>
                         Login
